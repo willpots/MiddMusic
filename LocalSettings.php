@@ -7,11 +7,11 @@
  * wp@punkypond.com
  ***************************************************************************/
 
-$dbHost = "localhost";
-$dbUser = "mmu";
-$dbPass = "mmuuser";
-$dbSchema = "mmu";
+$dbHost = "middmusic.db.7831758.hostedresource.com";
+$dbUser = "middmusic";
+$dbPass = "MMG2mmu!";
+$dbSchema = "middmusic";
 
 $emailDomain = "middlebury.edu";
-$sitename = "http://localhost"
+$sitename = "http://middmusic.com/"
 ?>

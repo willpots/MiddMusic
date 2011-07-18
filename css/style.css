@@ -85,31 +85,53 @@ a:hover { color: #036; }
    ||                                              ||
     \\ ========================================== //
 */
-header {
+/*Front Page Styles*/ 
+header#fp-header {
 	height: 250px;
 }
-#main {
+#fp-main {
 	background: #336796;
 	height: 300px;
 }
-#main section {
+#fp-main section {
 	margin: 0 auto;
 	width: 900px;
 	height: 300px;
 	color: #fff;
 }
-#login {
+#fp-logobar {
+	height: 50px;
+	margin: 0 auto;
+	width: 900px;
+}
+#fp-logo {
+	margin: 0 80px 0 0;
+	height: 50px;
+	float: right;
+	background: #336796 url('/img/mmuweb.gif') no-repeat center bottom;
+	display: block;
+	width: 165px;
+}
+#fp-login {
 	width: 450px;
 	height: 300px;
 	float: left;
 }
-#loginbox {
-	margin: 100px auto 0 auto;
-	width: 100px;
+#fp-signup {
+	width: 450px;
+	height: 300px;
+	float: left;
 }
-#loginline {
-	margin: 0 0 0 0;
-	height: 15px;
+#fp-loginbox, #fp-signupbox {
+	margin: 50px 0 0 0;
+	float: left; 
+	width: 250px;
+	line-height: 20px;
+}
+#fp-loginline, #fp-signupline {
+	margin: 65px 0 0 0;
+	font-size: 20px;
+	height: 25px;
 	width: 200px;
 	-moz-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
@@ -118,17 +140,106 @@ header {
 	float: left;
 	border-bottom: 2pt solid #fff;
 }
-#signup {
-	width: 450px;
-	height: 300px;
-	float: left;
+.fp-links {
+	margin: 40px 0;
+}
+a.fp-content-link {
+	text-decoration: none;
+	font-size: 20px;
+	color: #FFF;
+	display: block;
+	padding: 10px 0;
+}
+a.fp-content-link:hover {
+	color: #F3297A;
 }
 
-
-
-
-
-
+/* Other Page Stuff */
+#header {
+	height: 50px;
+	width: 100%;
+	background: #336796;
+}
+#inner-header {
+	width: 900px;
+	margin: 0 auto;
+}
+#main {
+	width: 900px;
+	margin: 0 auto;
+	border-bottom: 1pt solid #ddd;
+	border-right: 1pt solid #ddd;
+	border-left: 1pt solid #ddd;
+	height: 500px;
+}
+#sidebar {
+	width: 250px;
+	background: #ddd;
+	height: 500px;
+}
+#main-content {
+	width: 640px;
+	padding: 20px;
+}
+#h-logo {
+	background: url('/img/mmuweb.gif') no-repeat center center;
+	height: 50px;
+	width: 160px;
+	display: block;
+}
+#h-logo:hover {
+	background: url('/img/mmuweb-grey.gif') no-repeat center center;
+}
+#nav-bar {
+	float: right;
+	padding: 0 10px;
+}
+#nav-bar a {
+	border-left: 1pt solid #fff;
+	float: right;
+	display: block;
+	font-size: 15px;
+	padding: 15px 10px;
+	text-decoration: none;
+	color: #FFF;
+}
+#nav-bar a:hover {
+	background: #4478a7;
+}
+#nav-bar a.selected {
+	background: #4478a7;
+}
+#search-form {
+	padding: 10px;
+}
+#search-form label {
+  margin: 5px;
+  font-size: 16px;
+}
+#search-form input#s {
+  margin: 5px 0;
+  background:#fff url(/img/search.png) no-repeat 5px 6px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 14px;
+  height: 22px;
+  line-height: 1.2em;
+  padding: 4px 10px 4px 28px;
+	-webkit-transition-duration: 400ms;
+	-webkit-transition-property: width, background;
+	-webkit-transition-timing-function: ease;
+	-moz-transition-duration: 400ms;
+	-moz-transition-property: width, background;
+	-moz-transition-timing-function: ease;
+	-o-transition-duration: 400ms;
+	-o-transition-property: width, background;
+	-o-transition-timing-function: ease;
+	width: 72px;
+}
+#search-form input#s:focus {
+    background-color: #f9f9f9;
+    width: 190px;
+}
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }

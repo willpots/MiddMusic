@@ -8,8 +8,7 @@
  ***************************************************************************/
 if(isset($_POST["SUBMITLOGIN"]))
 {
-	include("SiteFunctions.php");
-	include("LocalSettings.php");
+	include('functions.php');	
 	$username = $_POST["username"];
 	$password = md5($_POST["password"]);
 	$con = mysql_connect($dbHost,$dbUser,$dbPass);

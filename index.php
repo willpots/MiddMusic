@@ -8,7 +8,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>MiddMusic</title>
+	<title>MiddMusic | <?php if(isset($_GET['page'])) echo ucfirst($_GET['page']); else echo "Home"; ?></title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 	
@@ -21,29 +21,11 @@
 	<script src="js/libs/modernizr-1.7.min.js"></script>
 </head>
 <body>
-	<div id="container">
-		<header>
-		
-		</header>
-		<div id="main" role="main">
-			<section>
-			<div id="login">
-				<div id="loginline">Login</div>
-				<div id="loginbox">
-					<label for="username">Username</label><br>
-					<input type="text" name="username" ><br>
-					<label for="password">Password</label><br>
-					<input type="text" name="password" ><br>
-				</div>
-			</div>
-			<div id="signup"></div>
-			</section>
-		</div>
-
-		<footer>
-
-		</footer>
-	</div>
+		<?php if(isset($_GET['page'])) {
+			include('page.php');
+		} else {
+			include('home.php');
+		} ?>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.1.min.js"%3E%3C/script%3E'))</script>
