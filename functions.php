@@ -6,7 +6,7 @@
  * Use of this code requires consent from William S. Potter									*
  * will@middpoint.com																												*
  ***************************************************************************/
- require_once('LocalSettings.php');
+require_once('LocalSettings.php');
  
 function getInfo($id, $table) {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;

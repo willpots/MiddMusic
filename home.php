@@ -23,6 +23,7 @@
 				<input type="text" name="username" ><br>
 				<label for="password">Password</label><br>
 				<input type="text" name="password" ><br>
+				<input type="submit" name="SUBMITLOGON" value="Log me in!"
 				<div class="fp-links">
 				<a href="" class="fp-content-link">BROWSE PERFORMERS</a>
 				<a href="" class="fp-content-link">CALENDAR AND EVENTS</a>
@@ -36,6 +37,7 @@
 				<input type="text" name="username" ><br>
 				<label for="password">Password</label><br>
 				<input type="text" name="password" ><br>
+				<input type="submit" name="SIGNMEUP" value="Sign me up!"
 			</div>
 		</div>
 	</section>
