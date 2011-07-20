@@ -6,7 +6,9 @@
  * Use of this code requires consent from William S. Potter									*
  * will@middpoint.com																												*
  ***************************************************************************/
+$page = $_GET['page'];
  ?>
+
 <div id="container">
 	<div id="header">
 		<div id="inner-header">
@@ -24,15 +26,29 @@
 	</div><!-- Header -->
 	<div id="main">
 		<div id="sidebar">
-			<div id="search-form">
-				<label for="s">SEARCH<br>
+			<div id="search-form" class="sidebar-widget">
+				<label for="s" class="sidebar-title">SEARCH<br>
 				<input type="text" class="field" name="s" id="s" placeholder="Search" />
 				</label>
 			</div><!-- Search form -->
-			<div id="main-content">
+			<?php 
+			if($page=="profile") {
+				include('sidebars/profileSidebar.php');
+			} else if($page=="calendar") {
 			
+			}
 			
-			</div><!-- Main Content -->
+			?>
 		</div><!-- Sidebar -->
+		<div id="main-content">
+			<?php 
+			if($page=="profile") {
+				include('main/profileMain.php');
+			} else if($page=="main/calendarMain.php") {
+			
+			}
+			?>
+		</div><!-- Main Content -->
+		<div class="clear"></div><!-- clear -->
 	</div><!-- Main -->
 </div><!-- Container -->

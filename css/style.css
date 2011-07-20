@@ -75,7 +75,7 @@ button {  width: auto; overflow: visible; }
 
 body, select, input, textarea {  color: #444; }
 h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-a, a:active, a:visited { color: #607890; }
+a, a:active, a:visited { color: #336796; }
 a:hover { color: #036; }
 
 /*
@@ -85,9 +85,25 @@ a:hover { color: #036; }
    ||                                              ||
     \\ ========================================== //
 */
+
+/* General */
+html,body,#container {
+	font-family: "Helvetica Neue", sans-serif;
+}
+.center {
+	text-align: center;
+}
+.clear {
+	clear: both;
+}
 /*Front Page Styles*/ 
 header#fp-header {
-	height: 250px;
+	height: 220px;
+	text-align: center;
+	font-size: 35px;
+}
+#fp-header-text {
+	margin: 80px;
 }
 #fp-main {
 	background: #336796;
@@ -170,16 +186,19 @@ a.fp-content-link:hover {
 	border-bottom: 1pt solid #ddd;
 	border-right: 1pt solid #ddd;
 	border-left: 1pt solid #ddd;
-	height: 500px;
+	min-height: 500px;
 }
 #sidebar {
+	float: left;
 	width: 250px;
 	background: #ddd;
-	height: 500px;
+	min-height: 500px;
 }
 #main-content {
-	width: 640px;
+	float: right;
+	width: 610px;
 	padding: 20px;
+	min-height: 500px;
 }
 #h-logo {
 	background: url('/img/mmuweb.gif') no-repeat center center;
@@ -209,10 +228,26 @@ a.fp-content-link:hover {
 #nav-bar a.selected {
 	background: #4478a7;
 }
-#search-form {
+#sidebar a {
+	text-decoration: none;
+}
+.sidebar-widget {
 	padding: 10px;
 }
-#search-form label {
+.sidebar-widget-content {
+	padding: 5px;
+	font-size: 13px;
+}
+.sidebar-act {
+	display: block;
+	margin: 5px 0;
+}
+.sidebar-act-members {
+	margin: 0 0 0 10px;
+	border-left: 1pt solid black;
+	padding: 4px;
+}
+.sidebar-title {
   margin: 5px;
   font-size: 16px;
 }
@@ -240,6 +275,39 @@ a.fp-content-link:hover {
     background-color: #f9f9f9;
     width: 190px;
 }
+
+/* Profile Stuff */
+.section-title {
+	font-size: 18px;
+}
+/* Messages */
+.message {
+	margin: 10px 0;
+	font-size: 15px;
+}
+.message a {
+	text-decoration: none;
+}
+.msgto, .msgfrom {
+	font-size: 17px;
+}
+.msgsent {
+	float: right;
+	color: #888;
+}
+/* Calendar */
+.month {
+	width: 610px;
+}
+.week {
+
+}
+.day {
+	display: inline-block;
+	width:80px;
+	border: 1pt solid black;
+}
+/* Other Stuff */
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
