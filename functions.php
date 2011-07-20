@@ -122,6 +122,7 @@ function getUserActs($id) {
 	}
 
 }
+//Act Stuff
 function getActMembers($id) {
 	$members=array();
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
@@ -147,6 +148,7 @@ function getActInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
+//Venue Stuff
 function getVenueInfo($id) {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -158,6 +160,21 @@ function getVenueInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
- 
- 
+
+//Event Stuff
+function getEventsBetween($starttime, $endtime, $calendar) {
+	$events = array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM $calendar WHERE starttime BETWEEN '$starttime' AND '$endtime'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row = mysql_fetch_array($result)) {
+		$events[]=$row;
+	}
+	if(!empty($events))  return $events;
+	else return false; 
+}
+
  ?>

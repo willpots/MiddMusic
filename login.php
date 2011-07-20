@@ -11,7 +11,7 @@ if(isset($_POST["SUBMITLOGIN"]))
 		$admin = $ui['admin'];
 		$valid = $ui['valid'];
 		
-		$expires = time() + 3600;
+		$expires = time() + 60*60*24*31;
 		if($valid==1)
 		{
 			setrawcookie("mu_user", $username, $expires);

@@ -1,54 +1,72 @@
 <?php
-require("LocalSettings.php");
-header( "content-type: application/xml; charset=ISO-8859-15" ); 
-$uids=array();
-$u = $_GET['u'];
-$con = mysql_connect($dbHost, $dbUser, $dbPass);
-mysql_select_db($dbSchema, $con);
+require("functions.php");
+error_reporting(E_ALL); 
+$p=$_POST;
+if(isset($p['getDateView'])) {
+	header( "content-type: text/html; charset=UTF-8" ); 
 
-$results = mysql_query("SELECT * FROM instruments");
-while($row = mysql_fetch_array($results))
-{
-	$names[] = ucfirst($row['name']);
-	$ids[] = $row['id'];
-}
 
-mysql_free_result($results);
 
-$results = mysql_query("SELECT * FROM userinstruments WHERE userid= '$u' ");
-while($row = mysql_fetch_array($results))
-{
-	$uids[] = $row['instrumentid'];
-}
-mysql_close($con);
 
-//get the q parameter from URL
-$q=strtolower($_GET["q"]);
-$len=strlen($q);
 
-$dom = new DOMDocument('1.0', 'ISO-8859-1');
-$query = $dom->createElement('query');
-$dom->appendChild($query);
-if ($len>0)
-{
-	
-	for($i=0; $i<count($names); $i++)
+
+} else if(isset($p['getMonthView'])) {
+	header( "content-type: text/html; charset=UTF-8" ); 
+	$month = $p['month'];
+	$calendar = $p['calendar'];
+	$today = mktime(0,0,0,date('m'),date('j'),date('Y'));
+	$presentmonth = $month;
+	while( date('l', $month) != "Sunday" )
 	{
-		$name=$names[$i];
-		$id=$ids[$i];
-		
-		if(!in_array($id,$uids))
-		{
-			if (stripos($name,$q) || strtolower(substr($name,0,$len)) == $q)
-			{
-				$element = $dom->createElement('inst', $name);
-				$element->setAttribute('id',$id);
-				$query->appendChild($element);
-			}
-		}
+		$month = $month - (60*60*24);
 	}
+	$calstart = $month; ?>
+	<div id="month-nav">
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 month", $presentmonth)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 month", $presentmonth)."','".$calendar;?>')">&rarr;</a>
+	</div>
+	<div class="section-title">CALENDAR</div>
+	<div class="month-name"><?php echo date('F, Y',$presentmonth); ?></div>
+	<div class="month">
+
+	<?php 
+	while($calstart <= strtotime("+1 month", $presentmonth))
+	{
+		$daysleft = 7;
+		echo '<div class="week">';
+		while($daysleft > 0)
+		{
+			$endofday = mktime(0,0,0,date('m',$calstart),date('d',$calstart)+1,date('Y',$calstart));
+			$events = getEventsBetween($calstart, $endofday, $calendar);
+			if($calstart<$presentmonth||$calstart >= strtotime("+1 month", $presentmonth)) {
+				echo '<div class="day wrongday" >';
+			} else if($calstart != $today) {
+				echo '<div class="day" >';
+			} else {
+				echo '<div class="day today" id="day-'.$calstart.'">';
+			}
+			echo '<div class="dayno">'.date('j', $calstart).'</div>';
+			if($events!=false) {
+				foreach($events as $e) {
+					echo $e['name'];
+				}
+			}
+			$daysleft--;
+			$calstart=$endofday;
+			echo '</div>';
+		}
+		echo '</div>';
+	}
+	?>
+			<div class="clear"></div>
+		</div>
+	<?php
+
+} else if(1!=1) {
+
+
+
+
+
 }
-
-echo $dom->saveXML(); 
-
-?> 
+?>

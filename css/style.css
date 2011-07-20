@@ -1,5 +1,5 @@
 
-/* ==== Scroll down to find where to put your styles :) ==== */
+/* ==== MiddMusic Stuff ==== */
 
 /*  HTML5 ✰ Boilerplate  */
 
@@ -96,6 +96,12 @@ html,body,#container {
 .clear {
 	clear: both;
 }
+.unselectable {
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
 /*Front Page Styles*/ 
 header#fp-header {
 	height: 220px;
@@ -188,12 +194,6 @@ a.fp-content-link:hover {
 	border-left: 1pt solid #ddd;
 	min-height: 500px;
 }
-#sidebar {
-	float: left;
-	width: 250px;
-	background: #ddd;
-	min-height: 500px;
-}
 #main-content {
 	float: right;
 	width: 610px;
@@ -227,6 +227,12 @@ a.fp-content-link:hover {
 }
 #nav-bar a.selected {
 	background: #4478a7;
+}
+#sidebar {
+	float: left;
+	width: 250px;
+	background: #ddd;
+	min-height: 700px;	
 }
 #sidebar a {
 	text-decoration: none;
@@ -296,16 +302,67 @@ a.fp-content-link:hover {
 	color: #888;
 }
 /* Calendar */
-.month {
-	width: 610px;
+#calendar-loading {
+	padding: 200px 289px;
 }
-.week {
+#month-nav {
+	float: right;
+}
+.month-nav {
+	display: inline-block;
+	width: 40px;
+	height: 40px;
+	font-size: 30px;
+	cursor: pointer;
+	text-align: center;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  
+  border-left: 2pt solid #eee;
+  border-top: 2pt solid #eee;
+  border-right: 2pt solid #9A9A9A;
+  border-bottom: 2pt solid #9A9A9A;
 
 }
+.month-nav:hover {
+	background: #336796;
+	color: #fff;
+}
+.month-nav:active {
+  border-left: 2pt solid #9A9A9A;
+  border-top: 2pt solid #9A9A9A;
+  border-right: 2pt solid #eee;
+  border-bottom: 2pt solid #eee;
+}
+.month-name {
+	font-size: 16px;
+}
+.month {
+	width: 609px;
+	padding: 0;
+	margin: 30px 0;
+	border: 1pt solid #444;
+}
+.week {
+	padding: 0;
+	margin: 0;
+}
 .day {
-	display: inline-block;
-	width:80px;
-	border: 1pt solid black;
+	float: left;
+	width:85px;
+	border: 1pt solid #444;
+	height: 100px;
+	margin: 0;
+}
+.dayno {
+	float: right;
+	padding: 4px;
+}
+.wrongday {
+	background: #aaa;
+}
+.today {
+	background: #ffa;
 }
 /* Other Stuff */
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }

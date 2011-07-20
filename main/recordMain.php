@@ -1,6 +1,6 @@
 <?php 
 /****************************************************************************
- * calendarMain.php																													*
+ * recordMain.php																														*
  *
  * Middlebury Music United 																									*
  * This code is proprietary and property of William S. Potter.							*
@@ -17,7 +17,7 @@ if(isset($_GET['year'])) {
 } else $year = date('Y');
 
 $month =  mktime(0,0,0,$month,1,$year);
-
+$calendar = "record";
 ?>
 <div id="calendar">
 	<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="calendar-loading">
