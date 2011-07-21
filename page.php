@@ -1,10 +1,10 @@
 <?php 
-/****************************************************************************
- * Middlebury Music United 																									*
- * This code is proprietary and property of William S. Potter.							*
- * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter									*
- * will@middpoint.com																												*
+/***************************************************************************
+ * Middlebury Music United 																*
+ * This code is proprietary and property of William S. Potter.					*
+ * It has been licensed for use to Middlebury College in this installation.*
+ * Use of this code requires consent from William S. Potter						*
+ * will@middpoint.com																		*
  ***************************************************************************/
 if(isset($_GET['page'])) $page = $_GET['page'];
 else $page ="";
@@ -29,7 +29,13 @@ else $page ="";
 		<div id="sidebar">
 			<div id="search-form" class="sidebar-widget">
 				<label for="s" class="sidebar-title">SEARCH<br>
-				<input type="text" class="field" name="s" id="s" placeholder="Search" />
+				<?php if($page!="calendar"||$page!="practice"||$page!="record") {
+					$sp = "musicians";
+				} else {
+					$sp = $page;
+				} ?>
+				<input type="text" onkeyup="searchFor(event, this.value, '<?php echo $sp; ?>');" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
+ placeholder="Search" />
 				</label>
 			</div><!-- Search form -->
 			<?php 

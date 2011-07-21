@@ -1,13 +1,20 @@
 <?php 
-/****************************************************************************
- * Middlebury Music United 																									*
- * This code is proprietary and property of William S. Potter.							*
+/******************************************************************************
+ * If you are looking for something important, chances are that its here!		*
+ * This file contains really epic, crazy shit.											*
+ *																										*
+ * Middlebury Music United																		*
+ * This code is proprietary and property of William S. Potter.						*
  * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter									*
- * will@middpoint.com																												*
- ***************************************************************************/
+ * Use of this code requires consent from William S. Potter							*
+ * will@middpoint.com																			*
+ ******************************************************************************/
 require_once('LocalSettings.php');
+//Error reporting is on for development, this can be turned off at a later point in time.
 error_reporting(E_ALL); 
+/*
+	Gen Use Functions Below Here ---------------------
+*/
 function getLogin($username, $password) {
 	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -20,7 +27,9 @@ function getLogin($username, $password) {
 		return $row;
 	}
 }
-
+/*
+	User Functions Below Here ---------------------
+*/
 function getUserInfo($id) {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -122,7 +131,9 @@ function getUserActs($id) {
 	}
 
 }
-//Act Stuff
+/*
+	Act Functions Below Here ---------------------
+*/
 function getActMembers($id) {
 	$members=array();
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
@@ -148,7 +159,9 @@ function getActInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
-//Venue Stuff
+/*
+	Venue Functions Below Here ---------------------
+*/
 function getVenueInfo($id) {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -161,7 +174,9 @@ function getVenueInfo($id) {
  	else return false;
 }
 
-//Event Stuff
+/*
+	Event Functions Below Here ---------------------
+*/
 function getEventsBetween($starttime, $endtime, $calendar) {
 	$events = array();
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
@@ -176,5 +191,180 @@ function getEventsBetween($starttime, $endtime, $calendar) {
 	if(!empty($events))  return $events;
 	else return false; 
 }
+/*
+	Instrument/Style Functions Below Here ---------------------
+*/
 
+function getAllInstruments() {
+	$inst = array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM instruments";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row = mysql_fetch_array($result)) {
+		$inst[]=$row;
+	}
+	if(!empty($inst))  return $inst;
+	else return false; 
+
+}
+function getAllMusicStyles() {
+	$inst = array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM bandstyles";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row = mysql_fetch_array($result)) {
+		$inst[]=$row;
+	}
+	if(!empty($inst))  return $inst;
+	else return false; 
+}
+function getVenueTypes(){
+	$inst = array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM venuetypes";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row = mysql_fetch_array($result)) {
+		$inst[]=$row;
+	}
+	if(!empty($inst))  return $inst;
+	else return false; 
+}
+/*
+	Search Functions Go Here -------------------------
+*/
+function pullSearchQuery($q, $page, $i=0) {
+	$g = $i+20;
+	$qs = explode(" ",$q);
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	if($q=="") {
+		$query = "SELECT * FROM $page";
+		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+		while($i<$g&&$row=mysql_fetch_array($result)) {
+			$results[]=$row;
+			$i++;
+		}
+	} else if(!empty($qs)) {
+		foreach($qs as $s) {
+			if($page=="user") {
+				$query = "SELECT * FROM $page WHERE firstname LIKE '%".$s."%' OR lastname LIKE '%".$s."%'";
+			} else {
+				$query = "SELECT * FROM $page WHERE name LIKE '%".$s."%'";	
+			}
+			$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+			while($row = mysql_fetch_array($result)) {
+				if(!in_array($row,$results)) {
+					$results[]=$row;
+				}
+			}
+			$uids=array();
+			$query = "SELECT id FROM instruments WHERE name LIKE '%$q%' ";
+			$result = mysql_query($query);
+			while($row = mysql_fetch_array($result)) {
+				$instid=$row['id']; //Pull Instrument ID
+				$result2 = mysql_query("SELECT * FROM userinstruments WHERE instrumentid = '$instid'"); //Pull all users who have that instrument id
+				while($row2 = mysql_fetch_array($result2)) {
+					$uids[]=$row2['userid'];
+				}
+			}
+			if(!empty($uids)) {
+				foreach($uids as $uid) {
+					$result3 = mysql_query("SELECT * FROM user WHERE id= '$uid'");
+					while($row=mysql_fetch_array($result3)) {
+						if(!in_array($row, $results)) {
+							$results[]=$row;
+						}
+					}
+				}
+			}	
+		}
+	}
+	if(!empty($results))  return $results;
+	else return false; 
+}		
+function searchForUsersWithInst($id) {
+	$results=array();
+	$uids=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM userinstruments WHERE instrumentid = '$id'";
+	$result = mysql_query($query); 
+	while($row = mysql_fetch_array($result)) {
+		$uids[]=$row['userid'];
+	}
+	if(!empty($uids)) {
+		foreach($uids as $uid) {
+			$info = getUserInfo($uid);
+			if($info!=false) $results[]=$info;
+		}
+	}	
+	if(!empty($results))  return $results;
+	else return false; 	
+}
+/*
+	Drawing Functions Below Here ---------------------
+*/
+function drawCalendar($month, $calendar) {
+$today = mktime(0,0,0,date('m'),date('j'),date('Y'));
+	$presentmonth = $month;
+	while( date('l', $month) != "Sunday" )
+	{
+		$month = $month - (60*60*24);
+	}
+	$calstart = $month; ?>
+	<div id="month-nav">
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 month", $presentmonth)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 month", $presentmonth)."','".$calendar;?>')">&rarr;</a>
+	</div>
+	<div class="section-title">CALENDAR</div>
+	<div class="month-name"><?php echo date('F, Y',$presentmonth); ?></div>
+	<div class="month">
+
+	<?php 
+	while($calstart <= strtotime("+1 month", $presentmonth))
+	{
+		$daysleft = 7;
+		echo '<div class="week">';
+		while($daysleft > 0)
+		{
+			$endofday = mktime(0,0,0,date('m',$calstart),date('d',$calstart)+1,date('Y',$calstart));
+			$events = getEventsBetween($calstart, $endofday, $calendar);
+			if($calstart<$presentmonth||$calstart >= strtotime("+1 month", $presentmonth)) {
+				echo '<div class="day wrongday" >';
+			} else if($calstart != $today) {
+				echo '<div class="day" >';
+			} else {
+				echo '<div class="day today" id="day-'.$calstart.'">';
+			}
+			echo '<div class="dayno">'.date('j', $calstart).'</div>';
+			if($events!=false) {
+				foreach($events as $e) {
+					echo $e['name'];
+				}
+			}
+			$daysleft--;
+			$calstart=$endofday;
+			echo '</div>';
+		}
+		echo '</div>';
+	}
+	?>
+			<div class="clear"></div>
+		</div>
+	<?php
+}
  ?>

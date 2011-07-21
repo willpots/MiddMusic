@@ -50,11 +50,16 @@ include('functions.php');
 	<?php //Include page specific scripts
 		if(isset($_GET['page'])) {
 			$page=$_GET['page'];
+			if(isset($_GET['cat'])) $cat = $_GET['cat'];
+			else $cat = "false";
 			if($page=="profile") {
 				echo '<script src="js/profile.js"></script>';
 			} else if($page=="record"||$page=="practice"||$page=="calendar") {
 				echo '<script src="js/calendar.js"></script>';
 				echo '<script>getCalendarMonth("'.$month.'","'.$page.'");</script>';			
+			} else if($page=="bands"||$page=="musicians"||$page=="venues") {
+				echo '<script src="js/directory.js"></script>';
+				echo '<script>getSearchResults("'.$q.'","'.$page.'" );</script>';
 			} else {
 			
 			}

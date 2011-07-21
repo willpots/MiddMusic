@@ -96,6 +96,41 @@ html,body,#container {
 .clear {
 	clear: both;
 }
+.right {
+	float: right;
+}
+.left {
+	float: left;
+}
+.button {
+	color: #444;
+	background: #ddd;
+	display: inline-block;
+	padding: 5px;
+	font-size: 17px;
+	cursor: pointer;
+	text-align: center;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	border-left: 2pt solid #ddd;
+	border-top: 2pt solid #ddd;
+	border-right: 2pt solid #9A9A9A;
+	border-bottom: 2pt solid #9A9A9A;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+.button:hover {
+	background: #336796;
+	color: #fff;
+}
+.button:active {
+  border-left: 2pt solid #9A9A9A;
+  border-top: 2pt solid #9A9A9A;
+  border-right: 2pt solid #ddd;
+  border-bottom: 2pt solid #ddd;
+}
 .unselectable {
 	-moz-user-select: -moz-none;
 	-khtml-user-select: none;
@@ -248,6 +283,10 @@ a.fp-content-link:hover {
 	display: block;
 	margin: 5px 0;
 }
+.sidebar-child {
+	display: block;
+	margin: 0;
+}
 .sidebar-act-members {
 	margin: 0 0 0 10px;
 	border-left: 1pt solid black;
@@ -322,7 +361,6 @@ a.fp-content-link:hover {
   border-top: 2pt solid #eee;
   border-right: 2pt solid #9A9A9A;
   border-bottom: 2pt solid #9A9A9A;
-
 }
 .month-nav:hover {
 	background: #336796;
@@ -363,6 +401,31 @@ a.fp-content-link:hover {
 }
 .today {
 	background: #ffa;
+}
+/* Directory */
+.search-result {
+	display: block;
+	padding: 5px;
+	background-color: #fff;
+	text-decoration: none;
+	transition-property: background-color;
+	transition-duration: .25s;
+	transition-timing-function: ease-out;
+	-webkit-transition-property: background-color;
+	-webkit-transition-duration: .25s;
+	-webkit-transition-timing-function: ease-out;
+	-o-transition-property: background-color;
+	-o-transition-duration: .25s;
+	-o-transition-timing-function: ease-out;
+}
+.search-result:nth-child(even) {
+	background-color: #ddd;
+}
+.search-result:hover {
+	background-color: #bbb;
+}
+#results {
+	margin: 10px 0;
 }
 /* Other Stuff */
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }

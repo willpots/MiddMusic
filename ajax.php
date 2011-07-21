@@ -1,6 +1,5 @@
 <?php
 require("functions.php");
-error_reporting(E_ALL); 
 $p=$_POST;
 if(isset($p['getDateView'])) {
 	header( "content-type: text/html; charset=UTF-8" ); 
@@ -11,59 +10,51 @@ if(isset($p['getDateView'])) {
 
 
 } else if(isset($p['getMonthView'])) {
+	// This is the thing that draws all of the calendars!
 	header( "content-type: text/html; charset=UTF-8" ); 
 	$month = $p['month'];
 	$calendar = $p['calendar'];
-	$today = mktime(0,0,0,date('m'),date('j'),date('Y'));
-	$presentmonth = $month;
-	while( date('l', $month) != "Sunday" )
-	{
-		$month = $month - (60*60*24);
-	}
-	$calstart = $month; ?>
-	<div id="month-nav">
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 month", $presentmonth)."','".$calendar;?>')">&larr;</a>
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 month", $presentmonth)."','".$calendar;?>')">&rarr;</a>
-	</div>
-	<div class="section-title">CALENDAR</div>
-	<div class="month-name"><?php echo date('F, Y',$presentmonth); ?></div>
-	<div class="month">
-
-	<?php 
-	while($calstart <= strtotime("+1 month", $presentmonth))
-	{
-		$daysleft = 7;
-		echo '<div class="week">';
-		while($daysleft > 0)
-		{
-			$endofday = mktime(0,0,0,date('m',$calstart),date('d',$calstart)+1,date('Y',$calstart));
-			$events = getEventsBetween($calstart, $endofday, $calendar);
-			if($calstart<$presentmonth||$calstart >= strtotime("+1 month", $presentmonth)) {
-				echo '<div class="day wrongday" >';
-			} else if($calstart != $today) {
-				echo '<div class="day" >';
-			} else {
-				echo '<div class="day today" id="day-'.$calstart.'">';
-			}
-			echo '<div class="dayno">'.date('j', $calstart).'</div>';
-			if($events!=false) {
-				foreach($events as $e) {
-					echo $e['name'];
-				}
-			}
-			$daysleft--;
-			$calstart=$endofday;
-			echo '</div>';
+	drawCalendar($month, $calendar); //Located in functions.php
+	
+} else if(isset($p['getSearchQuery'])) {
+	if(isset($p['query'])) $q = $p['query'];
+	else $q = "";
+	$page = $p['page'];
+	$cat = "false";
+	
+	echo '<div class="section-title">'.strtoupper($page).'</div>';
+	echo '<div id="results">';
+	if($page=="musicians") {
+		$table = "user";
+		if($cat=="false") {
+			$results = pullSearchQuery($q, $table);
+		} else {
+			$results = searchForUsersWithInst($q);
 		}
-		echo '</div>';
+		if($results!=false) {
+			foreach($results as $r) {
+				echo '<a href="?page=profile&id='.$r['id'].'" class="search-result">'.$r['firstname'].' '.$r['lastname'].'</a>';
+			}
+		}
+	} else if($page=="venues") {
+		$table = "venue";
+		$results = pullSearchQuery($q, $table);
+		if($results!=false) {
+			foreach($results as $r) {
+				echo '<a href="?page=profile&venue='.$r['id'].'" class="search-result">'.$r['name'].'</a>';
+			}
+		}
+	} else if($page=="bands") {
+		$table = "acts";
+		$results = pullSearchQuery($q, $table);
+		if($results!=false) {
+			foreach($results as $r) {
+				echo '<a href="?page=profile&band='.$r['id'].'" class="search-result">'.$r['name'].'</a>';
+			}
+		}
 	}
-	?>
-			<div class="clear"></div>
-		</div>
-	<?php
-
-} else if(1!=1) {
-
+	echo '</div>';
+} else if(isset($p['getCategorySearch'])) {
 
 
 

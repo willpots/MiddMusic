@@ -13,7 +13,8 @@ $messages=getUserMessages($_COOKIE['mu_id']);
 
 ?>
 <div id="messages">
-	<div class="section-title">MY MESSAGES</div>
+	<a id="compose-message" class="button right">Compose</a>
+	<div class="section-title">MESSAGES</div>
 	<?php 
 	if($messages!=false) {
 		foreach($messages as $m) {
