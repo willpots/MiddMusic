@@ -1,10 +1,10 @@
 <?php 
-/****************************************************************************
- * Middlebury Music United 																									*
- * This code is proprietary and property of William S. Potter.							*
- * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter									*
- * will@middpoint.com																												*
+/***************************************************************************
+ * Middlebury Music United 																*
+ * This code is proprietary and property of William S. Potter.					*
+ * It has been licensed for use to Middlebury College in this installation.*
+ * Use of this code requires consent from William S. Potter						*
+ * will@middpoint.com																		*
  ***************************************************************************/
 include('functions.php');
 ?>
@@ -16,6 +16,7 @@ include('functions.php');
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
 	<meta charset="UTF-8">
+	<link rel="dns-prefetch" href="//ajax.googleapis.com" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
 	<title>MiddMusic | <?php if(isset($_GET['page'])) echo ucfirst($_GET['page']); else echo "Home"; ?></title>
@@ -50,19 +51,17 @@ include('functions.php');
 	<?php //Include page specific scripts
 		if(isset($_GET['page'])) {
 			$page=$_GET['page'];
-			if(isset($_GET['cat'])) $cat = $_GET['cat'];
-			else $cat = "false";
 			if($page=="profile") {
 				echo '<script src="js/profile.js"></script>';
+			} else if($page=="edit") {
+				echo '<script src="js/edit.js"></script>';
 			} else if($page=="record"||$page=="practice"||$page=="calendar") {
 				echo '<script src="js/calendar.js"></script>';
 				echo '<script>getCalendarMonth("'.$month.'","'.$page.'");</script>';			
 			} else if($page=="bands"||$page=="musicians"||$page=="venues") {
 				echo '<script src="js/directory.js"></script>';
 				echo '<script>getSearchResults("'.$q.'","'.$page.'" );</script>';
-			} else {
-			
-			}
+			} 
 		} else {
 		
 		}

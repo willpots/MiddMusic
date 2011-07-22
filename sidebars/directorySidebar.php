@@ -14,10 +14,13 @@ if(isset($_GET['q'])) $q = $_GET['q'];
 else $q = "";
 if($page=="musicians") {
 	$inst = getAllInstruments();
+	$sb_title = "INSTRUMENTS/STYLES";
 } else if($page=="bands") {
 	$inst = getAllMusicStyles();
+	$sb_title = "GENRES";
 } else if($page=="venues") {
 	$inst = getVenueTypes();
+	$sb_title = "STYLES";
 }
 if($inst!=false) {
 	foreach($inst as $c=>$key) {
@@ -28,13 +31,27 @@ if($inst!=false) {
 array_multisort( $sort_name, SORT_STRING, $inst);
 
 ?>
+<div id="search-form" class="sidebar-widget">
+	<label for="s" class="sidebar-title">SEARCH <?php echo strtoupper($page); ?><br>
+	<?php 
+	$page=$_GET['page'];
+	if($page=="calendar"||$page=="practice"||$page=="record") {
+		$sp = "musicians";
+	} else {
+		$sp = $page;
+	} ?>
+	<input type="text" onkeyup="searchFor(event, this.value, '<?php echo $sp; ?>');" autocomplete="off" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
+placeholder="Search" />
+	</label>
+</div><!-- Search form -->
+
 <div id="instruments" class="sidebar-widget">
-	<div class="sidebar-title">INSTRUMENTS/STYLES</div>
+	<div class="sidebar-title"><?php echo $sb_title; ?></div>
 	<div class="sidebar-widget-content">
 	<?php
 	if($inst!=false) {
 		foreach($inst as $i) { ?>
-			<a href="" id="<?php echo $i['id']; ?>" onclick="getSearchResults(this.id, '<?php echo $page; ?>', 'true')" class="sidebar-child"><?php echo ucfirst($i['name']); ?></a>
+			<a id="<?php echo 'inst_'.$i['id']; ?>" onclick="getCategoryResults('<?php echo $page."','".$i['id']?>')" class="sidebar-child"><?php echo ucfirst($i['name']); ?></a>
 			
 		<?php
 		}

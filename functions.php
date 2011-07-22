@@ -105,6 +105,48 @@ function getUserMessages($id){
  	if(!empty($messages)) return $messages;
  	else return false;
 } 
+function getUserInstruments($id) {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM userinstruments WHERE userid='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	$instids=array();
+	while($row=mysql_fetch_array($result)) {
+		$instids[]=$row['instrumentid'];
+	}
+	if(!empty($instids)) {
+		foreach($instids as $i) {
+			$query = "SELECT * FROM instruments WHERE id='$i'";
+			$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+			while($row=mysql_fetch_array($result)) {
+				if(!in_array($row,$results)) {
+					$results[]=$row;
+				}
+			}
+		}
+		return $results;
+	} else return false;
+}
+function removeInstrument($userid,$instrumentid) {
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "DELETE FROM userinstruments WHERE userid='$userid' AND instrumentid='$instrumentid'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+}
+function addInstrument($userid,$instrumentid) {
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "INSERT INTO userinstruments (userid, instrumentid) VALUES ('$userid','$instrumentid')";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+}
+
 function getUserActs($id) {
 	$acts=array();
 	$results=array();
@@ -131,6 +173,14 @@ function getUserActs($id) {
 	}
 
 }
+function updateUser($id, $firstname, $lastname, $class, $info) {
+	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "UPDATE user SET firstname='$firstname', lastname='$lastname', class='$class', info='$info' WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());		
+} 
 /*
 	Act Functions Below Here ---------------------
 */
@@ -159,6 +209,17 @@ function getActInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
+function getActTypeName($id){
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM bandstyles WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+ 	$row=mysql_fetch_array($result);
+ 	if(!empty($row)) return $row['name'];
+ 	else return false;
+}
 /*
 	Venue Functions Below Here ---------------------
 */
@@ -173,7 +234,17 @@ function getVenueInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
-
+function getVenueTypeName($id){
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM venuetypes WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+ 	$row=mysql_fetch_array($result);
+ 	if(!empty($row)) return $row['name'];
+ 	else return false;
+}
 /*
 	Event Functions Below Here ---------------------
 */
@@ -236,6 +307,19 @@ function getVenueTypes(){
 		$inst[]=$row;
 	}
 	if(!empty($inst))  return $inst;
+	else return false; 
+}
+function getInstName($id){
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM instruments WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row=mysql_fetch_array($result)) {
+		$name=$row['name'];	
+	}
+	if($name) return $name;
 	else return false; 
 }
 /*
@@ -312,6 +396,54 @@ function searchForUsersWithInst($id) {
 			if($info!=false) $results[]=$info;
 		}
 	}	
+	if(!empty($results))  return $results;
+	else return false; 	
+}
+function searchForVenueWithType($id){
+	$results=array();
+	$uids=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM venue WHERE type='$id'";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$results[]=$row;
+	}
+	if(!empty($results))  return $results;
+	else return false; 	
+}
+function searchForActWithType($id){
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM acts WHERE type='$id'";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$results[]=$row;
+	}
+	if(!empty($results))  return $results;
+	else return false; 	
+}
+function searchForInst($q){
+	$results=array();
+	$s = explode(' ',$q);
+	foreach($s as $w) {
+	 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+		$con = mysql_connect($dbHost, $dbUser, $dbPass);
+		if(!$con) die('Could not connect: ' . mysql_error());
+		mysql_select_db($dbSchema, $con) or die('Could not select database');
+		$query = "SELECT * FROM instruments WHERE name LIKE '%".$q."%'";
+		$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+		while($row = mysql_fetch_array($result)) {
+			if(!in_array($row,$results)){
+				$results[]=$row;
+			}
+		}
+	}
 	if(!empty($results))  return $results;
 	else return false; 	
 }

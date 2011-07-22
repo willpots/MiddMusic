@@ -1,13 +1,21 @@
 <?php 
 if(isset($_GET['id'])) $id = $_GET['id'];
-else $id = $_COOKIE['mu_id'];
+else if(isset($_COOKIE['mu_id'])) $id = $_COOKIE['mu_id'];
+else $id = NULL;
 
 $ui = getUserInfo($id);
 $acts = getUserActs($id);
 	
 
-
+if($ui!=false) {
 ?>
+<div id="search-form" class="sidebar-widget">
+	<label for="s" class="sidebar-title">SEARCH MUSICIANS<br>
+	<input type="text" onkeyup="searchFor(event, this.value, 'musicians');" class="field" autocomplete="off" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
+placeholder="Search" />
+	</label>
+</div><!-- Search form -->
+<?php if(!isset($_GET['id'])) { ?>
 <div id="about-me" class="sidebar-widget">
 	<div class="sidebar-title">ABOUT</div>
 	<div class="sidebar-widget-content">
@@ -16,6 +24,7 @@ $acts = getUserActs($id);
 	?>
 	</div>
 </div><!-- about-me -->
+<?php } ?>
 
 <div id="associated-acts" class="sidebar-widget">
 	<div class="sidebar-title">ASSOCIATED ACTS</div>
@@ -29,7 +38,7 @@ $acts = getUserActs($id);
 				if($mem!=false&&count($mem)>1) {
 					echo '<div class="sidebar-act-members">';
 					foreach($mem as $m) {
-						echo '<a href="" class="sidebar-member">'.$m['firstname'].' '.$m['lastname'].'</a>';
+						echo '<a href="?page=profile&id='.$m['id'].'" class="sidebar-member">'.$m['firstname'].' '.$m['lastname'].'</a>';
 						$i++;
 						if($i<count($mem)) echo ', ';
 					}
@@ -58,5 +67,6 @@ $acts = getUserActs($id);
 </div>
 
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=manage&user">MANAGE MY PROFILE</a></div>
+	<div class="sidebar-title center"><a href="?page=edit">EDIT MY PROFILE</a></div>
 </div>
+<?php } ?>

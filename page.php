@@ -20,27 +20,21 @@ else $page ="";
 				<a href="?page=venues" class="<?php if($page=="venues") echo 'selected '; ?>">Venues</a>
 				<a href="?page=bands" class="<?php if($page=="bands") echo 'selected '; ?>">Bands/DJs</a>
 				<a href="?page=musicians" class="<?php if($page=="musicians") echo 'selected '; ?>">Musicians</a>
+				<?php if(isset($_COOKIE['mu_id'])) { ?>
 				<a href="?page=profile" class="<?php if($page=="profile"||$page=="") echo 'selected '; ?>">Profile</a>
+				<?php } ?>
 			</div><!-- Nav-Bar -->
 			<a id="h-logo" href="/"></a><!-- H-Logo -->
 		</div><!-- Inner Header -->
 	</div><!-- Header -->
 	<div id="main">
 		<div id="sidebar">
-			<div id="search-form" class="sidebar-widget">
-				<label for="s" class="sidebar-title">SEARCH<br>
-				<?php if($page!="calendar"||$page!="practice"||$page!="record") {
-					$sp = "musicians";
-				} else {
-					$sp = $page;
-				} ?>
-				<input type="text" onkeyup="searchFor(event, this.value, '<?php echo $sp; ?>');" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
- placeholder="Search" />
-				</label>
-			</div><!-- Search form -->
 			<?php 
 			if($page=="profile") {
 				include('sidebars/profileSidebar.php');
+			} else if($page=="edit") {
+				// Edit Sidebar???
+				include('sidebars/editSidebar.php');				
 			} else if($page=="calendar"||$page=="practice"||$page=="record") {
 				include('sidebars/calendarSidebar.php');
 			} else if($page=="bands"||$page=="musicians"||$page=="venues") {
@@ -55,6 +49,8 @@ else $page ="";
 			<?php 
 			if($page=="profile") {
 				include('main/profileMain.php');
+			} else if($page=="edit") {
+				include('main/editMain.php');
 			} else if($page=="calendar"||$page=="practice"||$page=="record") {
 				include('main/calendarMain.php');
 			} else if($page=="bands"||$page=="musicians"||$page=="venues") {

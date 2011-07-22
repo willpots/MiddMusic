@@ -9,7 +9,7 @@
  ?>
 <div id="container">
 	<header id="fp-header">
-			<div id="fp-header-text">Take your campus life to the next level!</div>
+			<div id="fp-header-text">"Insert Cheesy Tagline Here"</div>
 	</header>
 	<div id="fp-logobar">
 		<a id="fp-logo"></a>
@@ -27,8 +27,8 @@
 				<input type="submit" name="SUBMITLOGIN" value="Log me in!">
 				</form>
 				<div class="fp-links">
-				<a href="" class="fp-content-link">BROWSE PERFORMERS</a>
-				<a href="" class="fp-content-link">CALENDAR AND EVENTS</a>
+				<a href="?page=musicians" class="fp-content-link">BROWSE PERFORMERS</a>
+				<a href="?page=calendar" class="fp-content-link">CALENDAR AND EVENTS</a>
 				</div><!-- links -->
 			</div><!-- loginbox -->
 		</div><!-- login -->

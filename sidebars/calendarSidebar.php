@@ -1,12 +1,12 @@
 <?php 
-/****************************************************************************
- * calendarMain.php																													*
+/***************************************************************************
+ * calendarMain.php																			*
  *
- * Middlebury Music United 																									*
- * This code is proprietary and property of William S. Potter.							*
- * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter									*
- * will@middpoint.com																												*
+ * Middlebury Music United																	*
+ * This code is proprietary and property of William S. Potter.					*
+ * It has been licensed for use to Middlebury College in this installation.*
+ * Use of this code requires consent from William S. Potter						*
+ * will@middpoint.com																		*
  ***************************************************************************/
 if(isset($_GET['month'])) {
 	$month = $_GET['month'];
@@ -19,7 +19,8 @@ if(isset($_GET['year'])) {
 $month =  mktime(0,0,0,$month,1,$year);
 
 if(isset($_GET['id'])) $id = $_GET['id'];
-else $id = $_COOKIE['mu_id'];
+else if(isset($_COOKIE['mu_id'])) $id = $_COOKIE['mu_id'];
+else $id = NULL;
 
 $ui = getUserInfo($id);
 $acts = getUserActs($id);
@@ -27,6 +28,20 @@ $acts = getUserActs($id);
 
 
 ?>
+<div id="search-form" class="sidebar-widget">
+	<label for="s" class="sidebar-title">SEARCH<br>
+	<?php 
+	$page=$_GET['page'];
+	if($page=="calendar"||$page=="practice"||$page=="record") {
+		$sp = "musicians";
+	} else {
+		$sp = $page;
+	} ?>
+	<input type="text" onkeyup="searchFor(event, this.value, '<?php echo $sp; ?>');" autocomplete="off" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
+placeholder="Search" />
+	</label>
+</div><!-- Search form -->
+
 <div id="about-me" class="sidebar-widget">
 	<div class="sidebar-title">UPCOMING PERFORMANCES</div>
 	<div class="sidebar-widget-content">
@@ -56,5 +71,5 @@ $acts = getUserActs($id);
 </div>
 
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=create&event">CREATE AN EVENT</a></div>
+	<div class="sidebar-title center "><a href="?page=create&event">CREATE AN EVENT</a></div>
 </div>

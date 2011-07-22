@@ -75,15 +75,11 @@ button {  width: auto; overflow: visible; }
 
 body, select, input, textarea {  color: #444; }
 h1, h2, h3, h4, h5, h6 { font-weight: bold; }
-a, a:active, a:visited { color: #336796; }
+a, a:active, a:visited { color: #336796;cursor: pointer; }
 a:hover { color: #036; }
 
 /*
-    // ========================================== \\
-   ||                                              ||
-   ||               Your styles !                  ||
-   ||                                              ||
-    \\ ========================================== //
+
 */
 
 /* General */
@@ -286,6 +282,18 @@ a.fp-content-link:hover {
 .sidebar-child {
 	display: block;
 	margin: 0;
+	transition-property: background-color;
+	transition-duration: .25s;
+	transition-timing-function: ease-out;
+	-webkit-transition-property: background-color;
+	-webkit-transition-duration: .25s;
+	-webkit-transition-timing-function: ease-out;
+	-o-transition-property: background-color;
+	-o-transition-duration: .25s;
+	-o-transition-timing-function: ease-out;
+}
+.sidebar-child:hover {
+	background: #bbb;
 }
 .sidebar-act-members {
 	margin: 0 0 0 10px;
@@ -427,7 +435,67 @@ a.fp-content-link:hover {
 #results {
 	margin: 10px 0;
 }
+/* User Profile */
+#user-profile {
+
+}
+#class {
+	font-size: 16px;
+	margin: 5px 0;
+}
+#info {
+	margin: 10px 0;
+}
+.user-inst {
+	margin: 5px 0;
+}
+/* Edit Profile */
+#sidebar-loading {
+	padding: 50px 50px;
+}
+#edit-form label {
+	display: block;
+	margin: 15px 0;
+}
+#profilepic {
+	border: 1pt solid #444;
+}
+#inst-search-results {
+	display: none;
+	margin-top: -5px;
+	background: #fff;
+	position: absolute;
+	z-index: 2;
+	width: 220px;
+	border: 1pt solid #444;
+}
+.inst-result {
+	padding: 5px;
+	font-size: 14px;
+	display: block;
+}
+.inst-result.selected {
+	background: #ddd;
+}
+.instrument {
+	display: block;
+	padding: 5px 0;
+}
+.instrument:hover {
+	background: #eee;
+}
+.instrument a {
+	padding: 0px 5px;
+}
+.delete-inst {
+	float: right;
+	display: block;
+}
+.delete-inst:hover {
+	color: red;
+}
 /* Other Stuff */
+
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
