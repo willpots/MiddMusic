@@ -12,6 +12,6 @@ $directory = $_GET['page'];
 
 ?>
 <div id="directory">
-	<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the directory is loading!" id="calendar-loading">
+	<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the directory is loading!" id="main-loading">
 </div>
 

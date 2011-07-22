@@ -4,7 +4,7 @@ $(function(){
 });
 
 function getCalendarMonth(month, calendar) {
-	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="calendar-loading">';
+	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
 	var fd = new FormData();
 	fd.append("getMonthView","true")
 	fd.append("month", month);
@@ -25,7 +25,7 @@ function getCalendarMonth(month, calendar) {
 }
 
 function getCalendarDay(day, calendar) {
-	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="calendar-loading">';
+	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
 	var fd = new FormData();
 	fd.append("getDayView","true")
 	fd.append("day", day);

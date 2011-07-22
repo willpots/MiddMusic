@@ -1,5 +1,5 @@
 function getSearchResults(query, page) {
-	document.getElementById('directory').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="calendar-loading">';
+	document.getElementById('directory').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
 	var fd = new FormData();
 	fd.append("getSearchQuery","true")
 	fd.append("query", query);
@@ -19,7 +19,7 @@ function getSearchResults(query, page) {
 	xhr.send(fd);
 }
 function getCategoryResults( page, cat) {
-	document.getElementById('directory').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="calendar-loading">';
+	document.getElementById('directory').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
 	var fd = new FormData();
 	fd.append("getCategorySearch","true")
 	fd.append("page", page);

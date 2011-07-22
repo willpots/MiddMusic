@@ -6,3 +6,84 @@ function searchFor(evt, query, page) {
 		getSearchResults(query, page, category);
 	}
 }
+function composeTo(to, from, reply) {
+	document.getElementById('messages').innerHTML='<img src="/img/loading.gif" alt="LoadingÉ" id="main-loading">';
+	to = to || false;
+	from = from || false;
+	reply = reply || false;
+	var fd = new FormData();
+	fd.append("getCategorySearch","true")
+	fd.append("to", to);
+	fd.append("from", from);
+	fd.append("reply", reply);
+	
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	    xhr = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+	    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('messages').innerHTML=xhr.responseText;
+		}
+	}
+	xhr.open("POST", "main/composeMain.php");
+	xhr.send(fd);	
+
+}
+function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+var resultIndex=-1;
+function pullUser(str, evt, field) {
+	var keycode = evt.which;
+	var results = document.getElementsByClassName('compose-result');
+	if(keycode==40&&resultIndex<results.length-1&&results.length!=0) {
+		if(resultIndex!=-1){
+			results[resultIndex].setAttribute('class', 'compose-result');
+		}
+		resultIndex++;
+		results[resultIndex].setAttribute('class', 'compose-result selected');	
+	} else if(keycode==38&&resultIndex>-1&&results.length!=0) {
+		results[resultIndex].setAttribute('class', 'compose-result');
+		resultIndex--;
+		if(resultIndex!=-1){
+			results[resultIndex].setAttribute('class', 'compose-result selected');
+		}
+	} else if(keycode==13&&resultIndex!=-1&&results.length!=0) {
+		setRecipient(results[resultIndex]);
+	} else if(keycode==9&&results.length==1) {
+		setRecipient(results[0]);
+	} else {
+		if (str.length==0) { 
+			resultIndex=-1;
+		  document.getElementById("compose-results").innerHTML="";
+		  document.getElementById("compose-results").style.border="0px";
+		  return;
+	  }
+	  xhr=new XMLHttpRequest();
+	  var fd = new FormData();
+	  fd.append("query", str);
+	  fd.append("pulluser", "pulluser");
+		xhr.onreadystatechange=function() {
+		  if (xhr.readyState==4 && xhr.status==200) {
+		    document.getElementById("compose-results").innerHTML=xhr.responseText;
+		    document.getElementById("compose-results").style.border="1px solid #A5ACB2";
+			}
+	  }
+		xhr.open("POST","ajax.php");
+		xhr.send(fd);
+	}
+}
+function setRecipient(elem, field) {
+	document.getElementById(field+"-container").innerHTML = ucfirst(field)+': <a name="'+elem.name+'" id="'+elem.id+'" onclick="putToFieldBack()">'+elem.innerHTML+'</a>';
+  document.getElementById("compose-results").innerHTML="";
+  document.getElementById("compose-results").style.border="0px";
+	document.getElementById("send").disabled=false;
+}
+
+function putToFieldBack(){
+	document.getElementById("to-container").innerHTML = 'To: <input type="text" onkeydown="pullUser(this.value, event)" name="to" id="to" placeholder="To">';
+	document.getElementById("send").disabled=true ;
+	resultIndex=-1;
+}

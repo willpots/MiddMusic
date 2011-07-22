@@ -332,6 +332,7 @@ a.fp-content-link:hover {
 /* Profile Stuff */
 .section-title {
 	font-size: 18px;
+	border-bottom: 1pt solid #ddd;
 }
 /* Messages */
 .message {
@@ -348,8 +349,12 @@ a.fp-content-link:hover {
 	float: right;
 	color: #888;
 }
+.compose-element {
+	display: block;
+	margin: 15px 0;
+}
 /* Calendar */
-#calendar-loading {
+#main-loading {
 	padding: 200px 289px;
 }
 #month-nav {

@@ -13,7 +13,7 @@ if(!isset($_GET['id'])&&isset($_COOKIE['mu_id'])) {
 	$messages=getUserMessages($id);
 	?>
 	<div id="messages">
-		<a id="compose-message" class="button right">Compose</a>
+		<a id="compose-message" onclick="composeTo(false,false,false)" class="button right">Compose</a>
 		<div class="section-title">MESSAGES</div>
 		<?php 
 		if($messages!=false) {

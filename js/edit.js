@@ -6,7 +6,7 @@ function updateUser() {
 	fd.append("lastname", document.getElementById('lastname').value);
 	fd.append("info", document.getElementById('info').value);
 	fd.append("class", pagesObj.options[pagesObj.selectedIndex].value);
-	document.getElementById('edit').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, we are updating your profile!" id="calendar-loading">';
+	document.getElementById('edit').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, we are updating your profile!" id="main-loading">';
 	 	
 	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 	    xhr = new XMLHttpRequest();
