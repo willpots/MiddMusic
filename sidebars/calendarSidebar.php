@@ -23,7 +23,7 @@ else if(isset($_COOKIE['mu_id'])) $id = $_COOKIE['mu_id'];
 else $id = NULL;
 
 $ui = getUserInfo($id);
-$acts = getUserActs($id);
+$bands = getUserBands($id);
 	
 
 
@@ -49,12 +49,12 @@ placeholder="Search" />
 	</div>
 </div><!-- about-me -->
 
-<div id="associated-acts" class="sidebar-widget">
-	<div class="sidebar-title">ASSOCIATED ACTS</div>
+<div id="associated-bands" class="sidebar-widget">
+	<div class="sidebar-title">ASSOCIATED bands</div>
 	<div class="sidebar-widget-content">
 
 	</div>
-</div><!-- associated acts -->
+</div><!-- associated bands -->
 
 <div id="upcoming-events" class="sidebar-widget">
 	<div class="sidebar-title">UPCOMING EVENTS</div>

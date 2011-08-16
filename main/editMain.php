@@ -1,12 +1,12 @@
 <?php 
-/***************************************************************************
- * editMain.php																				*
- * 
- * Middlebury Music United 																*
- * This code is proprietary and property of William S. Potter.					*
- * It has been licensed for use to Middlebury College in this installation.*
- * Use of this code requires consent from William S. Potter						*
- * will@middpoint.com																		*
+/****************************************************************************
+ * editMain.php																*
+ * 																			*
+ * Middlebury Music United 													*
+ * This code is proprietary and property of William S. Potter.				*
+ * It has been licensed for use to Middlebury College in this installation. *
+ * Use of this code requires consent from William S. Potter					*
+ * will@middpoint.com														*
  ***************************************************************************/
 if(isset($_COOKIE['mu_id'])) {
 	$id=$_COOKIE['mu_id'];
@@ -17,6 +17,9 @@ if(isset($_COOKIE['mu_id'])) {
 		<div id="edit-form">
 			<div class="right">
 				<img id="profilepic" src="<?php echo $i['picture']; ?>" alt="Profile Picture" width="200">
+				<form id="uploadpic">
+					<input type="file" name="profilepic" onchange="uploadImage()">
+				</form>
 			</div>
 			<label for="username">Username: 
 				<input type="text" name="username" id="username" value="<?php echo $i['username']; ?>" placeholder="Username" disabled>
@@ -48,7 +51,7 @@ if(isset($_COOKIE['mu_id'])) {
 				</select>
 			</label>
 			<label for="info">Description:<br>
-				<textarea rows="15" cols="53" name="info" id="info" placeholder="Describe yourself here..."><?php echo stripslashes($i['info']); ?></textarea>
+				<textarea rows="15" cols="50" name="info" id="info" placeholder="Describe yourself here..."><?php echo stripslashes($i['info']); ?></textarea>
 			</label>		
 			<a class="button" onclick="updateUser()" >Update Profile</a>
 		</div>

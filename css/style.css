@@ -116,6 +116,7 @@ html,body,#container {
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
+	text-decoration: none;
 }
 .button:hover {
 	background: #336796;
@@ -305,14 +306,14 @@ a.fp-content-link:hover {
   font-size: 16px;
 }
 #search-form input#s {
-  margin: 5px 0;
-  background:#fff url(/img/search.png) no-repeat 5px 6px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  font-size: 14px;
-  height: 22px;
-  line-height: 1.2em;
-  padding: 4px 10px 4px 28px;
+	margin: 5px 0;
+	background:#fff url(/img/search.png) no-repeat 5px 6px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 14px;
+	height: 22px;
+	line-height: 1.2em;
+	padding: 4px 10px 4px 28px;
 	-webkit-transition-duration: 400ms;
 	-webkit-transition-property: width, background;
 	-webkit-transition-timing-function: ease;
@@ -332,6 +333,7 @@ a.fp-content-link:hover {
 /* Profile Stuff */
 .section-title {
 	font-size: 18px;
+	width: 400px;
 	border-bottom: 1pt solid #ddd;
 }
 /* Messages */
@@ -404,6 +406,10 @@ a.fp-content-link:hover {
 	border: 1pt solid #444;
 	height: 100px;
 	margin: 0;
+	cursor: pointer;
+}
+.day-view {
+	margin: 20px 0;
 }
 .dayno {
 	float: right;
@@ -500,7 +506,10 @@ a.fp-content-link:hover {
 	color: red;
 }
 /* Other Stuff */
-
+#footer {
+	text-align: center;
+	padding: 10px;
+}
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }

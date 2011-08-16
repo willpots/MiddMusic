@@ -1,14 +1,14 @@
 <?php 
-/******************************************************************************
+/********************************************************************************
  * If you are looking for something important, chances are that its here!		*
- * This file contains really epic, crazy shit.											*
- *																										*
- * Middlebury Music United																		*
- * This code is proprietary and property of William S. Potter.						*
- * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter							*
- * will@middpoint.com																			*
- ******************************************************************************/
+ * This file contains really epic, crazy shit.									*
+ *																				*
+ * Middlebury Music United														*
+ * This code is proprietary and property of William S. Potter.					*
+ * It has been licensed for use to Middlebury College in this installation.		*
+ * Use of this code requires consent from William S. Potter						*
+ * will@middpoint.com															*
+ ********************************************************************************/
 require_once('LocalSettings.php');
 //Error reporting is on for development, this can be turned off at a later point in time.
 error_reporting(E_ALL); 
@@ -70,15 +70,15 @@ function getUserMessages($id){
  	while($row=mysql_fetch_array($result)) {
  		$messages[]=$row;
  	}
- 	//Acts
-	$acts=array();
-	$query = "SELECT * FROM useracts WHERE userid='$id'";
+ 	//bands
+	$bands=array();
+	$query = "SELECT * FROM userbands WHERE userid='$id'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 	while($row=mysql_fetch_array($result)) {
-		$acts[]=$row;
+		$bands[]=$row;
 	}
-	if(!empty($acts)) {
-		foreach($acts as $a) {
+	if(!empty($bands)) {
+		foreach($bands as $a) {
 			$query = "SELECT * FROM messages WHERE actmsgto='$a'";
 			$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 		 	while($row=mysql_fetch_array($result)) {
@@ -147,22 +147,22 @@ function addInstrument($userid,$instrumentid) {
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 }
 
-function getUserActs($id) {
-	$acts=array();
+function getUserBands($id) {
+	$bands=array();
 	$results=array();
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
-	$query = "SELECT * FROM useracts WHERE userid='$id'";
+	$query = "SELECT * FROM userbands WHERE userid='$id'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 	while($row=mysql_fetch_array($result)) {
-		$acts[]=$row;
+		$bands[]=$row;
 	}
-	if(!empty($acts)) {
-		foreach($acts as $a) {
-			$aid=$a['actid'];
-			$query = "SELECT * FROM acts WHERE id='$aid'";
+	if(!empty($bands)) {
+		foreach($bands as $a) {
+			$aid=$a['bandid'];
+			$query = "SELECT * FROM bands WHERE id='$aid'";
 			$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 			$row=mysql_fetch_array($result);
 			$results[]=$row;
@@ -181,6 +181,20 @@ function updateUser($id, $firstname, $lastname, $class, $info) {
 	$query = "UPDATE user SET firstname='$firstname', lastname='$lastname', class='$class', info='$info' WHERE id='$id'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());		
 } 
+function updatePic($id, $photo) {
+	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM user WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row=mysql_fetch_array($result)){ 
+		exec('rm '.$row['picture']);
+	}	
+
+	$query = "UPDATE user SET picture='$photo' WHERE id='$id'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());		
+}
 /*
 	Act Functions Below Here ---------------------
 */
@@ -190,7 +204,7 @@ function getActMembers($id) {
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
-	$query = "SELECT * FROM useracts WHERE actid='$id'";
+	$query = "SELECT * FROM userbands WHERE bandid='$id'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 	while($row=mysql_fetch_array($result)) {
 		$members[]=getUserInfo($row['userid']);
@@ -203,7 +217,7 @@ function getActInfo($id) {
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
-	$query = "SELECT * FROM acts WHERE id='$id'";
+	$query = "SELECT * FROM bands WHERE id='$id'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
  	$row=mysql_fetch_array($result);
  	if(!empty($row)) return $row;
@@ -255,6 +269,22 @@ function getEventsBetween($starttime, $endtime, $calendar) {
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
 	$query = "SELECT * FROM $calendar WHERE starttime BETWEEN '$starttime' AND '$endtime'";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	while($row = mysql_fetch_array($result)) {
+		$events[]=$row;
+	}
+	if(!empty($events))  return $events;
+	else return false; 
+}
+function getUpcomingEvents() {
+	$start = time();
+	$end = strtotime("+2 weeks" , $start);
+	$events = array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM calendar WHERE starttime BETWEEN '$start' AND '$end'";
 	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 	while($row = mysql_fetch_array($result)) {
 		$events[]=$row;
@@ -420,7 +450,7 @@ function searchForActWithType($id){
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
-	$query = "SELECT * FROM acts WHERE type='$id'";
+	$query = "SELECT * FROM bands WHERE type='$id'";
 	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
 	while($row = mysql_fetch_array($result)) {
 		$results[]=$row;
@@ -476,11 +506,11 @@ $today = mktime(0,0,0,date('m'),date('j'),date('Y'));
 			$endofday = mktime(0,0,0,date('m',$calstart),date('d',$calstart)+1,date('Y',$calstart));
 			$events = getEventsBetween($calstart, $endofday, $calendar);
 			if($calstart<$presentmonth||$calstart >= strtotime("+1 month", $presentmonth)) {
-				echo '<div class="day wrongday" >';
+				echo '<div class="day wrongday" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
 			} else if($calstart != $today) {
-				echo '<div class="day" >';
+				echo '<div class="day" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
 			} else {
-				echo '<div class="day today" id="day-'.$calstart.'">';
+				echo '<div class="day today" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" id="day-'.$calstart.'">';
 			}
 			echo '<div class="dayno">'.date('j', $calstart).'</div>';
 			if($events!=false) {
@@ -499,4 +529,48 @@ $today = mktime(0,0,0,date('m'),date('j'),date('Y'));
 		</div>
 	<?php
 }
- ?>
+function drawDayView($day,$calendar) {
+	$today = $day;
+	$eotoday = strtotime("+1 day", $today);
+?>
+	<div id="month-nav">
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("-1 day", $today)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("+1 day", $today)."','".$calendar;?>')">&rarr;</a>
+	</div>
+	<div class="section-title">CALENDAR</div>
+	<div class="month-name"><?php echo date('F d, Y',$today); ?></div>
+	<div class="day-view">
+<?php	
+	$events = getEventsBetween($today, $eotoday, $calendar);
+	if($events!=false) {
+		foreach($events as $e) {
+			echo $e['name'];
+		}
+	} else {
+		echo '<p>Nothing is planned for this day!</p>';
+	}
+				
+?>
+	</div>
+	<a onclick="getEventCreate(<?php echo $today; ?>,'<?php echo $calendar; ?>')" class="button unselectable">Add An Event</a>
+
+<?php
+}
+function drawEventCreate($day=null,$calendar=null) {
+
+?>
+<div class="section-title">CALENDAR</div>
+<div class="month-name">Create Event</div>
+<div class="event-form">
+	<p><label for="name">Event Name: <input type="text" name="name" id="name" placeholder="Event Name"></label></p>
+	<p><label for="starttime">Start Time: <input type="text" name="starttime" id="starttime" placeholder="Start Time"></label></p>
+	<p><label for="endtime">End Time: <input type="text" name="endtime" id="endtime" placeholder="End Time"></label></p>
+	<p><label for="description">Description:<br>
+		<textarea name="description" id="description" rows="10" cols="70" placeholder="What's happening?"></textarea></label></p>
+	<p><label for="starttime">Event Name: <input type="text" name="starttime" id="starttime" placeholder="Event Name"></label></p>
+</div>
+
+
+<?php
+}
+?>

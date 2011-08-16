@@ -4,7 +4,7 @@ else if(isset($_COOKIE['mu_id'])) $id = $_COOKIE['mu_id'];
 else $id = NULL;
 
 $ui = getUserInfo($id);
-$acts = getUserActs($id);
+$bands = getUserBands($id);
 	
 
 if($ui!=false) {
@@ -26,12 +26,12 @@ placeholder="Search" />
 </div><!-- about-me -->
 <?php } ?>
 
-<div id="associated-acts" class="sidebar-widget">
-	<div class="sidebar-title">ASSOCIATED ACTS</div>
+<div id="associated-bands" class="sidebar-widget">
+	<div class="sidebar-title">ASSOCIATED bands</div>
 	<div class="sidebar-widget-content">
 	<?php
-		if($acts!=false) {
-			foreach($acts as $a) {
+		if($bands!=false) {
+			foreach($bands as $a) {
 				$mem = getActMembers($a['id']);
 				echo '<a href="" class="sidebar-act">'.$a['name'].'</a>';
 				$i=0;
@@ -46,14 +46,24 @@ placeholder="Search" />
 				}
 			}
 		} else {
-			echo $ui['firstname']." is not part of any acts.";
+			echo $ui['firstname']." is not part of any bands.";
 		}
 	?>
 	</div>
-</div><!-- associated acts -->
+</div><!-- associated bands -->
 
 <div id="upcoming-events" class="sidebar-widget">
 	<div class="sidebar-title">UPCOMING EVENTS</div>
+		<?php
+		$evts = getUpcomingEvents();
+		if($evts!=false){
+			foreach($evts as $e) {
+				echo '<div class="upcoming-event">';
+				echo $e['name'];
+				echo '</div>';
+			}
+		}
+		?>
 	<div class="sidebar-widget-content">
 	
 	</div>

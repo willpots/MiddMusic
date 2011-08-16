@@ -15,6 +15,31 @@ if(isset($p['getDateView'])) {
 	$month = $p['month'];
 	$calendar = $p['calendar'];
 	drawCalendar($month, $calendar); //Located in functions.php
+
+
+} else if(isset($p['getDayView'])) {
+	header( "content-type: text/html; charset=UTF-8" ); 
+	$day = isset($p['day']) ? $p['day'] : null;
+	$calendar = isset($p['calendar']) ? $p['calendar'] : null;
+	drawDayView($day, $calendar); //Located in functions.php
+	
+} else if(isset($p['uploadPix'])) {
+
+
+	$tname=	$_FILES['profilepic']['tmp_name'];
+	$name = $_FILES['profilepic']['name'];
+
+	updatePic($_COOKIE['mu_id'],"photos/".$name);
+	move_uploaded_file(	$tname, "photos/".$name);
+	echo "photos/".$name;
+
+
+
+} else if(isset($p['getEventCreate'])) {
+	header( "content-type: text/html; charset=UTF-8" ); 
+	$day = isset($p['day']) ? $p['day'] : null;
+	$calendar = isset($p['calendar']) ? $p['calendar'] : null;
+	drawEventCreate($day, $calendar); //Located in functions.php
 	
 } else if(isset($p['getSearchQuery'])) {
 	if(isset($p['query'])) $q = $p['query'];
@@ -41,7 +66,7 @@ if(isset($p['getDateView'])) {
 			}
 		}
 	} else if($page=="bands") {
-		$table = "acts";
+		$table = "bands";
 		$results = pullSearchQuery($q, $table);
 		if($results!=false) {
 			foreach($results as $r) {
@@ -79,7 +104,7 @@ if(isset($p['getDateView'])) {
 		$cname = getActTypeName($q);
 		echo '<div class="section-title">'.strtoupper($page).' - '.$cname.'</div>';
 		echo '<div id="results">';
-		$table = "acts";
+		$table = "bands";
 		$results = searchForActWithType($q);
 		if($results!=false) {
 			foreach($results as $r) {
@@ -160,7 +185,7 @@ if(isset($p['getDateView'])) {
 	addInstrument($uid,$iid);
 	$results = getUserInstruments($_COOKIE['mu_id']);	
 	if($results!=false) {
-		foreach($inst as $c=>$key) {
+		foreach($results as $c=>$key) {
 		  $sort_id[] = $key['id'];
 		  $sort_name[] = $key['name'];
 		}
@@ -188,7 +213,7 @@ if(isset($p['getDateView'])) {
 	removeInstrument($uid,$iid);
 	$results = getUserInstruments($_COOKIE['mu_id']);
 	if($results!=false) {
-		foreach($inst as $c=>$key) {
+		foreach($results as $c=>$key) {
 		  $sort_id[] = $key['id'];
 		  $sort_name[] = $key['name'];
 		}

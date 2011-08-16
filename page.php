@@ -1,10 +1,10 @@
-<?php 
-/***************************************************************************
- * Middlebury Music United 																*
- * This code is proprietary and property of William S. Potter.					*
- * It has been licensed for use to Middlebury College in this installation.*
- * Use of this code requires consent from William S. Potter						*
- * will@middpoint.com																		*
+<?php
+/****************************************************************************
+ * Middlebury Music United													*
+ * This code is proprietary and property of William S. Potter.				*
+ * It has been licensed for use to Middlebury College in this installation. *
+ * Use of this code requires consent from William S. Potter					*
+ * will@middpoint.com														*
  ***************************************************************************/
 if(isset($_GET['page'])) $page = $_GET['page'];
 else $page ="";
@@ -29,40 +29,40 @@ else $page ="";
 	</div><!-- Header -->
 	<div id="main">
 		<div id="sidebar">
-			<?php 
-			if($page=="profile") {
-				include('sidebars/profileSidebar.php');
-			} else if($page=="edit") {
-				// Edit Sidebar???
-				include('sidebars/editSidebar.php');				
-			} else if($page=="calendar"||$page=="practice"||$page=="record") {
-				include('sidebars/calendarSidebar.php');
-			} else if($page=="bands"||$page=="musicians"||$page=="venues") {
-				include('sidebars/directorySidebar.php');
-			} else {
-				include('sidebars/profileSidebar.php');
-			}
-			
-			?>
+			<?php
+if($page=="profile") {
+	include('sidebars/profileSidebar.php');
+} else if($page=="edit") {
+		// Edit Sidebar???
+		include('sidebars/editSidebar.php');
+	} else if($page=="calendar"||$page=="practice"||$page=="record") {
+		include('sidebars/calendarSidebar.php');
+	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
+		include('sidebars/directorySidebar.php');
+	} else {
+	include('sidebars/profileSidebar.php');
+}
+
+?>
 		</div><!-- Sidebar -->
 		<div id="main-content">
-			<?php 
-			if($page=="profile") {
-				include('main/profileMain.php');
-			} else if($page=="edit") {
-				include('main/editMain.php');
-			} else if($page=="calendar"||$page=="practice"||$page=="record") {
-				include('main/calendarMain.php');
-			} else if($page=="bands"||$page=="musicians"||$page=="venues") {
-				include('main/directoryMain.php');
-			} else {
-				include('main/profileMain.php');
-			}
-			?>
+			<?php
+if($page=="profile") {
+	include('main/profileMain.php');
+} else if($page=="edit") {
+		include('main/editMain.php');
+	} else if($page=="calendar"||$page=="practice"||$page=="record") {
+		include('main/calendarMain.php');
+	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
+		include('main/directoryMain.php');
+	} else {
+	include('main/profileMain.php');
+} 
+?>
 		</div><!-- Main Content -->
 		<div class="clear"></div><!-- clear -->
 	</div><!-- Main -->
 	<div id="footer">
-	
+		Copyright &copy; 2011 <a href="//twitter.com/willpots">Will Potter</a>. Licensed for Exclusive Use by Middlebury Music United.
 	</div>
 </div><!-- Container -->

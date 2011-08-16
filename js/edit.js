@@ -110,3 +110,19 @@ function removeInstrument(elem) {
 	xhr.open("POST", "ajax.php");
 	xhr.send(fd);
 }
+function uploadImage() {
+	console.log('Changing picture.');
+	var fd = new FormData(document.getElementById('uploadpic'));
+	fd.append("uploadPix","true");
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('profilepic').src=xhr.responseText;
+			console.log("Changed");
+			console.log(xhr.responseText);
+		}
+	}
+
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+}

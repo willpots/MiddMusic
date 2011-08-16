@@ -44,4 +44,25 @@ function getCalendarDay(day, calendar) {
 	xhr.open("POST", "ajax.php");
 	xhr.send(fd);
 }
+function getEventCreate(day,calendar) {
+	day = day || null;
+	calendar = calendar || null;
+	var fd = new FormData();
+	fd.append("getEventCreate","true")
+	if(day!=null) { fd.append("day", day); }
+	if(calendar!=null) { fd.append("calendar", calendar); }
+	
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	    xhr = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+	    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('calendar').innerHTML=xhr.responseText;
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
 
+}

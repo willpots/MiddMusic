@@ -11,7 +11,7 @@
 // Alphabetically Sort the Array! Genius!
 $results = getUserInstruments($_COOKIE['mu_id']);
 if($results!=false) {
-	foreach($inst as $c=>$key) {
+	foreach($results as $c=>$key) {
 	  $sort_id[] = $key['id'];
 	  $sort_name[] = $key['name'];
 	}
