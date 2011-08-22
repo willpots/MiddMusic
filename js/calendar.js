@@ -1,6 +1,6 @@
 //Here are all relevant calendar scripts
 $(function(){
-
+	
 });
 
 function getCalendarMonth(month, calendar) {
@@ -60,6 +60,18 @@ function getEventCreate(day,calendar) {
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4&&xhr.status==200) {
 			document.getElementById('calendar').innerHTML=xhr.responseText;
+			$("#bands").tokenInput("http://middmusic.com/xml.php", {
+				queryParam: "bands",
+			    preventDuplicates: true,
+			    theme: "facebook",
+			    animateDropdown: false
+			});
+			$('#starttime').datetimepicker({
+				ampm: true
+			});
+			$('#endtime').datetimepicker({
+				ampm: true
+			});
 		}
 	}
 	xhr.open("POST", "ajax.php");

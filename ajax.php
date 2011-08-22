@@ -1,13 +1,32 @@
 <?php
-require("functions.php");
+require("libs/libMMU.php");
 $p=$_POST;
 if(isset($p['getDateView'])) {
 	header( "content-type: text/html; charset=UTF-8" ); 
 
-
-
-
-
+} else if(isset($p['sendmessage'])) {
+	$m = new Message();
+	$msgto = $_POST['msgto'];
+	$msgfrom = $_POST['msgfrom'];
+	$m->subject = $_POST['subject'];
+	$m->content = $_POST['content'];
+	$e = explode('-',$msgto);
+	if($e[0] == 'u') {
+		$m->usermsgto = $e[1];
+	} else if($e[0] == 'b') {
+		$m->bandmsgto = $e[1];
+	} else if($e[0] == 'v') {
+		$m->venuemsgto = $e[1];
+	}
+	$e = explode('-',$msgfrom);
+	if($e[0] == 'u') {
+		$m->usermsgfrom = $e[1];
+	} else if($e[0] == 'b') {
+		$m->bandmsgfrom = $e[1];
+	} else if($e[0] == 'v') {
+		$m->venuemsgfrom = $e[1];
+	}
+	$m->deliver();
 
 } else if(isset($p['getMonthView'])) {
 	// This is the thing that draws all of the calendars!
@@ -177,8 +196,21 @@ if(isset($p['getDateView'])) {
 		
 		}
 	}
-	
-	
+} else if(isset($p['calBandSearch'])) {
+	$q = $p['q'];
+	if($q=="") {
+		$results=false;
+	} else {
+		$results=searchForBands($q);
+	}
+	if($results==false) {
+			echo '<a class="band-name">Nothing found!</a>';
+	} else {
+		foreach($results as $r) {
+			echo '<a class="band-name" onclick="calAddBand(this)" id="'.$r['id'].'">'.ucwords(strtolower($r['name'])).'</a>';
+		
+		}
+	}
 } else if(isset($p['addInstrument'])) {
 	$uid=$_COOKIE['mu_id'];
 	$iid=$p['id'];

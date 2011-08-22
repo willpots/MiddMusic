@@ -8,9 +8,13 @@ $dbPass = "MMG2mmu!";
 $dbSchema = "middmusic";
 
 $emailDomain = "middlebury.edu";
-$sitename = "http://middmusic.com/"
+$sitename = "http://middmusic.com/";
 
 //! Require the Components of the Library
-require_once('libs/libMMU-classes.php');
-
+require_once('functions.php');
+require_once('User.Functions.php');
+require_once('Band.Functions.php');
+require_once('Event.Functions.php');
+require_once('Venue.Functions.php');
+require_once('libMMU-classes.php');
 ?>

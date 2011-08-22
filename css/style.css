@@ -335,11 +335,18 @@ a.fp-content-link:hover {
 	font-size: 18px;
 	width: 400px;
 	border-bottom: 1pt solid #ddd;
+	margin-bottom: 30px;
 }
 /* Messages */
 .message {
-	margin: 10px 0;
+	padding: 10px;
 	font-size: 15px;
+}
+.message:nth-child(even) {
+	background: #eaeaea;
+}
+.message:nth-child(odd) {
+	background: #e0e6ef;
 }
 .message a {
 	text-decoration: none;
@@ -354,6 +361,22 @@ a.fp-content-link:hover {
 .compose-element {
 	display: block;
 	margin: 15px 0;
+}
+.compose-field {
+    overflow: hidden; 
+    height: auto !important; 
+    width: 400px;
+    border: 1px solid #8496ba;
+    cursor: text;
+    font-size: 12px;
+    min-height: 1px;
+    z-index: 999;
+    margin: 0;
+    padding: 5px;
+    background-color: #fff;
+    list-style-type: none;
+    clear: left;
+    display: block;
 }
 /* Calendar */
 #main-loading {
@@ -420,6 +443,10 @@ a.fp-content-link:hover {
 }
 .today {
 	background: #ffa;
+}
+/* Create Event */
+#bands {
+
 }
 /* Directory */
 .search-result {
@@ -510,6 +537,14 @@ a.fp-content-link:hover {
 	text-align: center;
 	padding: 10px;
 }
+/* Time Picker */
+.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+.ui-timepicker-div dl{ text-align: left; }
+.ui-timepicker-div dl dt{ height: 25px; }
+.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+
+/* NON BP */
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
 .visuallyhidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }

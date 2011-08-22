@@ -2,7 +2,7 @@
 if(isset($_GET['id'])) $id = $_GET['id'];
 else if(isset($_COOKIE['mu_id'])) $id = $_COOKIE['mu_id'];
 else $id = NULL;
-
+$u = new User($id);
 $ui = getUserInfo($id);
 $bands = getUserBands($id);
 	
@@ -11,7 +11,7 @@ if($ui!=false) {
 ?>
 <div id="search-form" class="sidebar-widget">
 	<label for="s" class="sidebar-title">SEARCH MUSICIANS<br>
-	<input type="text" onkeyup="searchFor(event, this.value, 'musicians');" class="field" autocomplete="off" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
+	<input type="text" onkeyup="searchFor(event, this.value, 'musicians')" class="field" autocomplete="off" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
 placeholder="Search" />
 	</label>
 </div><!-- Search form -->
@@ -20,14 +20,14 @@ placeholder="Search" />
 	<div class="sidebar-title">ABOUT</div>
 	<div class="sidebar-widget-content">
 	<?php 
-		echo $ui['info'];
+		echo $u->info;
 	?>
 	</div>
 </div><!-- about-me -->
 <?php } ?>
 
 <div id="associated-bands" class="sidebar-widget">
-	<div class="sidebar-title">ASSOCIATED bands</div>
+	<div class="sidebar-title">ASSOCIATED BANDS</div>
 	<div class="sidebar-widget-content">
 	<?php
 		if($bands!=false) {
@@ -46,7 +46,7 @@ placeholder="Search" />
 				}
 			}
 		} else {
-			echo $ui['firstname']." is not part of any bands.";
+			echo $u->firstname." is not part of any bands.";
 		}
 	?>
 	</div>
@@ -54,6 +54,7 @@ placeholder="Search" />
 
 <div id="upcoming-events" class="sidebar-widget">
 	<div class="sidebar-title">UPCOMING EVENTS</div>
+	<div class="sidebar-widget-content">
 		<?php
 		$evts = getUpcomingEvents();
 		if($evts!=false){
@@ -62,17 +63,28 @@ placeholder="Search" />
 				echo $e['name'];
 				echo '</div>';
 			}
+		} else {
+			echo $u->firstname." is not part of any events.";
 		}
-		?>
-	<div class="sidebar-widget-content">
-	
+		?>	
 	</div>
 </div><!-- upcoming events -->
 
 <div id="venues" class="sidebar-widget">
 	<div class="sidebar-title">VENUES</div>
 	<div class="sidebar-widget-content">
-	
+		<?php
+		$venues = getUserVenues($id);
+		if($venues!=false){
+			foreach($venues as $e) {
+				echo '<div class="upcoming-event">';
+				echo $e['name'];
+				echo '</div>';
+			}
+		} else {
+			echo $u->firstname." is not associated with any venues.";
+		}
+		?>
 	</div>
 </div>
 

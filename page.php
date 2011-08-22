@@ -32,8 +32,9 @@ else $page ="";
 			<?php
 if($page=="profile") {
 	include('sidebars/profileSidebar.php');
+} else if($page=="compose") {
+
 } else if($page=="edit") {
-		// Edit Sidebar???
 		include('sidebars/editSidebar.php');
 	} else if($page=="calendar"||$page=="practice"||$page=="record") {
 		include('sidebars/calendarSidebar.php');
@@ -49,6 +50,8 @@ if($page=="profile") {
 			<?php
 if($page=="profile") {
 	include('main/profileMain.php');
+} else if($page=="compose") {
+	include('main/composeMain.php');
 } else if($page=="edit") {
 		include('main/editMain.php');
 	} else if($page=="calendar"||$page=="practice"||$page=="record") {

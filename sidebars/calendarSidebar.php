@@ -50,7 +50,7 @@ placeholder="Search" />
 </div><!-- about-me -->
 
 <div id="associated-bands" class="sidebar-widget">
-	<div class="sidebar-title">ASSOCIATED bands</div>
+	<div class="sidebar-title">ASSOCIATED BANDS</div>
 	<div class="sidebar-widget-content">
 
 	</div>
@@ -71,5 +71,5 @@ placeholder="Search" />
 </div>
 
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center "><a href="?page=create&event">CREATE AN EVENT</a></div>
+	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create">CREATE AN EVENT</a></div>
 </div>
