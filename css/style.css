@@ -19,7 +19,9 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
-
+*:focus {
+outline: 0;
+}
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
@@ -352,7 +354,14 @@ a.fp-content-link:hover {
 	text-decoration: none;
 }
 .msgto, .msgfrom {
-	font-size: 17px;
+	font-size: 14px;
+}
+.message a.msg-delete {
+	display: block;
+	font-size: 11px;
+}
+.msg-subject {
+	font-weight: bold;
 }
 .msgsent {
 	float: right;
@@ -531,6 +540,10 @@ a.fp-content-link:hover {
 }
 .delete-inst:hover {
 	color: red;
+}
+.edit-sidebar-band {
+	display: block;
+	padding: 5px 0;
 }
 /* Other Stuff */
 #footer {

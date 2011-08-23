@@ -1,4 +1,13 @@
 <?php
+function compareMessages($a,$b) {
+	if($a->msgsent==$b->msgsent) {
+		return 0;
+	} else if($a->msgsent<$b->msgsent) {
+		return 1;
+	} else if($a->msgsent>$b->msgsent) {
+		return -1;
+	}
+}
 class DBObject {
 	public $id = null;
 	public $User = "middmusic";
@@ -94,7 +103,8 @@ class User extends DBObject { //USER
 					 	}
 				 	}
 				}
-			 	if(!empty($messages)) return $messages;
+				usort($this->messages, "compareMessages" );
+			 	if(!empty($this->messages)) return $this->messages;
 			 	else return false;
  			}
 		}
@@ -225,6 +235,14 @@ class Band extends DBObject {
 			}
 		}
 	}
+	public function update() {
+		$result = mysql_query("UPDATE bands SET 
+								name = '".$this->name."', 
+								type = '".$this->type."',
+								info = '".$this->info."' 
+							 	WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+	
+	}
 }
 class Venue extends DBObject {
 	
@@ -263,7 +281,7 @@ class Venue extends DBObject {
 			while($row=mysql_fetch_array($result)){
 				$this->users[] = $row['userid'];
 			}
-			$result = mysql_query("SELECT * FROM venuetypes WHERE id='".$this->type."'",$this->Con) or die("It was me!".mysql_error());
+			$result = mysql_query("SELECT * FROM venuestyles WHERE id='".$this->type."'",$this->Con) or die("It was me!".mysql_error());
 			while($row=mysql_fetch_array($result)){
 				$this->typename = $row['name'];
 			}

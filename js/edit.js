@@ -126,3 +126,21 @@ function uploadImage() {
 	xhr.open("POST", "ajax.php");
 	xhr.send(fd);
 }
+function updateBand() {
+	console.log("Function called!");
+	var fe = document.getElementById('updateBand');
+	var fd = new FormData(fe);
+	fd.append("updatingband","asdf")
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			if(xhr.responseText=="true") {
+				console.log('Success');
+				window.location='?page=profile';
+			}
+		}
+	}
+
+	xhr.open("POST", "/ajax.php");
+	xhr.send(fd);
+}

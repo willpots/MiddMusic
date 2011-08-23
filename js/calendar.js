@@ -66,6 +66,12 @@ function getEventCreate(day,calendar) {
 			    theme: "facebook",
 			    animateDropdown: false
 			});
+			$("#venue").tokenInput("http://middmusic.com/xml.php", {
+				queryParam: "venue",
+			    tokenLimit: 1,
+			    theme: "facebook",
+			    animateDropdown: false
+			});
 			$('#starttime').datetimepicker({
 				ampm: true
 			});
@@ -77,4 +83,32 @@ function getEventCreate(day,calendar) {
 	xhr.open("POST", "ajax.php");
 	xhr.send(fd);
 
+}
+function validateEventForm() {
+	var name = document.getElementById('name');
+	var starttime = document.getElementById('starttime');
+	var endtime = document.getElementById('endtime');
+	var starttime = document.getElementById('starttime');
+	var description = document.getElementById('description');
+	var bands = document.getElementById('bands');
+	var venue = document.getElementById('venue');
+	var sbutton = document.getElementById('sbutton');
+	if(name.value!=""&&starttime.value!=""&&endtime.value!=""&&description.value!=""&&bands.value!=""&&venue.value!="") {
+		sbutton.disabled=false;
+	}
+}
+function createAnEvent(calendar) {
+	var fe = document.getElementById('event-create-form');
+	var fd = new FormData(fe);
+	fd.append('calendar',calendar);
+	fd.append('createAnEvent','asdf');
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			window.location = '?page='+calendar;
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+	console.log("Request Sent!");
 }

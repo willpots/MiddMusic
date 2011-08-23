@@ -1,15 +1,15 @@
 <?php 
 /****************************************************************************
- * Middlebury Music United 																									*
- * This code is proprietary and property of William S. Potter.							*
+ * Middlebury Music United													*
+ * This code is proprietary and property of William S. Potter.				*
  * It has been licensed for use to Middlebury College in this installation.	*
- * Use of this code requires consent from William S. Potter									*
- * wp@punkypond.com																													*
+ * Use of this code requires consent from William S. Potter					*
+ * wp@punkypond.com															*
  ***************************************************************************/
  ?>
 <div id="container">
 	<header id="fp-header">
-			<div id="fp-header-text">"Insert Cheesy Tagline Here"</div>
+			<div id="fp-header-text">Middlebury Musicians Union</div>
 	</header>
 	<div id="fp-logobar">
 		<a id="fp-logo"></a>
@@ -21,9 +21,9 @@
 			<div id="fp-loginbox">
 				<form action="login.php" method="post">
 				<label for="username">Username</label><br>
-				<input type="text" name="username" ><br>
+				<input type="text" autocomplete="off" name="username" ><br>
 				<label for="password">Password</label><br>
-				<input type="password" name="password" ><br>
+				<input type="password" autocomplete="off" name="password" ><br>
 				<input type="submit" name="SUBMITLOGIN" value="Log me in!">
 				</form>
 				<div class="fp-links">
@@ -35,11 +35,13 @@
 		<div id="fp-signup">
 			<div id="fp-signupline">Sign Up</div><!-- signupline -->
 			<div id="fp-signupbox">
+				<form action="?page=register" method="post">
 				<label for="username">Username</label><br>
-				<input type="text" name="username" ><br>
+				<input type="text" autocomplete="off" name="username" placeholder="rliebowitz">@middlebury.edu<br>
 				<label for="password">Password</label><br>
-				<input type="text" name="password" ><br>
+				<input type="password" autocomplete="off" name="password" ><br>
 				<input type="submit" name="SIGNMEUP" value="Sign me up!">
+				</form>
 			</div><!-- signupbox -->
 		</div><!-- signup -->
 	</section>

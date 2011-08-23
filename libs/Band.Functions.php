@@ -13,7 +13,7 @@ function getActMembers($id) {
 	if(!empty($members)) return $members;
 	else return false;
 } 
-function getActInfo($id) {
+function getBandInfo($id) {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
@@ -24,7 +24,7 @@ function getActInfo($id) {
  	if(!empty($row)) return $row;
  	else return false;
 }
-function getActTypeName($id){
+function getBandTypeName($id){
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
@@ -34,5 +34,18 @@ function getActTypeName($id){
  	$row=mysql_fetch_array($result);
  	if(!empty($row)) return $row['name'];
  	else return false;
+}
+function getBandTypes() {
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM bandstyles";
+	$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+	$res = array();
+ 	while($row=mysql_fetch_array($result)) {
+ 		$res[] = $row;
+ 	}
+ 	return $res;
 }
 ?>

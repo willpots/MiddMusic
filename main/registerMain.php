@@ -6,8 +6,7 @@
  * Use of this code requires consent from William S. Potter
  * wp@punkypond.com
  ***************************************************************************/
-include_once("SiteFunctions.php");
-include_once("LocalSettings.php");
+require_once('libs/libMMU.php');
 if(isset($_POST['SUBMITREGISTER']))
 {
 	$con = mysql_connect($dbHost,$dbUser,$dbPass);
@@ -54,66 +53,42 @@ if(isset($_POST['SUBMITREGISTER']))
 		}
 		mysql_close($con);
 	}
-}
-else
-{
+} else {
+$p=$_POST;
 ?>
-	<html>
-	
-	<head>
-	<title>Middlebury Music United | Register</title>
-	<link rel="stylesheet" type="text/css" href="includes/css/style.css">
-	</head>
-	<body>
-		<div id="loginbar">
-			<?php //Login Bar
-			include("LoginBar.php");
-			?>
-		</div>
-		<div id="wrapper">
-			<div id="header">
-				<a href="index.php"><img src="mmuweb.jpg" alt=""></a>
-			</div>
+<form method="post" action="?page=register" onkeyup="validateForm();">
+<p>
+	<label for="username">Username:<br>
+	<input type="text" autocomplete="off" name="username" id="username" class="compose-field" style="width:200px;display:inline-block;" placeholder="Username" value="<?php if(isset($p['username'])) echo $p['username'];?>">@middlebury.edu
+	</label>
+</p>		
+<p>
+	<label for="password">Password:<br>
+	<input type="password" autocomplete="off" name="password" id="password" class="compose-field" placeholder="Password" value="<?php if(isset($p['password'])) echo $p['password'];?>">
+	</label>
+</p>
+<p>
+	<label for="password2">Confirm Password:<br>
+	<input type="password" autocomplete="off" name="password2"id="password2" class="compose-field" placeholder="Confirm Password">
+	</label>
+</p>	
+<p>
+	<label for="firstname">Firstname:<br>
+	<input type="text" autocomplete="off" name="firstname" class="compose-field" placeholder="Firstname">
+	</label>
+</p>	
+<p>
+	<label for="lastname">Lastname:<br>
+	<input type="text" autocomplete="off" name="lastname" class="compose-field" placeholder="Lastname">
+	</label>
+</p><p>
+	<label for="class">Class Year:<br>
+	<input type="text" autocomplete="off" name="class" id="class" class="compose-field" placeholder="Class Year">
+	</label>
+</p>
+<p><input type="submit" value="Register" id="SUBMITREGISTER" name="SUBMITREGISTER" disabled></p>
+</form>	
 
-			<div id="content">
-				<div id="mainbody">
-				<form name="register" action="register.php" method="post">
-				<table align="center" style="text-align:center;">
-				<tr><td colspan="2">To register for the Middlebury Music United, fill out the below information.</td></tr>
-				<tr><td colspan="2">Please use your Middlebury Email account.</td></tr>
-				<tr></tr>
-				<tr><td>Middlebury Email: </td><td> <input type="text" name="email"></td></tr>
-				<tr><td>Confirm Email: </td><td> <input type="text" name="email2"></td></tr>
-				<tr><td>Desired Password: </td><td> <input type="password" name="password"></td></tr>
-				<tr><td>Confirm Password: </td><td> <input type="password" name="password2"></td></tr>
-				<tr><td>First Name: </td><td> <input type="text" name="firstname"></td></tr>
-				<tr><td>Last Name: </td><td> <input type="text" name="lastname"></td></tr>
-				<tr><td>Class Year</td><td>
-				<select name="class">
-					<?php 
-					$date = 1960;
-					$olddate = 2014;
-					while($olddate >= $date)
-					{
-						echo '<option value="'.$olddate.'">'.$olddate.'</option>';
-						echo '<option value="'.$olddate.'.5">'.$olddate.'.5</option>';
-						$olddate--;
-					}
-					?>
-				</select>
-				</td></tr>
-				<tr><td colspan="2"><input type="submit" name="SUBMITREGISTER" value="Register"></td></tr>
-				</table>
-				</form>
-				</div>
-			</div>
-		</div>
-	<?php 
-	include_once("Footer.php");
-	?>
-	</body>
-	</html> 
-		<?php
-
-}		
+<?php
+}
 ?>

@@ -4,6 +4,32 @@ $p=$_POST;
 if(isset($p['getDateView'])) {
 	header( "content-type: text/html; charset=UTF-8" ); 
 
+
+} else if(isset($p['updatingband'])) {
+	$id = $p['id'];
+	$b = new Band($id);
+	if(!empty($p['profilepic'])) {
+		$tname=	$_FILES['profilepic']['tmp_name'];
+		$name = $_FILES['profilepic']['name'];
+		move_uploaded_file(	$tname, "photos/band_".$name);
+		$b->picture =  "photos/band_".$name;
+	}
+	$b->name = $p['name'];
+	$b->info = $p['info'];
+	$b->type = $p['type'];
+	$b->update();	
+	echo "true";
+} else if(isset($p['checkemail'])) {
+	$username = $p['checkemail'];
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM user WHERE username='$username'";
+	$result = mysql_query($query,$con) or die(mysql_error());
+	if(mysql_num_rows($result)>0) {
+		echo "false";
+	} else echo "true";
+
 } else if(isset($p['sendmessage'])) {
 	$m = new Message();
 	$msgto = $_POST['msgto'];
@@ -42,6 +68,11 @@ if(isset($p['getDateView'])) {
 	$calendar = isset($p['calendar']) ? $p['calendar'] : null;
 	drawDayView($day, $calendar); //Located in functions.php
 	
+} else if(isset($p['deleteMessage'])) {
+	$id = $p['id'];
+	$m = new Message($id);
+	$m->delete();
+
 } else if(isset($p['uploadPix'])) {
 
 
@@ -52,7 +83,30 @@ if(isset($p['getDateView'])) {
 	move_uploaded_file(	$tname, "photos/".$name);
 	echo "photos/".$name;
 
+} else if(isset($p['createAnEvent'])) {
+	$calendar = $p['calendar'];
+	$name = cleanString($p['name']);
+	$starttime = strtotime($p['starttime']);
+	$endtime = strtotime($p['endtime']);
+	$description = cleanString($p['description']);
+	$bands = explode(",",$p['bands']);
 
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "INSERT INTO $calendar (name,starttime,endtime,description) VALUES ('$name','$starttime','$endtime','$description')";
+	$result = mysql_query($query,$con) or die(mysql_error());
+	$calendarid = mysql_insert_id();
+	foreach($bands as $b) {
+		explode('-',$b);
+		$bandid=$b[1];
+		$query = "INSERT INTO band$calendar (bandid,calendarid) VALUES ('$bandid','$calendarid')";
+		$result = mysql_query($query,$con) or die(mysql_error());
+	}
+	$venue = explode('-',$p['venue']);
+	$venueid = $venue[1];	
+	$query = "INSERT INTO venue$calendar (bandid,calendarid) VALUES ('$venueid','$calendarid')";
+	$result = mysql_query($query,$con) or die(mysql_error());
 
 } else if(isset($p['getEventCreate'])) {
 	header( "content-type: text/html; charset=UTF-8" ); 

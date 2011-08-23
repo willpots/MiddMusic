@@ -48,18 +48,20 @@ if($page=="profile") {
 		</div><!-- Sidebar -->
 		<div id="main-content">
 			<?php
-if($page=="profile") {
+if($page=="profile") { //Profile
 	include('main/profileMain.php');
-} else if($page=="compose") {
+} else if($page=="compose") { //Compose
 	include('main/composeMain.php');
-} else if($page=="edit") {
-		include('main/editMain.php');
-	} else if($page=="calendar"||$page=="practice"||$page=="record") {
-		include('main/calendarMain.php');
-	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
-		include('main/directoryMain.php');
-	} else {
-	include('main/profileMain.php');
+} else if($page=="register") { //Register
+	include('main/registerMain.php');
+} else if($page=="edit") { //Edit (Profile)
+	include('main/editMain.php');
+} else if($page=="calendar"||$page=="practice"||$page=="record") { //Calendar Views
+	include('main/calendarMain.php');
+} else if($page=="bands"||$page=="musicians"||$page=="venues") { //Directory Views
+	include('main/directoryMain.php');
+} else { // Default to Profile View
+include('main/profileMain.php');
 } 
 ?>
 		</div><!-- Main Content -->

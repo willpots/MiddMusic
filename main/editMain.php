@@ -8,10 +8,47 @@
  * Use of this code requires consent from William S. Potter					*
  * will@middpoint.com														*
  ***************************************************************************/
-if(isset($_COOKIE['mu_id'])) {
+if(isset($_GET['band'])) {
+	$id=$_GET['band'];
+	$b = new Band($id);
+	$types = getBandTypes();
+?>
+		<div class="section-title">EDIT <?php echo strtoupper($b->name) ?>'S PROFILE</div>
+		<div id="edit-form">
+			<form id="updateBand">
+			<input type="hidden" name="id" value="<?php echo $b->id; ?>">
+			<div class="right">
+				<img id="profilepic" src="<?php if(isset($b->picture)) echo $b->picture; else echo "photos/nameless.png"; ?>" alt="Profile Picture" width="200">
+				<br><input type="file" name="profilepic">
+			</div>
+			<label for="name">Band Name: 
+				<input type="text" name="name" id="name" value="<?php echo $b->name; ?>" placeholder="Name">
+			</label>
+			<label for="info">Description:<br>
+				<textarea rows="15" cols="50" name="info" id="info" placeholder="Describe your band here..."><?php echo stripslashes($b->info); ?></textarea>
+			</label>	
+			<label for="type">Type: 
+				<select name="type">
+				<?php
+				foreach($types as $t) {
+					if($b->type==$t['id']) {
+						echo '<option selected value="'.$t['id'].'">'.$t['name'].'</option>';
+					} else {
+						echo '<option value="'.$t['id'].'">'.$t['name'].'</option>';
+					}
+				}
+				?>
+				</select>
+			</label>
+ 			<input type="button" class="button" name="updateband" onclick="updateBand()" value="Update Band">
+		</form>
+		</div>
+
+<?php
+} else if(isset($_COOKIE['mu_id'])) {
 	$id=$_COOKIE['mu_id'];
 	$i = getUserInfo($id);
-	?>
+?>
 	<div id="edit">
 		<div class="section-title">EDIT YOUR PROFILE</div>
 		<div id="edit-form">

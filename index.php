@@ -65,12 +65,14 @@ if(isset($_COOKIE['mu_user'])) {
 				echo '<script src="js/profile.js"></script>';
 			} else if($page=="compose") {
 				echo '<script src="js/compose.js"></script>';
+			} else if($page=="register") {
+				echo '<script src="js/register.js"></script>';
 			} else if($page=="edit") {
 				echo '<script src="js/edit.js"></script>';
 			} else if($page=="record"||$page=="practice"||$page=="calendar") {
 				echo '<script src="js/calendar.js"></script>';
 				if(isset($_GET['create'])) {
-					echo '<script>getEventCreate('.$month.',"calendar");</script>';
+					echo '<script>getEventCreate('.$month.',"'.$page.'");</script>';
 				} else {
 					echo '<script>getCalendarMonth("'.$month.'","'.$page.'");</script>';
 				}	

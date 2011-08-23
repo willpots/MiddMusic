@@ -45,4 +45,13 @@ placeholder="Search" />
 	?>
 	</div>
 </div><!-- instrument-list -->
-
+<div id="band-list" class="sidebar-widget">
+	<div class="sidebar-title">YOUR BANDS</div>
+	<div class="sidebar-widget-content">
+	<?php
+	foreach($me->bands as $b) {
+		echo '<a class="edit-sidebar-band" href="?page=edit&band='.$b->id.'">'.$b->name.'</a>';
+	}
+	?>
+	</div>
+</div><!-- instrument-list -->
