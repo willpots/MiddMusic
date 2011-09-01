@@ -1,7 +1,7 @@
 <?php
+require_once('libs/libMMU.php');	
 if(isset($_POST["SUBMITLOGIN"]))
 {
-	include('functions.php');	
 	$username = $_POST["username"];
 	$password = md5($_POST["password"]);
 	$ui = getLogin($username, $password);
@@ -12,16 +12,18 @@ if(isset($_POST["SUBMITLOGIN"]))
 		$valid = $ui['valid'];
 		
 		$expires = time() + 60*60*24*31;
-		if($valid==1)
-		{
+		if($admin == 1 && $valid==1) {
 			setrawcookie("mu_user", $username, $expires);
 			setrawcookie("mu_id", $id, $expires);
-		}
-		if($admin == 1 && $valid==1)
-		{
 			setrawcookie("mu_admin", "yes", $expires);
+			header('Location: http://middmusic.com/');
+		} else if($valid==1) {
+			setrawcookie("mu_user", $username, $expires);
+			setrawcookie("mu_id", $id, $expires);
+			header('Location: http://middmusic.com/');
+		} else {
+			header("Location: index.php?page=login&validate=".$username);
 		}
-		header('Location: http://middmusic.com/');
 	} else {
 		header('Location: index.php?page=login&fail');
 	}

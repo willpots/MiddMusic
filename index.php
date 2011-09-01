@@ -30,6 +30,7 @@ if(isset($_COOKIE['mu_user'])) {
 	
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/style.css?v=2" />
 	<link rel="stylesheet" media="handheld" href="css/handheld.css?v=2" />
 	<link rel="stylesheet" href="css/middmusic/jquery-ui-1.8.16.custom.css" type="text/css" />	

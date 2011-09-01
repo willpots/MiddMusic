@@ -15,8 +15,8 @@ if($results!=false) {
 	  $sort_id[] = $key['id'];
 	  $sort_name[] = $key['name'];
 	}
+	array_multisort( $sort_name, SORT_STRING, $results);
 }
-array_multisort( $sort_name, SORT_STRING, $results);
 
 ?>
 <div id="search-form" class="sidebar-widget">

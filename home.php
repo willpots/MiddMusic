@@ -21,7 +21,7 @@
 			<div id="fp-loginbox">
 				<form action="login.php" method="post">
 				<label for="username">Username</label><br>
-				<input type="text" autocomplete="off" name="username" ><br>
+				<input type="text" autocomplete="off" name="username" placeholder="rliebowitz">@middlebury.edu<br>
 				<label for="password">Password</label><br>
 				<input type="password" autocomplete="off" name="password" ><br>
 				<input type="submit" name="SUBMITLOGIN" value="Log me in!">

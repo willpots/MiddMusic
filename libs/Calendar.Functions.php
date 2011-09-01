@@ -23,21 +23,26 @@ function drawCalendar($month, $calendar) {
 		$endofday = mktime(0,0,0,date('m',$calstart),date('d',$calstart)+1,date('Y',$calstart));
 		$events = getEventsBetween($calstart, $endofday, $calendar);
 		if($calstart<$beginweek||$calstart >= strtotime("+1 month", $beginweek)) {
-			echo '<div class="day wrongday" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
+			echo '<div class="day wrongday" >';
+			//echo '<div class="day wrongday" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
 		} else if($calstart != $today) {
-			echo '<div class="day" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
+			echo '<div class="day" >';
+			//echo '<div class="day" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" >';
 		} else {
-			echo '<div class="day today" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" id="day-'.$calstart.'">';
+			echo '<div class="day today" id="day-'.$calstart.'">';
+			//echo '<div class="day today" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" id="day-'.$calstart.'">';
 		}
 		echo '<div class="dayno">'.date('j', $calstart).'</div>';
+		echo '<span class="">'.date('l',$calstart).'</span>';
+		echo '<div class="day-events">';
 		if($events!=false) {
 			foreach($events as $e) {
-				echo $e['name'];
+				echo '<a class="day-event" href="?page=profile&event='.$e['id'].'">'.date('g:i a', $e['starttime']).' - '.$e['name'].'</a>';
 			}
 		}
 		$daysleft--;
 		$calstart=$endofday;
-		echo '</div>';
+		echo '</div></div>';
 	}
 	echo '</div>';
 	?>

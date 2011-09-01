@@ -7,7 +7,7 @@
  * will@middpoint.com																		*
  ***************************************************************************/
 
-if(!isset($_GET['id'])&&!isset($_GET['band'])&&isset($_COOKIE['mu_id'])) {
+if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_GET['event'])&&isset($_COOKIE['mu_id'])) {
 	$id = $me->id;
 	
 	?>
@@ -61,6 +61,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&isset($_COOKIE['mu_id'])) {
 	$id = $_GET['id'];
 	$i = getUserInfo($id);
 	$in = getUserInstruments($id);
+	$u = new User($id);
 	if($i!=false) {
 ?>
 	<div id="user-profile">
@@ -80,6 +81,13 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&isset($_COOKIE['mu_id'])) {
 		}
 		?>
 		</div>
+		<div class="section-title">My Events</div>
+		<?php
+		foreach($u->events as $e) {
+			echo '<div><a href="?page=profile&event='.$e->id.'">'.date('n/j/y g:i a',$e->starttime).' - '.$e->name.'</a></div>';
+		}
+		?>
+		</div>		
 	</div>
 <?php
 	} else {
@@ -97,8 +105,57 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&isset($_COOKIE['mu_id'])) {
 		<div id="info"><?php echo stripslashes($b->info); ?></div>
 		<div id="user-instruments">
 		<div class="section-title">Style</div>
+		<?php echo $b->typename; ?>		
+		<div class="section-title">Members</div>
+		<?php 
+		foreach($b->users as $u) {
+			$u = new User($u);
+			echo '<div><a href="?page=profile&id='.$u->id.'">'.$u->firstname.' '.$u->lastname.'</a></div>';
+		}
+		?>
+		</div>
+	</div>
+<?php	
+} else if(isset($_GET['venue'])) {
+	$id = $_GET['venue'];
+	$b = new Venue($id);
+?>
+	<div id="user-profile">
+		<div id="profile-picture" class="right">
+			<img src="<?php if(isset($b->picture)) echo $b->picture; else echo "photos/nameless.png"; ?>" width="200" alt="">
+		</div>
+		<div class="section-title"><?php echo strtoupper($b->name);?></div>
+		<div id="info"><?php echo stripslashes($b->info); ?></div>
+		<div id="user-instruments">
+		<div class="section-title">Style</div>
 		<?php echo $b->typename; ?>
 		</div>
 	</div>
+<?php	
+} else if(isset($_GET['event'])) {
+	$id = $_GET['event'];
+	$b = new Event($id);
+?>
+	<div id="user-profile">
+		<div class="section-title"><?php echo strtoupper($b->name);?></div>
+		<div id="info"><?php echo stripslashes($b->description); ?></div>
+		<div class="profile-section">
+		<div class="section-title">Location</div>
+		<?php 
+			$v = new Venue($b->venueid);
+			echo '<a href="?page=profile&venue='.$v->id.'">'.$v->name.'</a>'; 
+		?>
+		</div>
+		<div class="profile-section">
+		<div class="section-title">Bands/Acts</div>
+		<?php 
+			foreach($b->bands as $a) {
+				$as = new Band($a);
+				echo '<a href="?page=profile&band='.$as->id.'">'.$as->name.'</a>'; 
+			}
+		?>
+		</div>
+	</div>
+
 <?php	
 }?>

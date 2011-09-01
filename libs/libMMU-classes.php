@@ -8,6 +8,15 @@ function compareMessages($a,$b) {
 		return -1;
 	}
 }
+function compareEvents($a,$b) {
+	if($a->starttime==$b->starttime) {
+		return 0;
+	} else if($a->starttime<$b->starttime) {
+		return -1;
+	} else if($a->starttime>$b->starttime) {
+		return 1;
+	}
+}
 class DBObject {
 	public $id = null;
 	public $User = "middmusic";
@@ -72,6 +81,13 @@ class User extends DBObject { //USER
 				while($row=mysql_fetch_array($result)){
 					$this->events[] = new Event($row['calendarid']);
 				}
+				foreach($this->bands as $b) {
+					$result = mysql_query("SELECT * FROM bandcalendar WHERE bandid='".$b->id."'",$this->Con) or die("It was me!".mysql_error());
+					while($row=mysql_fetch_array($result)){
+						$this->events[] = new Event($row['calendarid']);
+					}				
+				}
+				usort($this->events, "compareEvents" );
 				$result = mysql_query("SELECT * FROM uservenue WHERE userid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 				while($row=mysql_fetch_array($result)){
 					$this->venues[] = new Venue($row['venueid']);
@@ -135,6 +151,15 @@ class User extends DBObject { //USER
 		$result = mysql_query("SELECT * FROM messages WHERE usermsgto='".$this->id."' OR usermsgfrom='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 		while($row=mysql_fetch_array($result)){
 			$this->messages[] = new Message($row['id']);
+		}
+	}
+	public function canEdit($id,$type) {
+		if($type=="band") {
+			
+		} else if($type=="venue") {
+			
+		} else if($type=="event") {
+			
 		}
 	}
 }
@@ -227,7 +252,7 @@ class Band extends DBObject {
 			}
 			$result = mysql_query("SELECT * FROM userbands WHERE bandid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 			while($row=mysql_fetch_array($result)){
-				$this->venues[] = $row['userid'];
+				$this->users[] = $row['userid'];
 			}
 			$result = mysql_query("SELECT * FROM bandstyles WHERE id='".$this->type."'",$this->Con) or die("It was me!".mysql_error());
 			while($row=mysql_fetch_array($result)){
@@ -295,10 +320,12 @@ class Event extends DBObject {
 	public $endtime;
 	public $description;
 	public $users = array();
-	public function __construct($i,$calendar) {
+	public $venueid;
+	public $bands = array();
+	public function __construct($i) {
 		$this->id=$i;
 		$this->Con=$this->getConnection();
-		$result = mysql_query("SELECT * FROM $calendar WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		$result = mysql_query("SELECT * FROM calendar WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 		while($row=mysql_fetch_array($result)){
 			$this->name = $row['name'];
 			$this->starttime = $row['starttime'];
@@ -311,9 +338,25 @@ class Event extends DBObject {
 			while($row=mysql_fetch_array($result)){
 				$this->users[] = $row['userid'];
 			}
+			$result = mysql_query("SELECT * FROM bandcalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->bands[] = $row['bandid'];
+			}
+			$result = mysql_query("SELECT * FROM venuecalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->venueid = $row['venueid'];
+			}
+			
 		}
 	}
+	public function update() {
+		$result = mysql_query("UPDATE bands SET 
+								name = '".$this->name."', 
+								starttime = '".$this->starttime."',
+								endtime = '".$this->endtime."' 
+							 	WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 	
+	}
 }
 class Calendar extends DBObject {
 	

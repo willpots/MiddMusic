@@ -97,15 +97,20 @@ if(isset($p['getDateView'])) {
 	$query = "INSERT INTO $calendar (name,starttime,endtime,description) VALUES ('$name','$starttime','$endtime','$description')";
 	$result = mysql_query($query,$con) or die(mysql_error());
 	$calendarid = mysql_insert_id();
+	echo "Calendar ID: ".$calendarid."\n";
 	foreach($bands as $b) {
-		explode('-',$b);
-		$bandid=$b[1];
+		$bs = explode('-',$b);
+		$bandid=$bs[1];
+		echo "Band ID: ".$bandid."\n";
 		$query = "INSERT INTO band$calendar (bandid,calendarid) VALUES ('$bandid','$calendarid')";
 		$result = mysql_query($query,$con) or die(mysql_error());
 	}
 	$venue = explode('-',$p['venue']);
 	$venueid = $venue[1];	
-	$query = "INSERT INTO venue$calendar (bandid,calendarid) VALUES ('$venueid','$calendarid')";
+	echo "Venue ID: ".$venueid."\n";
+	$query = "INSERT INTO venue$calendar (venueid,calendarid) VALUES ('$venueid','$calendarid')";
+	$result = mysql_query($query,$con) or die(mysql_error());
+	$query = "INSERT INTO user$calendar (userid,calendarid) VALUES ('".$_COOKIE['mu_id']."','$calendarid')";
 	$result = mysql_query($query,$con) or die(mysql_error());
 
 } else if(isset($p['getEventCreate'])) {
@@ -178,7 +183,7 @@ if(isset($p['getDateView'])) {
 		echo '<div class="section-title">'.strtoupper($page).' - '.$cname.'</div>';
 		echo '<div id="results">';
 		$table = "bands";
-		$results = searchForActWithType($q);
+		$results = searchForBandWithType($q);
 		if($results!=false) {
 			foreach($results as $r) {
 				echo '<a href="?page=profile&band='.$r['id'].'" class="search-result">'.$r['name'].'</a>';

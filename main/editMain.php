@@ -8,7 +8,7 @@
  * Use of this code requires consent from William S. Potter					*
  * will@middpoint.com														*
  ***************************************************************************/
-if(isset($_GET['band'])) {
+if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 	$id=$_GET['band'];
 	$b = new Band($id);
 	$types = getBandTypes();
@@ -43,6 +43,10 @@ if(isset($_GET['band'])) {
  			<input type="button" class="button" name="updateband" onclick="updateBand()" value="Update Band">
 		</form>
 		</div>
+<?php } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { ?>
+
+
+
 
 <?php
 } else if(isset($_COOKIE['mu_id'])) {
@@ -53,7 +57,7 @@ if(isset($_GET['band'])) {
 		<div class="section-title">EDIT YOUR PROFILE</div>
 		<div id="edit-form">
 			<div class="right">
-				<img id="profilepic" src="<?php echo $i['picture']; ?>" alt="Profile Picture" width="200">
+				<img id="profilepic" src="<?php if(isset($i['picture'])) echo $i['picture']; else echo "photos/nameless.png";  ?>" alt="Profile Picture" width="200">
 				<form id="uploadpic">
 					<input type="file" name="profilepic" onchange="uploadImage()">
 				</form>

@@ -69,7 +69,8 @@ placeholder="Search" />
 	
 	</div>
 </div>
-
+<?php if(isset($_COOKIE['mu_id'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create">CREATE AN EVENT</a></div>
 </div>
+<?php } ?>

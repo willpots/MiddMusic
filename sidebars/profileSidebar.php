@@ -31,16 +31,16 @@ placeholder="Search" />
 	<div class="sidebar-widget-content">
 	<?php
 		if($bands!=false) {
-			foreach($bands as $a) {
-				$mem = getActMembers($a['id']);
-				echo '<a href="?page=profile&band='.$a['id'].'" class="sidebar-act">'.$a['name'].'</a>';
+			foreach($u->bands as $a) {
+				echo '<a href="?page=profile&band='.$a->id.'" class="sidebar-act">'.$a->name.'</a>';
 				$i=0;
-				if($mem!=false&&count($mem)>1) {
+				if($a->users!=false&&count($a->users)>1) {
 					echo '<div class="sidebar-act-members">';
-					foreach($mem as $m) {
-						echo '<a href="?page=profile&id='.$m['id'].'" class="sidebar-member">'.$m['firstname'].' '.$m['lastname'].'</a>';
+					foreach($a->users as $m) {
+						$u2 = new User($m);
+						echo '<a href="?page=profile&id='.$u2->id.'" class="sidebar-member">'.$u2->firstname.' '.$u2->lastname.'</a>';
 						$i++;
-						if($i<count($mem)) echo ', ';
+						if($i<count($a->users)) echo ', ';
 					}
 					echo '</div>';
 				}
@@ -56,11 +56,11 @@ placeholder="Search" />
 	<div class="sidebar-title">UPCOMING EVENTS</div>
 	<div class="sidebar-widget-content">
 		<?php
-		$evts = getUpcomingEvents();
-		if($evts!=false){
-			foreach($evts as $e) {
+		//$evts = getUpcomingEvents();
+		if($u->events!=false){
+			foreach($u->events as $e) {
 				echo '<div class="upcoming-event">';
-				echo $e['name'];
+				echo '<a class="sidebar-act" href="?page=profile&event='.$e->id.'">'.$e->name.'</a>';
 				echo '</div>';
 			}
 		} else {
@@ -78,7 +78,7 @@ placeholder="Search" />
 		if($venues!=false){
 			foreach($venues as $e) {
 				echo '<div class="upcoming-event">';
-				echo $e['name'];
+				echo '<a class="sidebar-act" href="?page=profile&venue='.$e['id'].'">'.$e['name'].'</a>';
 				echo '</div>';
 			}
 		} else {
@@ -87,6 +87,7 @@ placeholder="Search" />
 		?>
 	</div>
 </div>
+<?php if(isset($_COOKIE['mu_id'])) { ?>
 <?php if(isset($_GET['band'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit&band=<?php echo $_GET['band']; ?>">EDIT BAND PROFILE</a></div>
@@ -95,9 +96,14 @@ placeholder="Search" />
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit&venue=<?php echo $_GET['venue']; ?>">EDIT VENUE PROFILE</a></div>
 </div>
+<?php } else if(isset($_GET['event'])) { ?>
+<div id="manage-profile" class="sidebar-widget">
+	<div class="sidebar-title center"><a href="?page=edit&event=<?php echo $_GET['event']; ?>">EDIT EVENT DETAILS</a></div>
+</div>
 <?php } else { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit">EDIT MY PROFILE</a></div>
 </div>
 <?php }
+	}
 } ?>

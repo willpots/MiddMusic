@@ -1,6 +1,7 @@
 
 /* ==== MiddMusic Stuff ==== */
 
+
 /*  HTML5 ✰ Boilerplate  */
 
 html, body, div, span, object, iframe,
@@ -68,8 +69,8 @@ input:valid, textarea:valid   {  }
 input:invalid, textarea:invalid { border-radius: 1px; -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red; }
 .no-boxshadow input:invalid, .no-boxshadow textarea:invalid { background-color: #f0dddd; }
 
-::-moz-selection{ background: #FF5E99; color:#fff; text-shadow: none; }
-::selection { background:#FF5E99; color:#fff; text-shadow: none; }
+::-moz-selection{ background: #FF5E99; color:#fff; text-shadow:none;}
+::selection { background:#FF5E99; color:#fff; text-shadow:none; }
 a:link { -webkit-tap-highlight-color: #FF5E99; }
 
 button {  width: auto; overflow: visible; }
@@ -86,7 +87,7 @@ a:hover { color: #036; }
 
 /* General */
 html,body,#container {
-	font-family: "Helvetica Neue", sans-serif;
+	font-family: 'Open Sans', "Helvetica Neue", sans-serif;
 }
 .center {
 	text-align: center;
@@ -129,6 +130,28 @@ html,body,#container {
   border-top: 2pt solid #9A9A9A;
   border-right: 2pt solid #ddd;
   border-bottom: 2pt solid #ddd;
+}
+.button[disabled],
+.button[disabled]:active,
+.button[disabled]:hover {
+	color: #444;
+	background: #fdd;
+	display: inline-block;
+	padding: 5px;
+	font-size: 17px;
+	cursor: pointer;
+	text-align: center;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	border-left: 2pt solid #ddd;
+	border-top: 2pt solid #ddd;
+	border-right: 2pt solid #9A9A9A;
+	border-bottom: 2pt solid #9A9A9A;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	text-decoration: none;
 }
 .unselectable {
 	-moz-user-select: -moz-none;
@@ -423,8 +446,9 @@ a.fp-content-link:hover {
 	font-size: 16px;
 }
 .month {
-	width: 609px;
 	padding: 0;
+	height: 580px;
+	overflow-y: scroll;
 	margin: 30px 0;
 	border: 1pt solid #444;
 }
@@ -433,8 +457,6 @@ a.fp-content-link:hover {
 	margin: 0;
 }
 .day {
-	float: left;
-	width:85px;
 	border: 1pt solid #444;
 	height: 100px;
 	margin: 0;
@@ -442,6 +464,11 @@ a.fp-content-link:hover {
 }
 .day-view {
 	margin: 20px 0;
+}
+a.day-event {
+	display: block;
+	text-decoration: none;
+	cursor: pointer;
 }
 .dayno {
 	float: right;
@@ -451,7 +478,7 @@ a.fp-content-link:hover {
 	background: #aaa;
 }
 .today {
-	background: #ffa;
+	background: rgba(150,200,255,.2);
 }
 /* Create Event */
 #bands {
@@ -495,6 +522,9 @@ a.fp-content-link:hover {
 }
 .user-inst {
 	margin: 5px 0;
+}
+.profile-section {
+	margin: 10px 0;
 }
 /* Edit Profile */
 #sidebar-loading {

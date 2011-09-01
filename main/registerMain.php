@@ -15,41 +15,31 @@ if(isset($_POST['SUBMITREGISTER']))
 	  	die('Could not connect: ' . mysql_error());
 	}
 	mysql_select_db($dbSchema, $con);
-	if($_POST["email"] != $_POST["email2"])
+	if($_POST["password"] != $_POST["password2"]) 
 	{
-		echo "<p>Email accounts do not match. Please try <a href=\"register.php\">again</a>.</p>";	
-	}
-	elseif($_POST["password"] != $_POST["password2"]) 
-	{
-		echo "<p>Passwords do not match. Please try <a href=\"register.php\">again</a>.</p>";
-	}
-	elseif(emailCheck($_POST["email"], $emailDomain) == FALSE)
-	{
-		echo "<p>You must register with a middlebury.edu email address. Please try <a href=\"register.php\">again</a>.</p>";
+		echo "<p>Passwords do not match. Please try <a href=\"?page=register\">again</a>.</p>";
 	}
 	else
 	{
-		$email = $_POST["email"];
-		$pieces = explode('@', $email);
-		$username = $pieces[0];
+		$username = $_POST["username"];
 		$password = md5($_POST["password"]);
 		$firstname = $_POST["firstname"];
 		$lastname = $_POST["lastname"];
 		$class = $_POST["class"];
 				
-		$query = "SELECT username FROM user WHERE username = '$username' OR email = '$email' ";
+		$query = "SELECT username FROM user WHERE username = '$username'";
 		$result = mysql_query($query) or die(mysql_error());
 		if(!mysql_num_rows($result) == 0)
 		{
-			echo "<p>That username and/or email is/are already being used. Please try <a style=\"text-decoration: underline;\" href=\"register.php\">again</a>.</p>";
+			echo "<p>That username and/or email is/are already being used. Please try <a style=\"text-decoration: underline;\" href=\"?page=register\">again</a>.</p>";
 		}
 		else
 		{
-			$sql = "INSERT INTO user (username, password, firstname, lastname, class, email )
-			VALUES ('$username', '$password', '$firstname', '$lastname', '$class', '$email' )";
+			$sql = "INSERT INTO user (username, password, firstname, lastname, class )
+			VALUES ('$username', '$password', '$firstname', '$lastname', '$class' )";
 
 			mysql_query($sql) or die(mysql_error());
-			echo "<p>Welcome $username! You have succesfully registered! A confirmation will be sent shortly to your email address listed. Your username is $username and you can now return <a href=\"index.php\">home and login</a>.</p>";
+			echo "<p>Welcome $username! You have succesfully registered! A confirmation will be sent shortly to ".$username."@middlebury.edu listed. Your username is $username and you can now return <a href=\"/\">home and login</a>.</p>";
 		}
 		mysql_close($con);
 	}
@@ -86,7 +76,7 @@ $p=$_POST;
 	<input type="text" autocomplete="off" name="class" id="class" class="compose-field" placeholder="Class Year">
 	</label>
 </p>
-<p><input type="submit" value="Register" id="SUBMITREGISTER" name="SUBMITREGISTER" disabled></p>
+<p><input type="submit" value="Register" class="button" id="SUBMITREGISTER" name="SUBMITREGISTER" disabled></p>
 </form>	
 
 <?php
