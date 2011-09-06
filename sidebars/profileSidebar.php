@@ -90,19 +90,19 @@ placeholder="Search" />
 <?php if(isset($_COOKIE['mu_id'])) { ?>
 <?php if(isset($_GET['band'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=edit&band=<?php echo $_GET['band']; ?>">EDIT BAND PROFILE</a></div>
+	<div class="sidebar-title center"><a href="?page=edit&band=<?php echo $_GET['band']; ?>" class="blue-button">EDIT BAND PROFILE</a></div>
 </div>
 <?php } else if(isset($_GET['venue'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=edit&venue=<?php echo $_GET['venue']; ?>">EDIT VENUE PROFILE</a></div>
+	<div class="sidebar-title center"><a href="?page=edit&venue=<?php echo $_GET['venue']; ?>" class="blue-button">EDIT VENUE PROFILE</a></div>
 </div>
 <?php } else if(isset($_GET['event'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=edit&event=<?php echo $_GET['event']; ?>">EDIT EVENT DETAILS</a></div>
+	<div class="sidebar-title center"><a href="?page=edit&event=<?php echo $_GET['event']; ?>" class="blue-button">EDIT EVENT DETAILS</a></div>
 </div>
 <?php } else { ?>
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center"><a href="?page=edit">EDIT MY PROFILE</a></div>
+	<div class="sidebar-title center"><a href="?page=edit" class="blue-button">EDIT MY PROFILE</a></div>
 </div>
 <?php }
 	}

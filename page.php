@@ -39,7 +39,7 @@ if($page=="profile") {
 } else if($page=="edit") {
 		include('sidebars/editSidebar.php');
 	} else if($page=="calendar"||$page=="practice"||$page=="record") {
-		//include('sidebars/calendarSidebar.php');
+		include('sidebars/calendarSidebar.php');
 	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
 		include('sidebars/directorySidebar.php');
 	} else {
@@ -72,6 +72,6 @@ include('main/profileMain.php');
 		<div class="clear"></div><!-- clear -->
 	</div><!-- Main -->
 	<div id="footer">
-		Copyright &copy; 2011 <a href="//twitter.com/willpots">Will Potter</a>. Licensed for Exclusive Use by Middlebury Music United.
+		Middlebury Music United. Copyright &copy; 2011 <a href="//twitter.com/willpots" target="_blank" title="@willpots">Will Potter</a>.
 	</div>
 </div><!-- Container -->

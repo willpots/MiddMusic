@@ -20,10 +20,10 @@ if($results!=false) {
 
 ?>
 <div id="search-form" class="sidebar-widget">
-	<label for="s" class="sidebar-title">SEARCH<br>
+	<label for="s" class="sidebar-title">ADD INSTRUMENTS<br>
 
 	<input type="text" onkeyup="instrumentSearch(event,this.value)" autocomplete="off" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
-placeholder="Search" />
+placeholder="Instrument" />
 	</label>
 	<div id="inst-search-results"></div>
 </div><!-- Search form -->

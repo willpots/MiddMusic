@@ -8,8 +8,8 @@ function drawCalendar($month, $calendar) {
 	}
 	$calstart = $beginweek; ?>
 	<div id="month-nav">
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 week", $beginweek)."','".$calendar;?>')">&larr;</a>
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 week", $beginweek)."','".$calendar;?>')">&rarr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 week", $beginweek)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 week", $beginweek)."','".$calendar;?>')">&rarr;</a>
 	</div>
 	<div class="section-title"><?php echo strtoupper($calendar) ?></div>
 	<div class="month-name"><?php echo date('F, Y',$beginweek); ?></div>
@@ -55,8 +55,8 @@ function drawDayView($day,$calendar) {
 	$eotoday = strtotime("+1 day", $today);
 ?>
 	<div id="month-nav">
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("-1 day", $today)."','".$calendar;?>')">&larr;</a>
-		<a class="month-nav unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("+1 day", $today)."','".$calendar;?>')">&rarr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("-1 day", $today)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarDay('<?php echo strtotime("+1 day", $today)."','".$calendar;?>')">&rarr;</a>
 	</div>
 	<div class="section-title"><?php echo strtoupper($calendar) ?></div>
 	<div class="month-name"><?php echo date('F d, Y',$today); ?></div>
@@ -83,23 +83,39 @@ function drawEventCreate($day=null,$calendar=null) {
 <div class="section-title">CALENDAR</div>
 <div class="month-name">Create Event</div>
 <div class="event-form">
-	<form id="event-create-form" onkeyup="validateEventForm()">
+	<form id="event-create-form" name="eventCreateForm" onkeyup="validateEventForm()">
 	<p><label for="name">Event Name: <input type="text" name="name" id="name" class="compose-field" placeholder="Event Name"></label></p>
 	<p><label for="starttime">Start Time: <input type="text" name="starttime" class="compose-field" id="starttime" placeholder="Start Time"></label></p>
 	<p><label for="endtime">End Time: <input type="text" name="endtime" class="compose-field" id="endtime" placeholder="End Time"></label></p>
 	<p><label for="description">Description:<br>
 		<textarea name="description" id="description" rows="10" cols="70" class="compose-field" placeholder="What's happening?"></textarea></label></p>
 	<p><label for="bands">Bands/Performers:
-		<input type="text" id="bands" name="bands">
+		<select multiple id="bands" name="bands[]" class="chzn-select" style="width:300px;">
+			<option></option>
+			<?php
+				$a=pullAllBands();
+				foreach($a as $b) {
+					echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+				}
+			?>
+		</select>
 		</label>
 	</p>
 	<?php if($calendar=='calendar') { ?>
 	<p><label for="venue">Venue:
-		<input type="text" id="venue" name="venue">
+		<select id="venue" name="venue" class="chzn-select" style="width:300px;">
+			<option></option>
+			<?php
+				$a=pullAllVenues();
+				foreach($a as $b) {
+					echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+				}
+			?>
+		</select>
 		</label>
 	</p>
 	<?php } ?>
-	<input type="button" name="CREATEEVENT" id="sbutton" onclick="createAnEvent('<?php echo $calendar; ?>')" disabled value="Create Event">
+	<input type="button" name="CREATEEVENT" class="button" id="sbutton" onclick="createAnEvent('<?php echo $calendar; ?>')" disabled value="Create Event">
 	</form>
 </div>
 <?php

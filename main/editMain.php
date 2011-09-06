@@ -43,12 +43,100 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
  			<input type="button" class="button" name="updateband" onclick="updateBand()" value="Update Band">
 		</form>
 		</div>
-<?php } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { ?>
+<?php } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { 
+
+$event = $_GET['event'];
+$e=new Event($event);
+if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
+?>
+
+
+<div class="section-title">CALENDAR</div>
+<div class="month-name">Create Event</div>
+<div class="event-form">
+	<form id="event-create-form" name="updateEventForm" onkeyup="validateEventForm()">
+	<p><label for="name">Event Name: 
+			<input type="text" 
+					name="name" 
+					id="name" 
+					value="<?php echo $e->name; ?>" 
+					class="compose-field" 
+					placeholder="Event Name">
+	</label></p>
+	<p><label for="starttime">Start Time: 
+			<input type="text" 
+					name="starttime" 
+					class="compose-field" 
+					id="starttime" 
+					value="<?php echo date("m/d/Y h:i a",$e->starttime); ?>"
+					placeholder="Start Time">
+	</label></p>
+	<p><label for="endtime">End Time: 
+			<input type="text" 
+					name="endtime" 
+					class="compose-field" 
+					id="endtime" 
+					value="<?php echo date("m/d/Y h:i a",$e->endtime); ?>"
+					placeholder="End Time">
+	</label></p>
+	<p><label for="description">Description:<br>
+		<textarea name="description" id="description" rows="10" cols="70" class="compose-field" placeholder="What's happening?"><?php echo stripslashes($e->description); ?></textarea></label></p>
+	<p><label for="bands">Bands/Performers:<br>
+		<select multiple id="bands" name="bands[]" class="chzn-select" onchange="validateEventForm()" style="width:412px;">
+			<option></option>
+			<?php
+				$a=pullAllBands();
+				foreach($a as $b) {
+					$c = explode('-',$b['id']);
+					$c = $c[1];
+					if(in_array($c,$e->bands)) {
+						echo '<option value="'.$b['id'].'" selected>'.$b['name'].'</option>';
+					} else {
+						echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+					}
+				}
+			?>
+		</select>
+		</label>
+	</p>
+	<p><label for="venue">Venue:<br>
+		<select id="venue" name="venue" class="chzn-select" onchange="validateEventForm()" style="width:412px;">
+			<option></option>
+			<?php
+				$a=pullAllVenues();
+				foreach($a as $b) {
+					$c = explode('-',$b['id']);
+					$c = $c[1];
+					if($c==$e->venueid) {
+						echo '<option value="'.$b['id'].'" selected>'.$b['name'].'</option>';
+					} else {
+						echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+					}
+				}
+			?>
+		</select>
+		</label>
+	</p>
+	<input type="button" name="UPDATEEVENT" class="button" id="sbutton" onclick="updateEvent('<?php echo $event; ?>')" disabled value="Update Event">
+	</form>
+	<script>
+		$('#starttime').datetimepicker({
+			ampm: true
+		});
+		$('#endtime').datetimepicker({
+			ampm: true
+		});
+		validateEventForm();
+	</script>
+</div>
 
 
 
-
-<?php
+<?php } else if($e->exists==true) { ?>
+	<p>Sorry you do not have permission to edit that event!</p>
+<?php } else { ?>
+	<p>The event you are looking for does not exist!</p>
+<?php }
 } else if(isset($_COOKIE['mu_id'])) {
 	$id=$_COOKIE['mu_id'];
 	$i = getUserInfo($id);
@@ -72,7 +160,7 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 				<input type="text" name="lastname" id="lastname" value="<?php echo $i['lastname']; ?>" placeholder="Lastname">
 			</label>
 			<label for="class">Class Year:
-				<select name="class" id="class">
+				<select name="class" id="class" class="chzn-select">
 					<option value="2008" <?php if($i['class']==2008) echo "selected"; ?> >2008</option>
 					<option value="2008.5" <?php if($i['class']==2008.5) echo "selected"; ?> >2008.5</option>
 					<option value="2009" <?php if($i['class']==2009) echo "selected"; ?> >2009</option>

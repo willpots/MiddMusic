@@ -1,18 +1,14 @@
 function sendMessage() {
-	var fd = new FormData();
-	var from = document.getElementById('from');
-	from = from.options[from.selectedIndex].value;
+	var formCompose = document.forms.composeMessage;
+	var fd = new FormData(formCompose);
 	console.log(from);
-	fd.append("msgto", document.getElementById('to').value);
-	fd.append("msgfrom", from);
-	fd.append("subject", document.getElementById('subject').value);
-	fd.append("content", document.getElementById('msgcontent').value);
 	fd.append("sendmessage", "sendmessage");
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange=function() {
 		if (xhr.readyState==4 && xhr.status==200) {
+			console.log(xhr.responseText);
 			alert("Message sent successfully!");
-			window.location = "?page=profile";
+			//window.location = "?page=profile";
 		}
 	}  
   

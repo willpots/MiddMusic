@@ -18,7 +18,11 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 		if($me->messages!=false) {
 			foreach($me->messages as $m) {
 				echo '<div class="message">';
-				echo '<a class="right msg-delete" onclick="deleteMessage('.$m->id.')">Delete</a>';
+				if($m->state=="to") {
+					echo '<a class="right msg-delete" onclick="deleteMessage(\'to\','.$m->id.')">Delete</a>';
+				} else if($m->state=="from") {
+					echo '<a class="right msg-delete" onclick="deleteMessage(\'from\','.$m->id.')">Delete</a>';
+				}
 				if($m->usermsgfrom!=NULL) {
 					$from = $m->usermsgfrom;
 					$fromname = getUser($from, 'firstname').' '.getUser($from, 'lastname');
@@ -51,7 +55,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 				echo '</div>';
 			}
 		} else {
-		
+			echo "You have no messages in your inbox!";
 		
 		}
 		?>
@@ -66,7 +70,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 ?>
 	<div id="user-profile">
 		<div id="profile-picture" class="right">
-			<img src="<?php if(isset($i['picture'])) echo $i['picture']; else echo "photos/nameless.png"; ?>" width="200" alt="">
+			<img src="<?php if(isset($i['picture'])) echo '/'.$i['picture']; else echo "/photos/nameless.png"; ?>" width="200" alt="">
 		</div>
 		<div class="section-title"><?php echo strtoupper($i['firstname'].' '.$i['lastname']);?></div>
 		<div id="class"><?php echo $i['class']; ?></div>
@@ -135,6 +139,8 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 } else if(isset($_GET['event'])) {
 	$id = $_GET['event'];
 	$b = new Event($id);
+	if($b->exists==true ) {
+
 ?>
 	<div id="user-profile">
 		<div class="section-title"><?php echo strtoupper($b->name);?></div>
@@ -158,4 +164,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 	</div>
 
 <?php	
+	} else {
+		echo '<p>The event you are looking for does not exist!</p>';
+	}
 }?>

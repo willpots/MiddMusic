@@ -31,29 +31,31 @@ if(isset($p['getDateView'])) {
 	} else echo "true";
 
 } else if(isset($p['sendmessage'])) {
-	$m = new Message();
-	$msgto = $_POST['msgto'];
-	$msgfrom = $_POST['msgfrom'];
-	$m->subject = $_POST['subject'];
-	$m->content = $_POST['content'];
-	$e = explode('-',$msgto);
-	if($e[0] == 'u') {
-		$m->usermsgto = $e[1];
-	} else if($e[0] == 'b') {
-		$m->bandmsgto = $e[1];
-	} else if($e[0] == 'v') {
-		$m->venuemsgto = $e[1];
-	}
-	$e = explode('-',$msgfrom);
-	if($e[0] == 'u') {
-		$m->usermsgfrom = $e[1];
-	} else if($e[0] == 'b') {
-		$m->bandmsgfrom = $e[1];
-	} else if($e[0] == 'v') {
-		$m->venuemsgfrom = $e[1];
-	}
-	$m->deliver();
+	$msgs = $_POST['to'];
+	foreach($msgs as $msgto) {
+		$m = new Message();
+		$m->subject = $_POST['subject'];
+		$m->content = $_POST['content'];
 
+		$e = explode('-',$msgto);
+		if($e[0] == 'u') {
+			$m->usermsgto = $e[1];
+		} else if($e[0] == 'b') {
+			$m->bandmsgto = $e[1];
+		} else if($e[0] == 'v') {
+			$m->venuemsgto = $e[1];
+		}
+		$msgfrom = $_POST['from'];
+		$e = explode('-',$msgfrom);
+		if($e[0] == 'u') {
+			$m->usermsgfrom = $e[1];
+		} else if($e[0] == 'b') {
+			$m->bandmsgfrom = $e[1];
+		} else if($e[0] == 'v') {
+			$m->venuemsgfrom = $e[1];
+		}
+		$m->deliver();
+	}
 } else if(isset($p['getMonthView'])) {
 	// This is the thing that draws all of the calendars!
 	header( "content-type: text/html; charset=UTF-8" ); 
@@ -70,8 +72,9 @@ if(isset($p['getDateView'])) {
 	
 } else if(isset($p['deleteMessage'])) {
 	$id = $p['id'];
+	$tofrom = $p['tofrom'];
 	$m = new Message($id);
-	$m->delete();
+	$m->delete($tofrom);
 
 } else if(isset($p['uploadPix'])) {
 
@@ -89,7 +92,7 @@ if(isset($p['getDateView'])) {
 	$starttime = strtotime($p['starttime']);
 	$endtime = strtotime($p['endtime']);
 	$description = cleanString($p['description']);
-	$bands = explode(",",$p['bands']);
+	$bands = $p['bands'];
 
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
@@ -113,6 +116,32 @@ if(isset($p['getDateView'])) {
 	$query = "INSERT INTO user$calendar (userid,calendarid) VALUES ('".$_COOKIE['mu_id']."','$calendarid')";
 	$result = mysql_query($query,$con) or die(mysql_error());
 
+} else if(isset($p['updateEvent'])) {
+	$id = $p['id'];
+	$name = cleanString($p['name']);
+	$starttime = strtotime($p['starttime']);
+	$endtime = strtotime($p['endtime']);
+	$description = cleanString($p['description']);
+	$bands = $p['bands'];
+	$venue = $p['venue'];
+	//echo "Venue ID: ".$venue;
+	$e = new Event($id);
+	$e->name = $name;
+	$e->starttime = $starttime;
+	$e->endtime = $endtime;
+	$e->description = $description;
+	$bandids=array();
+	foreach($bands as $b) {
+		$bs = explode('-',$b);
+		$bandids[]=$bs[1];
+	}
+	$e->bands=$bandids;
+	$venue = explode('-',$p['venue']);
+	$venueid = $venue[1];	
+	$e->venueid=$venueid;
+	//echo "Venue ID: ".$venueid;
+	$e->update();
+	echo "successfully!";
 } else if(isset($p['getEventCreate'])) {
 	header( "content-type: text/html; charset=UTF-8" ); 
 	$day = isset($p['day']) ? $p['day'] : null;

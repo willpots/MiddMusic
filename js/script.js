@@ -87,3 +87,127 @@ function putToFieldBack(){
 	document.getElementById("send").disabled=true ;
 	resultIndex=-1;
 }
+//Here are all relevant calendar scripts
+$(function(){
+	
+});
+
+function getCalendarMonth(month, calendar) {
+	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
+	var fd = new FormData();
+	fd.append("getMonthView","true")
+	fd.append("month", month);
+	fd.append("calendar", calendar)
+	
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	    xhr = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+	    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('calendar').innerHTML=xhr.responseText;
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+}
+
+function getCalendarDay(day, calendar) {
+	document.getElementById('calendar').innerHTML='<img src="http://middmusic.com/img/loading.gif" alt="Hang on, the calendar is loading!" id="main-loading">';
+	var fd = new FormData();
+	fd.append("getDayView","true")
+	fd.append("day", day);
+	fd.append("calendar", calendar)
+	
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	    xhr = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+	    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('calendar').innerHTML=xhr.responseText;
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+}
+function getEventCreate(day,calendar) {
+	day = day || null;
+	calendar = calendar || null;
+	var fd = new FormData();
+	fd.append("getEventCreate","true")
+	if(day!=null) { fd.append("day", day); }
+	if(calendar!=null) { fd.append("calendar", calendar); }
+	
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+	    xhr = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+	    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('calendar').innerHTML=xhr.responseText;
+			$('.chzn-select').chosen();
+			$('#starttime').datetimepicker({
+				ampm: true
+			});
+			$('#endtime').datetimepicker({
+				ampm: true
+			});
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+
+}
+function validateEventForm() {
+	var eventForm = document.forms.eventCreateForm;
+	var name = document.getElementById('name');
+	var starttime = document.getElementById('starttime');
+	var endtime = document.getElementById('endtime');
+	var starttime = document.getElementById('starttime');
+	var description = document.getElementById('description');
+	var bands = document.getElementById('bands');
+	var venue = document.getElementById('venue');
+	var sbutton = document.getElementById('sbutton');
+	if(name.value!=""&&starttime.value!=""&&endtime.value!=""&&description.value!=""&&bands.selectedIndex!=-1&&venue.selectedIndex!=-1) {
+		sbutton.disabled=false;
+	} else {
+		sbutton.disabled=true;
+	}
+}
+function createAnEvent(calendar) {
+	var fe = document.getElementById('event-create-form');
+	var fd = new FormData(fe);
+	fd.append('calendar',calendar);
+	fd.append('createAnEvent','asdf');
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			console.log(xhr.responseText);
+			window.location = '?page='+calendar;
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+	console.log("Request Sent!");
+}
+function updateEvent(id) {
+	var eventForm = document.forms.updateEventForm;
+	var fd = new FormData(eventForm);
+	fd.append('id',id);
+	fd.append('updateEvent','asdf');
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			console.log(xhr.responseText);
+			alert("Updated Event "+xhr.responseText);
+		}
+	}
+	xhr.open("POST", "ajax.php");
+	xhr.send(fd);
+	console.log("Request Sent!");
+
+}

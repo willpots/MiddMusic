@@ -8,6 +8,7 @@
  * Use of this code requires consent from William S. Potter						*
  * will@middpoint.com																		*
  ***************************************************************************/
+ /*
 if(isset($_GET['month'])) {
 	$month = $_GET['month'];
 } else $month = date('n');
@@ -71,6 +72,13 @@ placeholder="Search" />
 </div>
 <?php if(isset($_COOKIE['mu_id'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
-	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create">CREATE AN EVENT</a></div>
+	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create" class="button">CREATE AN EVENT</a></div>
 </div>
+<?php } */
+?>
+<?php if(isset($_COOKIE['mu_id'])) { ?>
+<div id="manage-profile" class="sidebar-widget">
+	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create" class="blue-button">CREATE AN EVENT</a></div>
+</div>
+
 <?php } ?>

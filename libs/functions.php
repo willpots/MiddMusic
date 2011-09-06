@@ -257,6 +257,87 @@ function searchForBands($q){
 	if(!empty($results))  return $results;
 	else return false; 	
 }
+function pullAllEntities() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM user WHERE id != '".$_COOKIE['mu_id']."'";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='u-'.$row['id'];
+		$a['name']=$row['firstname'].' '.$row['lastname'];
+		$results[]=$a;
+	}
+	$query = "SELECT * FROM bands ";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='b-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	$query = "SELECT * FROM venue ";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='v-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
+function pullAllUsers() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM user WHERE id != '".$_COOKIE['mu_id']."'";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='u-'.$row['id'];
+		$a['name']=$row['firstname'].' '.$row['lastname'];
+		$results[]=$a;
+	}
+	return $results;
+}
+function pullAllBands() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM bands ";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='b-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
+function pullAllVenues() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM venue ";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='v-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
+
 /*
 	Drawing Functions Below Here ---------------------
 */

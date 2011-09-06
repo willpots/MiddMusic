@@ -37,12 +37,14 @@ if(isset($_COOKIE['mu_user'])) {
     <link rel="stylesheet" href="css/token-input.css" type="text/css" />
     <link rel="stylesheet" href="css/token-input-mac.css" type="text/css" />
     <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
-
+	<link rel="stylesheet" href="css/chosen.css" type="text/css" />
+	
 	<script src="js/libs/modernizr-1.7.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 	<script src="js/jquery-ui-1.8.16.custom.min.js"></script>
 	<script src="js/plugins.js"></script>
 	<script src="js/script.js"></script>
+	<script src="js/libs/chosen.jquery.min.js"></script>
 	<script src="js/jquery.tokeninput.js"></script>
 	<script src="js/jquery.timepicker.addon.js"></script>
 
@@ -85,6 +87,9 @@ if(isset($_COOKIE['mu_user'])) {
 		
 		}
 	?>
+	<script>
+		$(".chzn-select").chosen()
+	</script>
 	<!--[if lt IE 7 ]>
 	<script src="js/libs/dd_belatedpng.js"></script>
 	<script> DD_belatedPNG.fix('img, .png_bg');</script>

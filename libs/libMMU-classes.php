@@ -79,12 +79,18 @@ class User extends DBObject { //USER
 				}
 				$result = mysql_query("SELECT * FROM usercalendar WHERE userid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 				while($row=mysql_fetch_array($result)){
-					$this->events[] = new Event($row['calendarid']);
+					$e = new Event($row['calendarid']);
+					if(!in_array($e,$this->events)&&$e->starttime>=time()) {
+						$this->events[]=$e;
+					}
 				}
 				foreach($this->bands as $b) {
 					$result = mysql_query("SELECT * FROM bandcalendar WHERE bandid='".$b->id."'",$this->Con) or die("It was me!".mysql_error());
 					while($row=mysql_fetch_array($result)){
-						$this->events[] = new Event($row['calendarid']);
+						$e = new Event($row['calendarid']);
+						if(!in_array($e,$this->events)&&$e->starttime>=time()) {
+							$this->events[]=$e;
+						}
 					}				
 				}
 				usort($this->events, "compareEvents" );
@@ -99,14 +105,30 @@ class User extends DBObject { //USER
 				$query = "SELECT * FROM messages WHERE usermsgto='".$this->id."' OR usermsgfrom='".$this->id."' ORDER BY msgsent DESC";
 				$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
 			 	while($row=mysql_fetch_array($result)) {
-			 		$this->messages[]=new Message($row['id']);
+			 		if($row['usermsgto']==$this->id&&$row['deletedto']!=1) {
+				 		$m=new Message($row['id']);
+				 		$m->state="to";
+				 		$this->messages[] = $m;
+			 		} else if($row['usermsgfrom']==$this->id&&$row['deletedfrom']!=1) {
+				 		$m=new Message($row['id']);
+				 		$m->state="from";
+				 		$this->messages[] = $m;
+			 		}
 			 	}
 				if(!empty($this->bands)) {
 					foreach($this->bands as $a) {
 						$query = "SELECT * FROM messages WHERE bandmsgto='".$a->id."' OR bandmsgfrom='".$a->id."' ORDER BY msgsent DESC";
 						$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
 					 	while($row=mysql_fetch_array($result)) {
-					 		$this->messages[]=new Message($row['id']);
+					 		if($row['bandmsgto']==$a->id&&$row['deletedto']!=1) {
+						 		$m=new Message($row['id']);
+						 		$m->state="to";
+						 		$this->messages[] = $m;
+					 		} else if($row['bandmsgfrom']==$a->id&&$row['deletedfrom']!=1) {
+						 		$m=new Message($row['id']);
+						 		$m->state="from";
+						 		$this->messages[] = $m;
+					 		}
 					 	}
 				 	}
 				}
@@ -115,7 +137,15 @@ class User extends DBObject { //USER
 						$query = "SELECT * FROM messages WHERE venuemsgto='".$v->id."' OR venuemsgfrom='".$v->id."' ORDER BY msgsent DESC";
 						$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
 					 	while($row=mysql_fetch_array($result)) {
-					 		$this->messages[]=new Message($row['id']);
+					 		if($row['bandmsgto']==$v->id&&$row['deletedto']!=1) {
+						 		$m=new Message($row['id']);
+						 		$m->state="to";
+						 		$this->messages[] = $m;
+					 		} else if($row['bandmsgfrom']==$v->id&&$row['deletedfrom']!=1) {
+						 		$m=new Message($row['id']);
+						 		$m->state="to";
+						 		$this->messages[] = $m;
+					 		}
 					 	}
 				 	}
 				}
@@ -175,7 +205,7 @@ class Message extends DBObject {
 	public $msgsent=NULL;
 	public $subject=NULL;
 	public $content=NULL;
-
+	public $state=NULL;
 	public $unread;
 	
 	public function __construct($i=null) {
@@ -209,9 +239,14 @@ class Message extends DBObject {
 		VALUES ('$date', '".$this->usermsgto."','".$this->usermsgfrom."', '".$this->bandmsgto."', '".$this->bandmsgfrom."', '".$this->venuemsgto."', '".$this->venuemsgfrom."', '".$this->subject."', '".$this->content."', '1')";
 		$result = mysql_query($query) or die("Query failed: ".mysql_error());
 	}
-	function delete() {
+	function delete($tofrom) {
 		$this->Con = $this->getConnection();
-		$query = "DELETE FROM messages WHERE id='".$this->id."'";
+		echo $tofrom;
+		if($tofrom=="to") {
+			$query = "UPDATE messages SET deletedto='1' WHERE id='".$this->id."'";
+		} else if($tofrom=="from") {
+			$query = "UPDATE messages SET deletedfrom='1' WHERE id='".$this->id."'";
+		}
 		mysql_query($query) or die("Query failed: ".mysql_error());
 	}
 	function markAsRead() {
@@ -227,7 +262,7 @@ class Band extends DBObject {
 	public $typename;
 	public $type;
 	public $info;
-	public $exists;
+	public $exists=false;
 	
 	
 	public $users = array();
@@ -248,7 +283,10 @@ class Band extends DBObject {
 
 			$result = mysql_query("SELECT * FROM bandcalendar WHERE bandid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 			while($row=mysql_fetch_array($result)){
-				$this->events[] = $row['calendarid'];
+				$e = new Event($row['calendarid']);
+				if(!in_array($e,$this->events)&&$e->starttime>=time()) {
+					$this->events[]=$e;
+				}
 			}
 			$result = mysql_query("SELECT * FROM userbands WHERE bandid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 			while($row=mysql_fetch_array($result)){
@@ -322,6 +360,8 @@ class Event extends DBObject {
 	public $users = array();
 	public $venueid;
 	public $bands = array();
+	public $exists = false;
+	
 	public function __construct($i) {
 		$this->id=$i;
 		$this->Con=$this->getConnection();
@@ -350,12 +390,13 @@ class Event extends DBObject {
 		}
 	}
 	public function update() {
-		$result = mysql_query("UPDATE bands SET 
-								name = '".$this->name."', 
-								starttime = '".$this->starttime."',
-								endtime = '".$this->endtime."' 
-							 	WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
-	
+		mysql_query("UPDATE calendar SET name = '".$this->name."', starttime = '".$this->starttime."', endtime = '".$this->endtime."', description = '".$this->description."' WHERE id = '".$this->id."'") or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandcalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		foreach($this->bands as $b) {
+			mysql_query("INSERT INTO bandcalendar (bandid,calendarid) VALUES ('".$b."','".$this->id."')") or die("It was me!".mysql_error());
+		}
+		mysql_query("DELETE FROM venuecalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("INSERT INTO venuecalendar (calendarid, venueid) VALUES ('".$this->id."' , '".$this->venueid."')") or die(mysql_error());
 	}
 }
 class Calendar extends DBObject {
