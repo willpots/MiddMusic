@@ -1,0 +1,37 @@
+TODO before Sunday
+
+
+
+
+
+
+
+
+==============================================================
+
+
+* Reset Password Email
+	
+* Ratings system
+
+* Record and Practice Schedules Functional
+
+* Create Band Button
+
+==============================================================
+
+Done:
+	Duplicate Messages
+	- Ideas…change ID field and use 'u-id','b-id',and 'v-id'
+
+	Calendar upcoming events sidebar
+		
+	Logout Button	
+	
+	Message to Everyone
+	
+	* Message to instruments
+
+	* Email confirmation - Done, need to test!
+
+	* "Like" bands

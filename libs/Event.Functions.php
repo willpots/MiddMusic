@@ -16,7 +16,7 @@ function getEventsBetween($starttime, $endtime, $calendar) {
 }
 function getUpcomingEvents() {
 	$start = time();
-	$end = strtotime("+2 weeks" , $start);
+	$end = strtotime("+1 month" , $start);
 	$events = array();
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);

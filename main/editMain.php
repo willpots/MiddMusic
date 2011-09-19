@@ -9,6 +9,7 @@
  * will@middpoint.com														*
  ***************************************************************************/
 if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
+	if($me->canEdit($_GET['band'],'band')) {
 	$id=$_GET['band'];
 	$b = new Band($id);
 	$types = getBandTypes();
@@ -27,8 +28,8 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 			<label for="info">Description:<br>
 				<textarea rows="15" cols="50" name="info" id="info" placeholder="Describe your band here..."><?php echo stripslashes($b->info); ?></textarea>
 			</label>	
-			<label for="type">Type: 
-				<select name="type">
+			<label for="type">Type: <br>
+				<select name="type[]" multiple id="type" class="chzn-select" style="width:500px;">
 				<?php
 				foreach($types as $t) {
 					if($b->type==$t['id']) {
@@ -40,10 +41,28 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 				?>
 				</select>
 			</label>
- 			<input type="button" class="button" name="updateband" onclick="updateBand()" value="Update Band">
+			<label for="users">
+				<select name="users[]" multiple id="users" class="chzn-select" style="width:500px;">
+				<?php
+				$users = pullAllUsers();
+				foreach($users as $us) {
+					if(in_array($us['id'],$b->users)) {
+						echo '<option selected value="'.$us['id'].'">'.$us['name'].'</option>';
+					} else {
+						echo '<option value="'.$us['id'].'">'.$us['name'].'</option>';
+					}
+				}
+				?>
+				</select>
+			</label>
 		</form>
+		<input type="button" class="button" name="updateband" onclick="updateBand()" value="Update Band">
 		</div>
-<?php } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { 
+<?php	} else { ?>
+	<p>You cannot edit that band. You are not a member.</p>
+<?php	
+	}
+ } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { 
 
 $event = $_GET['event'];
 $e=new Event($event);
@@ -117,8 +136,9 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 		</select>
 		</label>
 	</p>
-	<input type="button" name="UPDATEEVENT" class="button" id="sbutton" onclick="updateEvent('<?php echo $event; ?>')" disabled value="Update Event">
 	</form>
+	<input type="button" name="UPDATEEVENT" class="button" id="sbutton" onclick="updateEvent('<?php echo $event; ?>')" disabled value="Update Event">
+	<input type="button" name="DELETEEVENT" class="button" id="DELETEEVENT" onclick="deleteEvent('<?php echo $event; ?>')" value="Delete Event">
 	<script>
 		$('#starttime').datetimepicker({
 			ampm: true
@@ -140,15 +160,15 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 } else if(isset($_COOKIE['mu_id'])) {
 	$id=$_COOKIE['mu_id'];
 	$i = getUserInfo($id);
+	$u = new User($id);
 ?>
 	<div id="edit">
-		<div class="section-title">EDIT YOUR PROFILE</div>
+		<div class="section-title"><a href="?page=profile&id=<?php echo $id; ?>" style="text-decoration:none;">&larr;</a> | EDIT YOUR PROFILE</div>
 		<div id="edit-form">
-			<div class="right">
+			<form id="updateUser" name="updateUser">
+			<div class="right" style="width:200px;">
 				<img id="profilepic" src="<?php if(isset($i['picture'])) echo $i['picture']; else echo "photos/nameless.png";  ?>" alt="Profile Picture" width="200">
-				<form id="uploadpic">
-					<input type="file" name="profilepic" onchange="uploadImage()">
-				</form>
+				<input type="file" name="profilepic">
 			</div>
 			<label for="username">Username: 
 				<input type="text" name="username" id="username" value="<?php echo $i['username']; ?>" placeholder="Username" disabled>
@@ -181,11 +201,30 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 			</label>
 			<label for="info">Description:<br>
 				<textarea rows="15" cols="50" name="info" id="info" placeholder="Describe yourself here..."><?php echo stripslashes($i['info']); ?></textarea>
-			</label>		
-			<a class="button" onclick="updateUser()" >Update Profile</a>
+			</label>
+			<label for="popacts">I Like... <br>
+				<div id="popacts-container">
+				<select name="popacts[]" multiple id="popacts" class="chzn-select" style="width:500px;">
+					<?php 
+						$acts=pullAllPopActs();
+						foreach($acts as $a) {
+							if(in_array($a['id'],$u->popacts)) {
+								echo '<option value="'.$a['id'].'" selected>'.$a['name'].'</option>';
+							} else {
+								echo '<option value="'.$a['id'].'">'.$a['name'].'</option>';
+							}
+						}
+					?>
+				</select>
+				</div>
+			</label>	
+			<label>Or add you own... (Correct spelling please.)<br>
+				<input name="popacts[]" type="text" id="addpopact" style="width:500px;" onkeyup="addPopAct(event);" placeholder="Add a new Band">
+			</label>
+			</form>
+			<button class="button" onclick="updateMyProfile()">Update Profile</button>	
 		</div>
 	</div>
-	
 <?php
  } else { ?>
 <div id="edit">

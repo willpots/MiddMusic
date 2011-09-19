@@ -17,10 +17,10 @@ placeholder="Search" />
 </div><!-- Search form -->
 <?php if(!isset($_GET['id'])) { ?>
 <div id="about-me" class="sidebar-widget">
-	<div class="sidebar-title">ABOUT</div>
+	<div class="sidebar-title">ABOUT ME</div>
 	<div class="sidebar-widget-content">
 	<?php 
-		echo $u->info;
+		echo viewString($u->info);
 	?>
 	</div>
 </div><!-- about-me -->
@@ -88,22 +88,46 @@ placeholder="Search" />
 	</div>
 </div>
 <?php if(isset($_COOKIE['mu_id'])) { ?>
-<?php if(isset($_GET['band'])) { ?>
+<?php if(isset($_GET['band'])&&$me->canEdit($_GET['band'],'band')) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit&band=<?php echo $_GET['band']; ?>" class="blue-button">EDIT BAND PROFILE</a></div>
 </div>
-<?php } else if(isset($_GET['venue'])) { ?>
+<?php } else if(isset($_GET['venue'])&&isset($_COOKIE['mu_admin'])) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit&venue=<?php echo $_GET['venue']; ?>" class="blue-button">EDIT VENUE PROFILE</a></div>
 </div>
-<?php } else if(isset($_GET['event'])) { ?>
+<?php } else if(isset($_GET['event'])&&$me->canEdit($_GET['event'],'event')) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit&event=<?php echo $_GET['event']; ?>" class="blue-button">EDIT EVENT DETAILS</a></div>
 </div>
-<?php } else { ?>
+<?php } else if(isset($_GET['id'])&&$_GET['id']==$_COOKIE['mu_id']) { ?>
 <div id="manage-profile" class="sidebar-widget">
 	<div class="sidebar-title center"><a href="?page=edit" class="blue-button">EDIT MY PROFILE</a></div>
 </div>
-<?php }
+<?php } else { ?>
+<div id="manage-profile" class="sidebar-widget">
+	<div class="sidebar-title center"><a href="?page=create&band" class="blue-button">FORM A BAND</a></div>
+</div>
+<?php	}
 	}
-} ?>
+} else { ?>
+<div id="profile-info" class="sidebar-widget">
+	<div class="sidebar-title center">Welcome to Midd Music.</div>
+	<div class="sidebar-widget-content">We are Midd Music United, formerly the Middlebury Musician's Guild.</div>
+</div>
+<?php 
+$events = getUpcomingEvents();
+?>
+<div id="upcoming-events" class="sidebar-widget">
+	<div class="sidebar-title">UPCOMING EVENTS</div>
+	<div class="sidebar-widget-content">
+	<?php 
+	foreach($events as $event) {
+		$e=new Event($event['id']);
+		echo '<div>'.date('n/j',$e->starttime).' - <a href="?page=profile&event='.$e->id.'">'.$e->name.'</a></div>';
+	}
+	?>
+	</div>
+</div><!-- upcoming events -->
+
+<?php } ?>

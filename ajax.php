@@ -8,17 +8,56 @@ if(isset($p['getDateView'])) {
 } else if(isset($p['updatingband'])) {
 	$id = $p['id'];
 	$b = new Band($id);
-	if(!empty($p['profilepic'])) {
+	if(!empty($_FILES['profilepic']['name'])) {
 		$tname=	$_FILES['profilepic']['tmp_name'];
 		$name = $_FILES['profilepic']['name'];
-		move_uploaded_file(	$tname, "photos/band_".$name);
-		$b->picture =  "photos/band_".$name;
+		move_uploaded_file(	$tname, "photos/band_".$id."_".$name);
+		$b->picture =  "photos/band_".$id."_".$name;
+		echo "Uploaded Picture!";
+	}
+	$type=$p['type'][0];
+	for($i=1;$i<count($p['type']);$i++) {
+		$type .= ','.$p['type'];
 	}
 	$b->name = $p['name'];
 	$b->info = $p['info'];
-	$b->type = $p['type'];
+	$b->type = $type;
+	$b->users = $p['users'];
 	$b->update();	
 	echo "true";
+	
+} else if(isset($p['addpopact'])) {
+	$value = cleanString($p['addpopact']);
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "INSERT INTO popacts (name) VALUES ('$value')";
+	$result = mysql_query($query,$con) or die(mysql_error());
+	$id = mysql_insert_id($con);
+	$query = "INSERT INTO userpopacts (userid,popactid) VALUES ('".$_COOKIE['mu_id']."','".$id."')";
+	$result = mysql_query($query,$con) or die(mysql_error());
+	$u = new User($_COOKIE['mu_id']);
+	$acts=pullAllPopActs();
+	echo '<select name="popacts[]" multiple id="popacts" class="chzn-select" style="width:500px;">';
+	foreach($acts as $a) {
+		if(in_array($a['id'],$u->popacts)) {
+			echo '<option value="'.$a['id'].'" selected>'.stripslashes($a['name']).'</option>';
+		} else {
+			echo '<option value="'.$a['id'].'">'.stripslashes($a['name']).'</option>';
+		}
+	}
+	echo '</select>';
+
+} else if(isset($p['deleteevent'])) {
+	$id = $p['id'];
+	$e = new Event($id);
+	if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
+		$e->delete();
+		echo "Deleted Event!";
+	} else {
+		echo "Couldn't delete event!";
+	}
+
 } else if(isset($p['checkemail'])) {
 	$username = $p['checkemail'];
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -32,30 +71,19 @@ if(isset($p['getDateView'])) {
 
 } else if(isset($p['sendmessage'])) {
 	$msgs = $_POST['to'];
+	$tostring=':';
 	foreach($msgs as $msgto) {
-		$m = new Message();
-		$m->subject = $_POST['subject'];
-		$m->content = $_POST['content'];
-
-		$e = explode('-',$msgto);
-		if($e[0] == 'u') {
-			$m->usermsgto = $e[1];
-		} else if($e[0] == 'b') {
-			$m->bandmsgto = $e[1];
-		} else if($e[0] == 'v') {
-			$m->venuemsgto = $e[1];
-		}
-		$msgfrom = $_POST['from'];
-		$e = explode('-',$msgfrom);
-		if($e[0] == 'u') {
-			$m->usermsgfrom = $e[1];
-		} else if($e[0] == 'b') {
-			$m->bandmsgfrom = $e[1];
-		} else if($e[0] == 'v') {
-			$m->venuemsgfrom = $e[1];
-		}
-		$m->deliver();
+		$tostring .= $msgto.':';
 	}
+	echo $tostring;
+	$m = new Message();
+	$m->subject = $_POST['subject'];
+	$m->content = $_POST['content'];
+
+	$m->msgto = $tostring;
+	$m->msgfrom = ':'.$_POST['from'].':';
+	$m->deliver();
+	
 } else if(isset($p['getMonthView'])) {
 	// This is the thing that draws all of the calendars!
 	header( "content-type: text/html; charset=UTF-8" ); 
@@ -72,18 +100,17 @@ if(isset($p['getDateView'])) {
 	
 } else if(isset($p['deleteMessage'])) {
 	$id = $p['id'];
-	$tofrom = $p['tofrom'];
 	$m = new Message($id);
-	$m->delete($tofrom);
+	$m->delete();
 
 } else if(isset($p['uploadPix'])) {
 
 
 	$tname=	$_FILES['profilepic']['tmp_name'];
 	$name = $_FILES['profilepic']['name'];
-
-	updatePic($_COOKIE['mu_id'],"photos/".$name);
-	move_uploaded_file(	$tname, "photos/".$name);
+	
+	updatePic($_COOKIE['mu_id'],"photos/".$_COOKIE['mu_id']."_".$name);
+	move_uploaded_file(	$tname, "photos/".$_COOKIE['mu_id']."_".$name);
 	echo "photos/".$name;
 
 } else if(isset($p['createAnEvent'])) {
@@ -208,7 +235,7 @@ if(isset($p['getDateView'])) {
 			}
 		}
 	} else if($page=="bands") {
-		$cname = getActTypeName($q);
+		$cname = getBandTypeName($q);
 		echo '<div class="section-title">'.strtoupper($page).' - '.$cname.'</div>';
 		echo '<div id="results">';
 		$table = "bands";
@@ -222,53 +249,27 @@ if(isset($p['getDateView'])) {
 	echo '</div>';
 } else if(isset($p['userupdate'])) {
 	$id = $_COOKIE['mu_id'];
+	$user = new User($id);
 	$firstname=$_POST['firstname'];
 	$lastname=$_POST['lastname'];
 	$class=$_POST['class'];
-	$info=addslashes($_POST['info']);
-	updateUser($id, $firstname, $lastname, $class, $info);
-	$i = getUserInfo($id);
-	?>
-		<div class="section-title">EDIT YOUR PROFILE</div>
-		<div id="edit-form">
-			<div class="right">
-				<img id="profilepic" src="<?php echo $i['picture']; ?>" alt="Profile Picture" width="200">
-			</div>
-			<label for="username">Username: 
-				<input type="text" name="username" id="username" value="<?php echo $i['username']; ?>" placeholder="Username" disabled>
-			</label>
-			<label for="firstname">Firstname: 
-				<input type="text" name="firstname" id="firstname" value="<?php echo $i['firstname']; ?>" placeholder="Firstname">
-			</label>
-			<label for="lastname">Lastname: 
-				<input type="text" name="lastname" id="lastname" value="<?php echo $i['lastname']; ?>" placeholder="Lastname">
-			</label>
-			<label for="class">Class Year:
-				<select name="class" id="class">
-					<option value="2008" <?php if($i['class']==2008) echo "selected"; ?> >2008</option>
-					<option value="2008.5" <?php if($i['class']==2008.5) echo "selected"; ?> >2008.5</option>
-					<option value="2009" <?php if($i['class']==2009) echo "selected"; ?> >2009</option>
-					<option value="2009.5" <?php if($i['class']==2009.5) echo "selected"; ?> >2009.5</option>
-					<option value="2010" <?php if($i['class']==2010) echo "selected"; ?> >2010</option>
-					<option value="2010.5" <?php if($i['class']==2010.5) echo "selected"; ?> >2010.5</option>
-					<option value="2011" <?php if($i['class']==2011) echo "selected"; ?> >2011</option>
-					<option value="2011.5" <?php if($i['class']==2011.5) echo "selected"; ?> >2011.5</option>
-					<option value="2012" <?php if($i['class']==2012) echo "selected"; ?> >2012</option>
-					<option value="2012.5" <?php if($i['class']==2012.5) echo "selected"; ?> >2012.5</option>
-					<option value="2013" <?php if($i['class']==2013) echo "selected"; ?> >2013</option>
-					<option value="2013.5" <?php if($i['class']==2013.5) echo "selected"; ?> >2013.5</option>
-					<option value="2014" <?php if($i['class']==2014) echo "selected"; ?> >2014</option>
-					<option value="2014.5" <?php if($i['class']==2014.5) echo "selected"; ?> >2014.5</option>
-					<option value="2015" <?php if($i['class']==2015) echo "selected"; ?> >2015</option>
-					<option value="2015.5" <?php if($i['class']==2015.5) echo "selected"; ?> >2015.5</option>
-				</select>
-			</label>
-			<label for="info">Description:<br>
-				<textarea rows="15" cols="53" name="info" id="info" placeholder="Describe yourself here..."><?php echo $i['info']; ?></textarea>
-			</label>		
-			<a class="button" onclick="updateUser()">Update Profile</a>
-		</div>		
-<?php
+	$popacts = $_POST['popacts'];
+	$info=cleanString($_POST['info']);
+	if(!empty($_FILES['profilepic']['name'])) {
+		$tname=	$_FILES['profilepic']['tmp_name'];
+		$name = $_FILES['profilepic']['name'];
+		move_uploaded_file(	$tname, "photos/user_".$id."_".$name);
+		$user->picture =  "photos/user_".$id."_".$name;
+		echo "Uploaded Picture!";
+	}
+	$user->firstname = $firstname;
+	$user->lastname = $lastname;
+	$user->class = $class;
+	$user->info = $info;
+	$user->popacts = $popacts;
+	$user->update();
+		
+
 } else if(isset($p['instrumentSearch'])) {
 	$q = $p['q'];
 	if($q=="") {

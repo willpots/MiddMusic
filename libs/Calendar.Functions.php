@@ -8,15 +8,15 @@ function drawCalendar($month, $calendar) {
 	}
 	$calstart = $beginweek; ?>
 	<div id="month-nav">
-		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-1 week", $beginweek)."','".$calendar;?>')">&larr;</a>
-		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+1 week", $beginweek)."','".$calendar;?>')">&rarr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("-3 weeks", $beginweek)."','".$calendar;?>')">&larr;</a>
+		<a class="month-nav blue-button unselectable" unselectable="on" onclick="getCalendarMonth('<?php echo strtotime("+3 weeks", $beginweek)."','".$calendar;?>')">&rarr;</a>
 	</div>
 	<div class="section-title"><?php echo strtoupper($calendar) ?></div>
-	<div class="month-name"><?php echo date('F, Y',$beginweek); ?></div>
+	<div class="month-name"><?php echo date('F j, Y',$beginweek).' - '.date('F j, Y',strtotime("+20 days", $beginweek)); ?></div>
 	<div class="month">
 
 	<?php 
-	$daysleft = 7;
+	$daysleft = 21;
 	echo '<div class="week">';
 	while($daysleft > 0)
 	{
@@ -33,7 +33,7 @@ function drawCalendar($month, $calendar) {
 			//echo '<div class="day today" onclick="getCalendarDay('.$calstart.",'".$calendar.'\')" id="day-'.$calstart.'">';
 		}
 		echo '<div class="dayno">'.date('j', $calstart).'</div>';
-		echo '<span class="">'.date('l',$calstart).'</span>';
+		echo '<span class="dayname">'.date('l',$calstart).'</span>';
 		echo '<div class="day-events">';
 		if($events!=false) {
 			foreach($events as $e) {

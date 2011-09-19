@@ -9,7 +9,7 @@
  ?>
 <div id="container">
 	<header id="fp-header">
-			<div id="fp-header-text">Middlebury Musicians Union</div>
+			<div id="fp-header-text">Middlebury Music United</div>
 	</header>
 	<div id="fp-logobar">
 		<a id="fp-logo"></a>
@@ -17,14 +17,14 @@
 	<div id="fp-main" role="main">
 	<section>
 		<div id="fp-login">
-			<div id="fp-loginline">Login</div>
+			<div id="fp-loginline">Musician Login</div>
 			<div id="fp-loginbox">
 				<form action="login.php" method="post">
 				<label for="username">Username</label><br>
 				<input type="text" autocomplete="off" name="username" placeholder="rliebowitz">@middlebury.edu<br>
 				<label for="password">Password</label><br>
 				<input type="password" autocomplete="off" name="password" ><br>
-				<input type="submit" name="SUBMITLOGIN" value="Log me in!">
+				<input type="submit" name="SUBMITLOGIN" class="button" style="margin:10px 0;" value="Log me in!">
 				</form>
 				<div class="fp-links">
 				<a href="?page=musicians" class="fp-content-link">BROWSE PERFORMERS</a>
@@ -33,14 +33,14 @@
 			</div><!-- loginbox -->
 		</div><!-- login -->
 		<div id="fp-signup">
-			<div id="fp-signupline">Sign Up</div><!-- signupline -->
+			<div id="fp-signupline">Musician Sign Up</div><!-- signupline -->
 			<div id="fp-signupbox">
 				<form action="?page=register" method="post">
 				<label for="username">Username</label><br>
 				<input type="text" autocomplete="off" name="username" placeholder="rliebowitz">@middlebury.edu<br>
 				<label for="password">Password</label><br>
 				<input type="password" autocomplete="off" name="password" ><br>
-				<input type="submit" name="SIGNMEUP" value="Sign me up!">
+				<input type="submit" name="SIGNMEUP" class="button" style="margin:10px 0;" value="Sign me up!">
 				</form>
 			</div><!-- signupbox -->
 		</div><!-- signup -->

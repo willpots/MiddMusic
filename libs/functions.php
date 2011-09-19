@@ -19,7 +19,61 @@ function cleanString($string) {
 	$string = htmlspecialchars(addslashes(strip_tags($string)));
 	return $string;
 }
+function viewString($string) {
+	$string = nl2br(stripslashes($string));
+	return $string;
+}
+//! Randomizes characters for use in a code
+function randomChars() {
+	$characters = array("A","B","C","D","E","F","G","H","J",
+						"K","L","M","N","P","Q","R","S","T",
+						"U","V","W","X","Y","Z","1","2","3",
+						"4","5","6","7","8","9","a","b","c",
+						"d","e","f","g","h","i","j","k","l",
+						"m","n","o","p","q","r","s","t","u",
+						"v","w","x","y","z");
+	$keys = array();
+	$random_chars="";
+	//first count of $keys is empty so "1", remaining count is 1-6 = total 7 times
+	while(count($keys) < 7) {
+	    //"0" because we use this to FIND ARRAY KEYS which has a 0 value
+	    //"-1" because were only concerned of number of keys which is 32 not 33
+	    //count($characters) = 33
+	    $x = mt_rand(0, count($characters)-1);
+	    if(!in_array($x, $keys)) {
+	       $keys[] = $x;
+	    }
+	}
+	foreach($keys as $key){
+	   $random_chars .= $characters[$key];
+	}
+	$value = hash('sha256',$random_chars);
+	return $value;
+}
 
+/*
+function verifyInviteCode($code) {
+	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM user WHERE invitecode='$code'";
+	$result = mysql_query($query) or die("Query $query failed: " . mysql_error());
+	if(mysql_num_rows($result)!=1) return FALSE;
+	else return TRUE;
+}
+//! Creates an invite code
+function createInviteCode() {
+	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$chars = randomChars();
+	$query = "INSERT INTO user (invitecode) VALUES ('$chars')";
+	mysql_query($query) or die("Query $query failed: " . mysql_error());
+	return $chars;	
+}
+*/
 /*
 	Instrument/Style Functions Below Here ---------------------
 */
@@ -131,6 +185,25 @@ function pullSearchQuery($q, $page, $i=0) {
 					}
 				}
 			}	
+			$query = "SELECT id FROM popacts WHERE name LIKE '%$q%' ";
+			$result = mysql_query($query);
+			while($row = mysql_fetch_array($result)) {
+				$popact=$row['id']; //Pull Instrument ID
+				$result2 = mysql_query("SELECT * FROM userpopacts WHERE popactid = '$popact'"); //Pull all users who have that instrument id
+				while($row2 = mysql_fetch_array($result2)) {
+					$uids[]=$row2['userid'];
+				}
+			}
+			if(!empty($uids)) {
+				foreach($uids as $uid) {
+					$result3 = mysql_query("SELECT * FROM user WHERE id= '$uid'");
+					while($row=mysql_fetch_array($result3)) {
+						if(!in_array($row, $results)) {
+							$results[]=$row;
+						}
+					}
+				}
+			}	
 		}
 	}
 	if(!empty($results))  return $results;
@@ -143,7 +216,7 @@ function pullAll($q,$table=null) {
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
 	if($table==null||$table=='user') {
-		$query = "SELECT id, firstname, lastname FROM user WHERE firstname LIKE '%%".mysql_real_escape_string($q)."%%' OR lastname LIKE '%%".mysql_real_escape_string($q)."%%' LIMIT 10";
+		$query = "SELECT id, firstname, lastname FROM user WHERE firstname LIKE '%%".mysql_real_escape_string($q)."%%' OR lastname LIKE '%%".mysql_real_escape_string($q)."%%' LIMIT 10 ORDER BY lastname DESC";
 		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 		while($obj = mysql_fetch_array($result)) {
 			$a = array('id'=>'u-'.$obj['id'], 'name'=>$obj['firstname'].' '.$obj['lastname']);
@@ -287,6 +360,14 @@ function pullAllEntities() {
 		$a['name']=$row['name'];
 		$results[]=$a;
 	}
+	$query = "SELECT * FROM instruments";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='i-'.$row['id'];
+		$a['name']=ucfirst($row['name']);
+		$results[]=$a;
+	}
 	return $results;
 }
 function pullAllUsers() {
@@ -295,11 +376,11 @@ function pullAllUsers() {
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
-	$query = "SELECT * FROM user WHERE id != '".$_COOKIE['mu_id']."'";
+	$query = "SELECT * FROM user ORDER BY lastname ASC";
 	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
 	while($row = mysql_fetch_array($result)) {
 		$a=array();
-		$a['id']='u-'.$row['id'];
+		$a['id']=$row['id'];
 		$a['name']=$row['firstname'].' '.$row['lastname'];
 		$results[]=$a;
 	}
@@ -337,7 +418,59 @@ function pullAllVenues() {
 	}
 	return $results;
 }
+function pullAllInstruments() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM instruments ORDER BY name ASC";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='i-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
+function pullAllPopActs() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM popacts ORDER BY name ASC";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']=$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
+function pullAllGenres() {
+	$results=array();
+ 	global $dbHost, $dbUser, $dbPass, $dbSchema;
+	$con = mysql_connect($dbHost, $dbUser, $dbPass);
+	if(!$con) die('Could not connect: ' . mysql_error());
+	mysql_select_db($dbSchema, $con) or die('Could not select database');
+	$query = "SELECT * FROM genres ORDER BY name ASC";
+	$result = mysql_query($query) or die('Query Error: ' . mysql_error()); 
+	while($row = mysql_fetch_array($result)) {
+		$a=array();
+		$a['id']='g-'.$row['id'];
+		$a['name']=$row['name'];
+		$results[]=$a;
+	}
+	return $results;
+}
 
+function masterSearch($query,$type=null,$instrument=null,$popact=null,$genre=null,$influence=null,$spacestyle=null) {
+	$results = array();
+	$q = explode(" ",$query);
+}
 /*
 	Drawing Functions Below Here ---------------------
 */

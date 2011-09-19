@@ -23,7 +23,7 @@ function getBandInfo($id) {
  	$row=mysql_fetch_array($result);
  	if(!empty($row)) return $row;
  	else return false;
-}
+}*/
 function getBandTypeName($id){
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
@@ -34,7 +34,7 @@ function getBandTypeName($id){
  	$row=mysql_fetch_array($result);
  	if(!empty($row)) return $row['name'];
  	else return false;
-}*/
+}
 function getBandTypes() {
  	global $dbHost, $dbUser, $dbPass, $dbSchema;
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);

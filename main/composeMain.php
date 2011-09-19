@@ -7,7 +7,7 @@
  * will@middpoint.com																		*
  ***************************************************************************/
 if(isset($_COOKIE['mu_id'] )) {
-	if(isset($_POST['to'])) $to = $_POST['to'];
+	if(isset($_GET['to'])) $to = $_GET['to'];
 	else $to = "";
 	if($to==false) $to="";
 	?>
@@ -15,7 +15,7 @@ if(isset($_COOKIE['mu_id'] )) {
 	<div id="message">
 		<form name="composeMessage" method="post">
 		<div class="compose-element" id="from-container">From: 
-			<select name="from" id="from" style="width:300px;" class="chzn-select" title="Choose a recipient" data-placeholder="Choose a recipient"  >
+			<select name="from" id="from" style="width:300px;" class="chzn-select" title="Choose a sender" data-placeholder="Chose a sender"  >
 				<option value="u-<?php echo $me->id; ?>"><?php echo $me->firstname." ".$me->lastname; ?></option>
 			<?php
 				foreach($me->bands as $b) {
@@ -33,26 +33,23 @@ if(isset($_COOKIE['mu_id'] )) {
 			<?php
 				$a=pullAllEntities();
 				foreach($a as $b) {
-					echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+					if($to==$b['id']) {
+						echo '<option selected value="'.$b['id'].'">'.$b['name'].'</option>';
+					} else {
+						echo '<option value="'.$b['id'].'">'.$b['name'].'</option>';
+					}
+				}
+				if(isset($_COOKIE['mu_admin'])) {
+					echo '<option value="everyone">Everyone</option>';
 				}
 			?>
 		</select>
 		</div>
-		<div class="" id="results"></div>
 		<div class="compose-element">Subject: <input type="text" name="subject" class="compose-field" id="subject" placeholder="Subject"></div>
 		<div class="compose-element">Message Body:<br><textarea rows="10" cols="70" name="content" class="compose-field" id="msgcontent" placeholder="Message Content"></textarea></div>
-		<div class="compose-element"><button name="send" id="send" onclick="sendMessage()" class="button" >Send Message</div>
 		</form>
+		<div class="compose-element"><button name="send" id="send" onclick="sendMessage()" class="button" >Send Message</div>
 	</div>
-	<script>
-	/*$("#to").tokenInput("http://middmusic.com/xml.php", {
-	    preventDuplicates: true,
-	    tokenLimit: 1,
-	    theme: "facebook",
-	    animateDropdown: false
-	    
-	});*/
-	</script>
 	<?php
 }
 ?>

@@ -12,6 +12,13 @@ else $page ="";
 
 <div id="container">
 	<div id="header">
+		<div id="logins">
+			<?php if(isset($_COOKIE['mu_user'])) {
+				echo '<a href="logout.php">Log Out</a>';
+			} else {	
+				echo '<a href="?page=login">Log In</a>';
+			}?>
+		</div>
 		<div id="inner-header">
 			<div id="nav-bar">
 				<?php if(isset($_COOKIE['mu_id'])) { ?>
@@ -23,7 +30,8 @@ else $page ="";
 				<a href="?page=bands" class="<?php if($page=="bands") echo 'selected '; ?>">Bands/DJs</a>
 				<a href="?page=musicians" class="<?php if($page=="musicians") echo 'selected '; ?>">Musicians</a>
 				<?php if(isset($_COOKIE['mu_id'])) { ?>
-				<a href="?page=profile&id=<?php echo $_COOKIE['mu_id']; ?>" class="<?php if($page=="profile"||$page=="") echo 'selected '; ?>">Profile</a>
+				<a href="?page=profile&id=<?php echo $_COOKIE['mu_id']; ?>" class="<?php if($page=="profile") echo 'selected '; ?>">Profile</a>
+				<a href="/" class="<?php if($page=="") echo 'selected '; ?>">Home</a>
 				<?php } ?>
 			</div><!-- Nav-Bar -->
 			<a id="h-logo" href="?page=profile"></a><!-- H-Logo -->
@@ -38,8 +46,14 @@ if($page=="profile") {
 
 } else if($page=="edit") {
 		include('sidebars/editSidebar.php');
-	} else if($page=="calendar"||$page=="practice"||$page=="record") {
+	} else if($page=="calendar") {
 		include('sidebars/calendarSidebar.php');
+	} else if($page=="confirm") {
+
+	} else if($page=="create") {
+	
+	} else if($page=="record"||$page=="practice") {
+		include('sidebars/practiceSidebar.php');
 	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
 		include('sidebars/directorySidebar.php');
 	} else {
@@ -58,10 +72,16 @@ if($page=="profile") { //Profile
 	include('main/loginMain.php');
 } else if($page=="register") { //Register
 	include('main/registerMain.php');
+} else if($page=="confirm") {
+	include('main/confirmMain.php');
+} else if($page=="create") {
+	include('main/createMain.php');
 } else if($page=="edit") { //Edit (Profile)
 	include('main/editMain.php');
-} else if($page=="calendar"||$page=="practice"||$page=="record") { //Calendar Views
+} else if($page=="calendar") { //Calendar Views
 	include('main/calendarMain.php');
+} else if($page=="record"||$page=="practice") {
+	include('main/practiceMain.php');
 } else if($page=="bands"||$page=="musicians"||$page=="venues") { //Directory Views
 	include('main/directoryMain.php');
 } else { // Default to Profile View

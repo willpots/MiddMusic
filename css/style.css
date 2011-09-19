@@ -85,9 +85,10 @@ a:hover { color: #036; }
 
 */
 /* Generic Elements Styling */
-input, textarea {
-	border: 1pt inset #aaa;
+input[type=text], input[type=password], textarea {
+	border: 1px solid rgb(88, 151, 251);
 	border-radius: 2px;
+	padding: 7px;
 }
 p {
 	margin: 10px 0;
@@ -107,6 +108,56 @@ html,body,#container {
 }
 .left {
 	float: left;
+}
+.small-button,
+a.small-button:link,
+a.small-button:visited {
+	display: -moz-inline-box;
+	display: inline-block;
+	margin: 0;
+	position: relative;
+	padding: 5px 10px;
+	margin: 5px 0;
+	
+	font: 75% 'Open Sans',sans-serif;
+	text-decoration: none;
+	font-size: 75%;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 80%;
+	
+	text-align: center;
+	white-space: nowrap;
+	outline: none;
+	
+	cursor: pointer;
+	vertical-align: middle;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	-o-transition: border-top-color 0.218s,border-right-color 0.218s,border-bottom-color 0.218s,border-left-color .218s;
+	-webkit-transition: border-color .218s;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-top-color: rgba(0, 0, 0, 0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	color: #666;
+	background: -moz-linear-gradient(top,whiteSmoke,#F1F1F1);
+	background: -webkit-gradient(linear,0% 40%,0% 70%,from(whiteSmoke),to(#F1F1F1));
+}
+.small-button:hover {
+	border-color: #939393!important;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	color: #333;
+}
+.small-button:active {
+	background: -webkit-gradient(linear,0% 40%,0% 70%,from(#F1F1F1),to(whiteSmoke));
+	border-color: #444!important;
+	background: -moz-linear-gradient(top,#F3F3F3,whiteSmoke);
 }
 .button,
 a.button:link,
@@ -261,16 +312,18 @@ header#fp-header {
 	border-bottom: 2pt solid #fff;
 }
 .fp-links {
-	margin: 40px 0;
+	margin: 0 0;
 }
 a.fp-content-link {
 	text-decoration: none;
 	font-size: 20px;
 	color: #FFF;
 	display: block;
-	padding: 10px 0;
+	padding: 5px 0;
 }
 a.fp-content-link:hover {
+	background: white;
+	background-clip: content-box;
 	color: #F3297A;
 }
 
@@ -290,13 +343,11 @@ a.fp-content-link:hover {
 	border-bottom: 1pt solid #ddd;
 	border-right: 1pt solid #ddd;
 	border-left: 1pt solid #ddd;
-	min-height: 500px;
 }
 #main-content {
 	float: right;
 	width: 610px;
 	padding: 20px;
-	min-height: 500px;
 }
 #h-logo {
 	background: url('/img/mmuweb.gif') no-repeat center center;
@@ -325,6 +376,22 @@ a.fp-content-link:hover {
 }
 #nav-bar a.selected {
 	background: #4478a7;
+}
+#logins {
+	float: right;
+	padding: 6px 20px;
+}
+#logins a {
+	padding: 10px 20px;
+	display: inline-block;
+	text-decoration: none;
+	color: white;
+	border:1pt solid transparent;
+}
+#logins a:hover {
+	background: rgb(68, 120, 167);
+	border: 1pt solid white;
+	border-radius: 3px;
 }
 #sidebar {
 	float: left;
@@ -375,6 +442,7 @@ a.fp-content-link:hover {
 	margin: 5px 0;
 	background:#fff url(/img/search.png) no-repeat 5px 6px;
 	-moz-border-radius: 2px;
+	border: 1px solid rgb(88, 151, 251);
 	border-radius: 2px;
 	font-size: 14px;
 	height: 22px;
@@ -399,9 +467,14 @@ a.fp-content-link:hover {
 /* Profile Stuff */
 .section-title {
 	font-size: 18px;
-	width: 400px;
+	width: 370px;
 	border-bottom: 1pt solid #ddd;
 	margin-bottom: 30px;
+}
+.section-content {
+	padding: 15px;
+	background: #eee;
+	margin-bottom: 15px;
 }
 /* Messages */
 .message {
@@ -515,7 +588,8 @@ a.day-event {
 }
 .dayno {
 	float: right;
-	padding: 4px;
+	padding: 7px;
+	font-size: 30px;
 }
 .wrongday {
 	background: #aaa;
@@ -569,6 +643,10 @@ a.day-event {
 .profile-section {
 	margin: 10px 0;
 }
+#profile-picture {
+	background: #fff;
+	padding: 10px 10px 10px 30px;
+}
 /* Edit Profile */
 #sidebar-loading {
 	padding: 50px 50px;
@@ -621,6 +699,7 @@ a.day-event {
 /* Other Stuff */
 #footer {
 	text-align: center;
+	font-size: 9px;
 	padding: 10px;
 }
 /* Time Picker */

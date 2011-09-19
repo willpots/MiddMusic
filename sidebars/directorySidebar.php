@@ -42,6 +42,7 @@ array_multisort( $sort_name, SORT_STRING, $inst);
 	} ?>
 	<input type="text" onkeyup="searchFor(event, this.value, '<?php echo $sp; ?>');" autocomplete="off" class="field" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>
 placeholder="Search" />
+	<p style="font-size:10px;">Search all musicians, genres, interests and/or instruments.</p>
 	</label>
 </div><!-- Search form -->
 

@@ -35,11 +35,14 @@ if(isset($_POST['SUBMITREGISTER']))
 		}
 		else
 		{
-			$sql = "INSERT INTO user (username, password, firstname, lastname, class )
-			VALUES ('$username', '$password', '$firstname', '$lastname', '$class' )";
-
+			$code = randomChars();
+			$sql = "INSERT INTO user (username, password, firstname, lastname, class, confirm, valid, registered )
+			VALUES ('$username', '$password', '$firstname', '$lastname', '$class', '$code', '0', '".time()."' )";
+			// Send Email Here
+			sendConfirmEmail($username,$code);
 			mysql_query($sql) or die(mysql_error());
-			echo "<p>Welcome $username! You have succesfully registered! A confirmation will be sent shortly to ".$username."@middlebury.edu listed. Your username is $username and you can now return <a href=\"/\">home and login</a>.</p>";
+			echo "<p>Welcome $username! You have succesfully registered! A confirmation will be sent shortly to ".$username."@middlebury.edu listed. When you click the link in your
+			 email, you may then log in <a href='/'>home</a>";
 		}
 		mysql_close($con);
 	}
@@ -73,7 +76,24 @@ $p=$_POST;
 	</label>
 </p><p>
 	<label for="class">Class Year:<br>
-	<input type="text" autocomplete="off" name="class" id="class" class="compose-field" placeholder="Class Year">
+		<select name="class" id="class" class="chzn-select">
+			<option value="2008">2008</option>
+			<option value="2008.5">2008.5</option>
+			<option value="2009">2009</option>
+			<option value="2009.5">2009.5</option>
+			<option value="2010">2010</option>
+			<option value="2010.5">2010.5</option>
+			<option value="2011">2011</option>
+			<option value="2011.5">2011.5</option>
+			<option value="2012">2012</option>
+			<option value="2012.5">2012.5</option>
+			<option value="2013">2013</option>
+			<option value="2013.5">2013.5</option>
+			<option value="2014">2014</option>
+			<option value="2014.5">2014.5</option>
+			<option value="2015">2015</option>
+			<option value="2015.5">2015.5</option>
+		</select>
 	</label>
 </p>
 <p><input type="submit" value="Register" class="button" id="SUBMITREGISTER" name="SUBMITREGISTER" disabled></p>

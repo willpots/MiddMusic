@@ -26,6 +26,7 @@ if(isset($_POST["SUBMITLOGIN"]))
 		}
 	} else {
 		header('Location: index.php?page=login&fail');
+		//header('Location: index.php');
 	}
 }	else {?>
 

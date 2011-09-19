@@ -34,9 +34,6 @@ if(isset($_COOKIE['mu_user'])) {
 	<link rel="stylesheet" href="css/style.css?v=2" />
 	<link rel="stylesheet" media="handheld" href="css/handheld.css?v=2" />
 	<link rel="stylesheet" href="css/middmusic/jquery-ui-1.8.16.custom.css" type="text/css" />	
-    <link rel="stylesheet" href="css/token-input.css" type="text/css" />
-    <link rel="stylesheet" href="css/token-input-mac.css" type="text/css" />
-    <link rel="stylesheet" href="css/token-input-facebook.css" type="text/css" />
 	<link rel="stylesheet" href="css/chosen.css" type="text/css" />
 	
 	<script src="js/libs/modernizr-1.7.min.js"></script>
@@ -47,6 +44,7 @@ if(isset($_COOKIE['mu_user'])) {
 	<script src="js/libs/chosen.jquery.min.js"></script>
 	<script src="js/jquery.tokeninput.js"></script>
 	<script src="js/jquery.timepicker.addon.js"></script>
+	<script	src="js/profile.js"></script>
 
 </head>
 <body>
@@ -60,13 +58,11 @@ if(isset($_COOKIE['mu_user'])) {
 			}
 		} ?>
 
-	
+
 	<?php //Include page specific scripts
 		if(isset($_GET['page'])) {
 			$page=$_GET['page'];
-			if($page=="profile") {
-				echo '<script src="js/profile.js"></script>';
-			} else if($page=="compose") {
+			if($page=="compose") {
 				echo '<script src="js/compose.js"></script>';
 			} else if($page=="register") {
 				echo '<script src="js/register.js"></script>';
@@ -88,7 +84,9 @@ if(isset($_COOKIE['mu_user'])) {
 		}
 	?>
 	<script>
-		$(".chzn-select").chosen()
+		$(".chzn-select").chosen({
+			no_results_text: "No results matched"	
+		});
 	</script>
 	<!--[if lt IE 7 ]>
 	<script src="js/libs/dd_belatedpng.js"></script>

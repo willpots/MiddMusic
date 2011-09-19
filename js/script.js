@@ -209,5 +209,18 @@ function updateEvent(id) {
 	xhr.open("POST", "ajax.php");
 	xhr.send(fd);
 	console.log("Request Sent!");
-
+}
+function pullMainSection(url) {
+	var xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4&&xhr.status==200) {
+			document.getElementById('main-content').innerHTML = xhr.responseText;
+			console.log('Loaded xhr response text');
+			$(".chzn-select").chosen();
+			console.log('Loaded Chosen');
+		}
+	}
+	xhr.open("POST", "subpage.php"+url);
+	xhr.send();
+	console.log("Request Sent!");
 }

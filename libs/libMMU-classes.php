@@ -41,21 +41,24 @@ class User extends DBObject { //USER
 	public $email;
 	public $picture;
 	public $class;
+	public $commons;
 	public $firstname;
 	public $lastname;
 	public $admin;
 	public $valid;
 	public $info;
 	public $exists;
+	public $registered;
 	
-	
+	public $confirmed=false;
 	public $bands = array();
 	public $events = array();
 	public $venues = array();
 	public $instruments = array();
 	public $messages = array();
+	public $popacts = array();
 	
-	public function __construct($i=null) {
+	public function __construct($i=null,$code=null) {
 		if($i!=null) {
 			$this->id=$i;
 			$this->Con=$this->getConnection();
@@ -65,11 +68,13 @@ class User extends DBObject { //USER
 				$this->email = $row['email'];
 				$this->picture = $row['picture'];
 				$this->class = $row['class'];
+				$this->commons = $row['commons'];
 				$this->firstname = $row['firstname'];
 				$this->lastname = $row['lastname'];
 				$this->admin = $row['admin'];
 				$this->valid = $row['valid'];
 				$this->info = $row['info'];
+				$this->registered = $row['registered'];
 				$this->exists=true;
 			}
 			if($this->exists==true){
@@ -100,109 +105,120 @@ class User extends DBObject { //USER
 				}
 				$result = mysql_query("SELECT * FROM userinstruments WHERE userid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 				while($row=mysql_fetch_array($result)){
-					$this->instruments[] = $row['instrumentid'];
+					$this->instruments[] = new Instrument($row['instrumentid']);
 				}
-				$query = "SELECT * FROM messages WHERE usermsgto='".$this->id."' OR usermsgfrom='".$this->id."' ORDER BY msgsent DESC";
-				$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
-			 	while($row=mysql_fetch_array($result)) {
-			 		if($row['usermsgto']==$this->id&&$row['deletedto']!=1) {
-				 		$m=new Message($row['id']);
-				 		$m->state="to";
-				 		$this->messages[] = $m;
-			 		} else if($row['usermsgfrom']==$this->id&&$row['deletedfrom']!=1) {
-				 		$m=new Message($row['id']);
-				 		$m->state="from";
-				 		$this->messages[] = $m;
-			 		}
-			 	}
+				$result = mysql_query("SELECT * FROM userpopacts WHERE userid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+				while($row=mysql_fetch_array($result)){
+					$this->popacts[] = $row['popactid'];
+				}
+				// Messages
+				$query = "SELECT * FROM messages WHERE msgsent >= '".$this->registered."' AND (msgto LIKE '%:everyone:%' OR msgto LIKE '%:u-".$this->id.":%' OR msgfrom LIKE '%:u-".$this->id.":%'";
 				if(!empty($this->bands)) {
 					foreach($this->bands as $a) {
-						$query = "SELECT * FROM messages WHERE bandmsgto='".$a->id."' OR bandmsgfrom='".$a->id."' ORDER BY msgsent DESC";
-						$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
-					 	while($row=mysql_fetch_array($result)) {
-					 		if($row['bandmsgto']==$a->id&&$row['deletedto']!=1) {
-						 		$m=new Message($row['id']);
-						 		$m->state="to";
-						 		$this->messages[] = $m;
-					 		} else if($row['bandmsgfrom']==$a->id&&$row['deletedfrom']!=1) {
-						 		$m=new Message($row['id']);
-						 		$m->state="from";
-						 		$this->messages[] = $m;
-					 		}
-					 	}
-				 	}
+						$query .= " OR msgto LIKE '%:b-".$a->id.":%' OR msgfrom LIKE '%:b-".$a->id.":%'";
+					}
 				}
 				if(!empty($this->venues)) {
 					foreach($this->venues as $v) {
-						$query = "SELECT * FROM messages WHERE venuemsgto='".$v->id."' OR venuemsgfrom='".$v->id."' ORDER BY msgsent DESC";
-						$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
-					 	while($row=mysql_fetch_array($result)) {
-					 		if($row['bandmsgto']==$v->id&&$row['deletedto']!=1) {
-						 		$m=new Message($row['id']);
-						 		$m->state="to";
-						 		$this->messages[] = $m;
-					 		} else if($row['bandmsgfrom']==$v->id&&$row['deletedfrom']!=1) {
-						 		$m=new Message($row['id']);
-						 		$m->state="to";
-						 		$this->messages[] = $m;
-					 		}
-					 	}
+						$query .= " OR msgto LIKE '%:v-".$v->id.":%' OR msgfrom LIKE '%:v-".$v->id.":%'";
 				 	}
 				}
-				usort($this->messages, "compareMessages" );
-			 	if(!empty($this->messages)) return $this->messages;
-			 	else return false;
+				if(!empty($this->instruments)) {
+					foreach($this->instruments as $i) {
+						$query .= " OR msgto LIKE '%:i-".$i->id.":%' OR msgfrom LIKE '%:i-".$i->id.":%'";
+					}
+				}
+				$query .= ") ORDER BY msgsent DESC";
+				$messages=array();
+				$result = mysql_query($query,$this->Con) or die(mysql_error()." ".$query);
+				while($row=mysql_fetch_array($result)) {
+					$q = "SELECT * FROM messageread WHERE userid='".$_COOKIE['mu_id']."' AND messageid='".$row['id']."'";
+					$result2 = mysql_query($q,$this->Con) or die(mysql_error()." ".$q);
+					if(mysql_num_rows($result2)==0) {
+						$messages[]= new Message($row['id']);
+					}
+				}
+			 	if(empty($messages)) $this->messages=false;
+				else $this->messages = $messages;
  			}
+		} else if($code!=null) {
+			$this->Con = $this->getConnection();
+			$query = "SELECT * FROM user WHERE confirm = '$code'";
+			$result = mysql_query($query,$this->Con) or die(mysql_error()." ".$query);
+			if(mysql_num_rows($result)>0) {
+				while($row=mysql_fetch_array($result)) {
+					$id = $row['id'];
+				}
+				$query = "UPDATE user SET valid='1' WHERE id='$id'";
+				$a = mysql_query($query,$this->Con) or die(mysql_error()." ".$query);
+				if($a==true) $this->confirmed = true;
+			}
 		}
+	}
+	public function confirm() {
+	
 	}
 	public function login() {
 		$expires = time() + 60*60*24*31;
-		if($this->valid==1)
-		{
+		if($this->valid==1) {
 			setrawcookie("mu_user", $this->username, $expires);
 			setrawcookie("mu_id", $this->id, $expires);
 		}
-		if($this->admin == 1 && $this->valid==1)
-		{
+		if($this->admin == 1 && $this->valid==1) {
 			setrawcookie("mu_admin", "yes", $expires);
 		}
+	}
+	public function update() {
+		$query = "UPDATE user SET firstname='".$this->firstname."', lastname='".$this->lastname."', info='".$this->info."', picture='".$this->picture."' WHERE id='".$this->id."'";
+		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+		$query = "DELETE FROM userpopacts WHERE userid='".$this->id."'";
+		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+		foreach($this->popacts as $a) {
+			$query = "INSERT INTO userpopacts (userid, popactid) VALUES ('".$this->id."','".$a."')";
+			$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
+		}
+		
 	}
 	public function addInstrument($instid) {
 		$query = "INSERT INTO userinstruments (userid, instrumentid) VALUES ('".$this->id."','$instid')";
 		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
-		$result = mysql_query("SELECT * FROM messages WHERE usermsgto='".$this->id."' OR usermsgfrom='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
-		while($row=mysql_fetch_array($result)){
-			$this->messages[] = new Message($row['id']);
-		}
 	}
 	public function deleteInstrument($instid) {
 		$query = "DELETE FROM userinstruments WHERE userid='".$this->id."' AND instrumentid='$instid'";
 		$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
-		$result = mysql_query("SELECT * FROM messages WHERE usermsgto='".$this->id."' OR usermsgfrom='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
-		while($row=mysql_fetch_array($result)){
-			$this->messages[] = new Message($row['id']);
-		}
+	}
+	public function addPopAct($popactid) {
+		$query = "DELETE FROM userpopacts WHERE userid='".$this->id."' AND popactid='$popactid'";
+		$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
+	}
+	public function deletePopAct($popactid) {
+		$query = "DELETE FROM userpopacts WHERE userid='".$this->id."' AND popactid='$popactid'";
+		$result = mysql_query($query,$this->Con) or die("Couldn't do query because of: ".mysql_error());
 	}
 	public function canEdit($id,$type) {
 		if($type=="band") {
-			
+			$query = "SELECT * FROM userbands WHERE userid='".$this->id."' AND bandid='$id'";
 		} else if($type=="venue") {
-			
+			$query = "SELECT * FROM uservenue WHERE userid='".$this->id."' AND venueid='$id'";
 		} else if($type=="event") {
-			
+			$query = "SELECT * FROM usercalendar WHERE userid='".$this->id."' AND calendarid='$id'";
+		}
+		$result = mysql_query($query,$this->Con);
+		if(mysql_num_rows($result)!=0) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
 
 class Message extends DBObject {
 	public $id;
-	public $usermsgto=NULL;
-	public $usermsgfrom=NULL;
-	public $bandmsgto=NULL;
-	public $bandmsgfrom=NULL;
-	public $venuemsgto=NULL;
-	public $venuemsgfrom=NULL;
+	public $msgto=NULL;
+	public $msgfrom=NULL;
 	public $msgsent=NULL;
+	public $deletedto=NULL;
+	public $deletedfrom=NULL;
 	public $subject=NULL;
 	public $content=NULL;
 	public $state=NULL;
@@ -217,12 +233,8 @@ class Message extends DBObject {
 			while($row=mysql_fetch_array($result)) {
 				$this->id = $row['id'];
 				$this->msgsent = $row['msgsent'];
-				$this->usermsgfrom = $row['usermsgfrom'];
-				$this->usermsgto = $row['usermsgto'];
-				$this->bandmsgfrom = $row['bandmsgfrom'];
-				$this->bandmsgto = $row['bandmsgto'];
-				$this->venuemsgfrom = $row['venuemsgfrom'];
-				$this->venuemsgto = $row['venuemsgto'];
+				$this->msgfrom = $row['msgfrom'];
+				$this->msgto = $row['msgto'];
 				$this->subject = $row['subject'];
 				$this->content = $row['content'];
 				$this->unread = $row['unread'];
@@ -235,35 +247,29 @@ class Message extends DBObject {
 		$this->content=cleanString($this->content);
 		$date = time();
 		$query = "INSERT INTO messages 
-		(msgsent, usermsgto, usermsgfrom, bandmsgto, bandmsgfrom, venuemsgto, venuemsgfrom, subject, content, unread) 
-		VALUES ('$date', '".$this->usermsgto."','".$this->usermsgfrom."', '".$this->bandmsgto."', '".$this->bandmsgfrom."', '".$this->venuemsgto."', '".$this->venuemsgfrom."', '".$this->subject."', '".$this->content."', '1')";
-		$result = mysql_query($query) or die("Query failed: ".mysql_error());
+		(msgsent, msgto, msgfrom, subject, content, unread) 
+		VALUES ('$date', '".$this->msgto."','".$this->msgfrom."', '".$this->subject."', '".$this->content."', '1')";
+		mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
 	}
-	function delete($tofrom) {
+	function delete() {
 		$this->Con = $this->getConnection();
-		echo $tofrom;
-		if($tofrom=="to") {
-			$query = "UPDATE messages SET deletedto='1' WHERE id='".$this->id."'";
-		} else if($tofrom=="from") {
-			$query = "UPDATE messages SET deletedfrom='1' WHERE id='".$this->id."'";
-		}
-		mysql_query($query) or die("Query failed: ".mysql_error());
+		$query = "INSERT INTO messageread (userid,messageid) VALUES ('".$_COOKIE['mu_id']."','".$this->id."')";
+		mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
 	}
 	function markAsRead() {
 		$this->Con = $this->getConnection();
 		$query = "UPDATE messages SET unread='0' WHERE id='".$this->id."'";
-		mysql_query($query) or die("Query failed: ".mysql_error());
+		mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
 	}
 }
 class Band extends DBObject {
 	
 	public $name;
-	public $picture;
+	public $picture=NULL;
 	public $typename;
 	public $type;
 	public $info;
 	public $exists=false;
-	
 	
 	public $users = array();
 	public $events = array();
@@ -302,9 +308,15 @@ class Band extends DBObject {
 		$result = mysql_query("UPDATE bands SET 
 								name = '".$this->name."', 
 								type = '".$this->type."',
-								info = '".$this->info."' 
+								info = '".$this->info."', 
+								picture = '".$this->picture."' 
 							 	WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
-	
+		$query = "DELETE FROM userbands WHERE bandid='".$this->id."'";
+		mysql_query($query,$this->Con) or die("Query $query failed.".mysql_error());
+		foreach($this->users as $u) {
+			$query = "INSERT INTO userbands (userid,bandid) VALUES ('".$u."','".$this->id."')";
+			mysql_query($query,$this->Con) or die("Query $query failed.".mysql_error());
+		}
 	}
 }
 class Venue extends DBObject {
@@ -398,6 +410,12 @@ class Event extends DBObject {
 		mysql_query("DELETE FROM venuecalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 		mysql_query("INSERT INTO venuecalendar (calendarid, venueid) VALUES ('".$this->id."' , '".$this->venueid."')") or die(mysql_error());
 	}
+	public function delete() {
+		mysql_query("DELETE FROM calendar WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM usercalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandcalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM venuecalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+	}
 }
 class Calendar extends DBObject {
 	
@@ -406,11 +424,36 @@ class Calendar extends DBObject {
 		$this->Con=$this->getConnection();
 	}
 }
-class Category extends DBObject {
+class Instrument extends DBObject {
 
-	public function __construct($i) {
-		$this->id=$i;
-		$this->Con=$this->getConnection();
+	public $id=null;
+	public $name=null;
+	public function __construct($i=null) {
+		if($i!=null) {
+			$this->id=$i;
+			$this->Con=$this->getConnection();
+			$query = "SELECT * FROM instruments WHERE id='$i'";
+			$result = mysql_query($query,$this->Con) or die("Couldn't complete $query ".mysql_error());
+			while($row=mysql_fetch_array($result)) {
+				$this->name = $row['name'];
+			}
+		}
+	}
+}
+class PopAct extends DBObject {
+
+	public $id=null;
+	public $name=null;
+	public function __construct($i=null) {
+		if($i!=null) {
+			$this->id=$i;
+			$this->Con=$this->getConnection();
+			$query = "SELECT * FROM popacts WHERE id='$i'";
+			$result = mysql_query($query,$this->Con) or die("Couldn't complete $query ".mysql_error());
+			while($row=mysql_fetch_array($result)) {
+				$this->name = $row['name'];
+			}
+		}
 	}
 }
 

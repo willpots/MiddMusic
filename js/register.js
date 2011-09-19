@@ -45,8 +45,4 @@ function validateForm() {
 }
 $(document).ready(function() {
 	checkPassword();
-	$('#class').tokenInput("class.php",{ 
-		tokenLimit: 1,
-		theme: "facebook"
-	});
 });

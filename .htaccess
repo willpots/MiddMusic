@@ -496,9 +496,3 @@ Options -Indexes
 #<IfModule php5_module>
 #	php_value session.cookie_httponly true
 #</IfModule>
-
-AuthUserFile /home/content/58/7831758/html/.htpasswd
-AuthName "EnterPassword"
-AuthType Basic
-
-require valid-user
