@@ -7,7 +7,7 @@
  * will@middpoint.com																		*
  ***************************************************************************/
 
-if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_GET['event'])&&isset($_COOKIE['mu_id'])) {
+if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_GET['event'])&&is_logged_in()) {
 	$me = new User($_COOKIE['mu_id']);
 	$id = $me->id;
 	
@@ -87,7 +87,9 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 			<img src="<?php if(isset($i['picture'])) echo '/'.$i['picture']; else echo "/photos/nameless.png"; ?>" width="200" alt="">
 		</div>
 		<div class="section-title"><?php echo strtoupper($i['firstname'].' '.$i['lastname']);?>
+		<?php if(is_logged_in()) { ?>
 		<a id="compose-message" href="?page=compose&to=u-<?php echo $i['id']; ?>" class="small-button right">Message Me</a></div>
+		<?php } ?>
 		<div id="class"><?php echo $i['class']; ?></div>
 		<div id="info" class="section-content"><?php echo viewString($i['info']); ?></div>
 		<div id="user-instruments">
@@ -108,7 +110,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 			<?php
 			foreach($u->popacts as $a) {
 				$act = new PopAct($a);
-				echo '<div>'.$act->name.'</div>';
+				echo '<div>'.viewString($act->name).'</div>';
 			}
 			?> </div> <?php
 		} 
@@ -143,13 +145,32 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 		<div id="info"><?php echo viewString($b->info); ?></div>
 		<div id="user-instruments">
 		<div class="section-title">Style</div>
-		<div class="section-content"><?php echo $b->typename; ?></div>	
+		<div class="section-content">
+		<?php 
+		//print_r($b->type);
+		if(!empty($b->typenames)) {
+			$a = $b->typenames;
+			echo $a[0];
+			for($i=1;$i<count($b->typenames);$i++) {
+				echo ', '.$a[$i];
+			}
+		}
+		?>
+		</div>	
 		<div class="section-title">Members</div>
 		<div class="section-content">
 		<?php 
 		foreach($b->users as $u) {
 			$u = new User($u);
 			echo '<div><a href="?page=profile&id='.$u->id.'">'.$u->firstname.' '.$u->lastname.'</a></div>';
+		}
+		?>
+		</div>
+		<div class="section-title">Upcoming Events</div>
+		<div class="section-content">
+		<?php 
+		foreach($b->events as $e) {
+			echo '<div><a href="?page=profile&event='.$e->id.'">'.$e->name.'</a> - '.date('n/j/y g:i a',$ev->starttime).'</div>';
 		}
 		?>
 		</div>
@@ -195,7 +216,8 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 			<div class="section-content">
 			<?php 
 				$v = new Venue($b->venueid);
-				echo '<a href="?page=profile&venue='.$v->id.'">'.$v->name.'</a>'; 
+				echo '<div><a href="?page=profile&venue='.$v->id.'">'.$v->name.'</a></div>'; 
+				echo '<div>'.date('n/j/y g:i a',$b->starttime).'</div>';
 			?>
 			</div>
 		</div>

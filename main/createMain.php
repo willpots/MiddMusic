@@ -25,9 +25,11 @@
 		$query = "INSERT INTO userbands (userid,bandid) VALUES ('".$_COOKIE['mu_id']."','".$id."')";
 		mysql_query($query) or die("Query $query failed.".mysql_error());
 	
-		foreach($_POST['users'] as $u) {
-			$query = "INSERT INTO userbands (userid,bandid) VALUES ('".$u."','".$id."')";
-			mysql_query($query) or die("Query $query failed.".mysql_error());
+		if(!empty($_POST['users'])) {
+			foreach($_POST['users'] as $u) {
+				$query = "INSERT INTO userbands (userid,bandid) VALUES ('".$u."','".$id."')";
+				mysql_query($query) or die("Query $query failed.".mysql_error());
+			}
 		}
 
 	?>

@@ -1,22 +1,11 @@
-TODO before Sunday
-
-
-
-
-
-
-
-
+TODO LIST
 ==============================================================
-
 
 * Reset Password Email
 	
 * Ratings system
 
 * Record and Practice Schedules Functional
-
-* Create Band Button
 
 ==============================================================
 

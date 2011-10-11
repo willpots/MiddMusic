@@ -482,10 +482,10 @@ a.fp-content-link:hover {
 	font-size: 15px;
 }
 .message:nth-child(even) {
-	background: #eaeaea;
+	background: #f0f6ff;
 }
 .message:nth-child(odd) {
-	background: #e0e6ef;
+	background: #e0e6ff;
 }
 .message a {
 	text-decoration: none;
@@ -499,6 +499,7 @@ a.fp-content-link:hover {
 }
 .msg-subject {
 	font-weight: bold;
+	border-bottom: 1pt solid #333;
 }
 .msgsent {
 	float: right;

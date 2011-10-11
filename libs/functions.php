@@ -11,18 +11,9 @@
  ********************************************************************************/
 require_once('LocalSettings.php');
 //Error reporting is on for development, this can be turned off at a later point in time.
-error_reporting(E_ALL); 
 /*
 	Gen Use Functions Below Here ---------------------
 */
-function cleanString($string) {
-	$string = htmlspecialchars(addslashes(strip_tags($string)));
-	return $string;
-}
-function viewString($string) {
-	$string = nl2br(stripslashes($string));
-	return $string;
-}
 //! Randomizes characters for use in a code
 function randomChars() {
 	$characters = array("A","B","C","D","E","F","G","H","J",
@@ -216,7 +207,7 @@ function pullAll($q,$table=null) {
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
 	if($table==null||$table=='user') {
-		$query = "SELECT id, firstname, lastname FROM user WHERE firstname LIKE '%%".mysql_real_escape_string($q)."%%' OR lastname LIKE '%%".mysql_real_escape_string($q)."%%' LIMIT 10 ORDER BY lastname DESC";
+		$query = "SELECT id, firstname, lastname FROM user WHERE firstname LIKE '%%".mysql_real_escape_string($q)."%%' OR lastname LIKE '%%".mysql_real_escape_string($q)."%%' ORDER BY lastname DESC";
 		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 		while($obj = mysql_fetch_array($result)) {
 			$a = array('id'=>'u-'.$obj['id'], 'name'=>$obj['firstname'].' '.$obj['lastname']);
@@ -224,7 +215,7 @@ function pullAll($q,$table=null) {
 		}
 	}
 	if($table==null||$table=='venue') {
-		$query = "SELECT id, name FROM venue WHERE name LIKE '%%".mysql_real_escape_string($q)."%%' LIMIT 10";
+		$query = "SELECT id, name FROM venue WHERE name LIKE '%%".mysql_real_escape_string($q)."%%'";
 		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 		while($obj = mysql_fetch_array($result)) {
 			$a = array('id'=>'v-'.$obj['id'], 'name'=>$obj['name']);
@@ -232,7 +223,7 @@ function pullAll($q,$table=null) {
 		}
 	}
 	if($table==null||$table=='bands') {
-		$query = "SELECT id, name FROM bands WHERE name LIKE '%%".mysql_real_escape_string($q)."%%' LIMIT 10";
+		$query = "SELECT id, name FROM bands WHERE name LIKE '%%".mysql_real_escape_string($q)."%%'";
 		$result = mysql_query($query) or die("Couldn't do query because of: ".mysql_error());
 		while($obj = mysql_fetch_array($result)) {
 			$a = array('id'=>'b-'.$obj['id'], 'name'=>$obj['name']);
@@ -381,6 +372,8 @@ function pullAllUsers() {
 	while($row = mysql_fetch_array($result)) {
 		$a=array();
 		$a['id']=$row['id'];
+		$a['firstname']=$row['firstname'];
+		$a['lastname']=$row['lastname'];
 		$a['name']=$row['firstname'].' '.$row['lastname'];
 		$results[]=$a;
 	}

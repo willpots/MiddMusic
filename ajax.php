@@ -17,7 +17,7 @@ if(isset($p['getDateView'])) {
 	}
 	$type=$p['type'][0];
 	for($i=1;$i<count($p['type']);$i++) {
-		$type .= ','.$p['type'];
+		$type .= ','.$p['type'][$i];
 	}
 	$b->name = $p['name'];
 	$b->info = $p['info'];
@@ -184,11 +184,21 @@ if(isset($p['getDateView'])) {
 	echo '<div id="results">';
 	if($page=="musicians") {
 		$table = "user";
-		$results = pullSearchQuery($q, $table);
+		if($query!="") { 
+			$results = pullSearchQuery($q, $table);
+		} else {
+			//$results = pullSearchQuery($q, $table);
+			$results = pullAllUsers();
+		}
 
 		if($results!=false) {
 			foreach($results as $r) {
-				echo '<a href="?page=profile&id='.$r['id'].'" class="search-result">'.$r['firstname'].' '.$r['lastname'].'</a>';
+				//$r['name'] = $r['firstname'].' '.$r['lastname'];
+				if(isset($row['name'])) {
+					echo '<a href="?page=profile&id='.$r['id'].'" class="search-result">'.$r['name'].'</a>';
+				} else {
+					echo '<a href="?page=profile&id='.$r['id'].'" class="search-result">'.$r['firstname'].' '.$r['lastname'].'</a>';
+				}
 			}
 		}
 	} else if($page=="venues") {
@@ -262,6 +272,9 @@ if(isset($p['getDateView'])) {
 		$user->picture =  "photos/user_".$id."_".$name;
 		echo "Uploaded Picture!";
 	}
+	if($p['email_ok']=="yes") {$email_ok=1;}
+	else {$email_ok=0;}
+	$user->set('email_ok',$email_ok);
 	$user->firstname = $firstname;
 	$user->lastname = $lastname;
 	$user->class = $class;

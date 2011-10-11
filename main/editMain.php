@@ -8,8 +8,10 @@
  * Use of this code requires consent from William S. Potter					*
  * will@middpoint.com														*
  ***************************************************************************/
+ 
+/*********** BANDS **************/
 if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
-	if($me->canEdit($_GET['band'],'band')) {
+	if($me->canEdit($_GET['band'],'band')||is_admin()) {
 	$id=$_GET['band'];
 	$b = new Band($id);
 	$types = getBandTypes();
@@ -26,16 +28,18 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 				<input type="text" name="name" id="name" value="<?php echo $b->name; ?>" placeholder="Name">
 			</label>
 			<label for="info">Description:<br>
-				<textarea rows="15" cols="50" name="info" id="info" placeholder="Describe your band here..."><?php echo stripslashes($b->info); ?></textarea>
+				<textarea rows="15" cols="45" name="info" id="info" placeholder="Describe your band here..."><?php echo stripslashes($b->info); ?></textarea>
 			</label>	
 			<label for="type">Type: <br>
 				<select name="type[]" multiple id="type" class="chzn-select" style="width:500px;">
 				<?php
 				foreach($types as $t) {
-					if($b->type==$t['id']) {
-						echo '<option selected value="'.$t['id'].'">'.$t['name'].'</option>';
-					} else {
-						echo '<option value="'.$t['id'].'">'.$t['name'].'</option>';
+					foreach($b->type as $c) {
+						if($c==$t['id']) {
+							echo '<option selected value="'.$t['id'].'">'.$t['name'].'</option>';
+						} else {
+							echo '<option value="'.$t['id'].'">'.$t['name'].'</option>';
+						}
 					}
 				}
 				?>
@@ -62,11 +66,12 @@ if(isset($_COOKIE['mu_id'])&&isset($_GET['band'])) {
 	<p>You cannot edit that band. You are not a member.</p>
 <?php	
 	}
- } else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { 
+/*********** EVENTS **************/
+} else if(isset($_COOKIE['mu_id'])&&isset($_GET['event'])) { 
 
 $event = $_GET['event'];
 $e=new Event($event);
-if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
+if($e->exists==true && (in_array($_COOKIE['mu_id'],$e->users||is_admin())) ) {
 ?>
 
 
@@ -157,17 +162,18 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 <?php } else { ?>
 	<p>The event you are looking for does not exist!</p>
 <?php }
+/*********** USERS **************/
 } else if(isset($_COOKIE['mu_id'])) {
 	$id=$_COOKIE['mu_id'];
 	$i = getUserInfo($id);
 	$u = new User($id);
 ?>
 	<div id="edit">
-		<div class="section-title"><a href="?page=profile&id=<?php echo $id; ?>" style="text-decoration:none;">&larr;</a> | EDIT YOUR PROFILE</div>
+		<div class="section-title"><a href="?page=profile&id=<?php echo $u->id; ?>" style="text-decoration:none;">&larr;</a> | EDIT YOUR PROFILE</div>
 		<div id="edit-form">
 			<form id="updateUser" name="updateUser">
 			<div class="right" style="width:200px;">
-				<img id="profilepic" src="<?php if(isset($i['picture'])) echo $i['picture']; else echo "photos/nameless.png";  ?>" alt="Profile Picture" width="200">
+				<img id="profilepic" src="<?php if(isset($i['picture'])) echo $u->picture; else echo "photos/nameless.png";  ?>" alt="Profile Picture" width="200">
 				<input type="file" name="profilepic">
 			</div>
 			<label for="username">Username: 
@@ -209,9 +215,9 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 						$acts=pullAllPopActs();
 						foreach($acts as $a) {
 							if(in_array($a['id'],$u->popacts)) {
-								echo '<option value="'.$a['id'].'" selected>'.$a['name'].'</option>';
+								echo '<option value="'.$a['id'].'" selected>'.stripslashes($a['name']).'</option>';
 							} else {
-								echo '<option value="'.$a['id'].'">'.$a['name'].'</option>';
+								echo '<option value="'.$a['id'].'">'.stripslashes($a['name']).'</option>';
 							}
 						}
 					?>
@@ -221,8 +227,13 @@ if($e->exists==true && in_array($_COOKIE['mu_id'],$e->users) ) {
 			<label>Or add you own... (Correct spelling please.)<br>
 				<input name="popacts[]" type="text" id="addpopact" style="width:500px;" onkeyup="addPopAct(event);" placeholder="Add a new Band">
 			</label>
+			<div class="section-title">Email Settings</div>
+				<label>Send me MMU Email Notifications? <input type="checkbox" name="email_ok" value="yes" <?php if($u->email_ok==1) echo "checked"; ?>>
+			</label>
 			</form>
+			<p>
 			<button class="button" onclick="updateMyProfile()">Update Profile</button>	
+			</p>
 		</div>
 	</div>
 <?php

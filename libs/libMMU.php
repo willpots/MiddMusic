@@ -19,5 +19,6 @@ require_once('Event.Functions.php');
 require_once('Venue.Functions.php');
 require_once('Directory.Functions.php');
 require_once('Email.Functions.php');
+require_once('libMMU.Functions.php');
 require_once('libMMU-classes.php');
 ?>

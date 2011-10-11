@@ -28,6 +28,7 @@ class DBObject {
 		$con = mysql_connect($this->Host, $this->User, $this->Pass);
 		if(!$con) die('Could not connect: ' . mysql_error());
 		mysql_select_db($this->Schema, $con) or die('Could not select database');
+		$this->Con = $con;
 		return $con;
 	}
 	public function closeConnection(){
@@ -49,6 +50,7 @@ class User extends DBObject { //USER
 	public $info;
 	public $exists;
 	public $registered;
+	public $email_ok;
 	
 	public $confirmed=false;
 	public $bands = array();
@@ -75,6 +77,7 @@ class User extends DBObject { //USER
 				$this->valid = $row['valid'];
 				$this->info = $row['info'];
 				$this->registered = $row['registered'];
+				$this->email_ok = $row['email_ok'];
 				$this->exists=true;
 			}
 			if($this->exists==true){
@@ -210,6 +213,10 @@ class User extends DBObject { //USER
 			return false;
 		}
 	}
+	public function set($field,$value) {
+		$query = "UPDATE user SET $field = '$value' WHERE id = '".$this->id."'";
+		mysql_query($query,$this->Con) or die("Query $query failed because: ".mysql_error());
+	}
 }
 
 class Message extends DBObject {
@@ -249,6 +256,7 @@ class Message extends DBObject {
 		$query = "INSERT INTO messages 
 		(msgsent, msgto, msgfrom, subject, content, unread) 
 		VALUES ('$date', '".$this->msgto."','".$this->msgfrom."', '".$this->subject."', '".$this->content."', '1')";
+		
 		mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
 	}
 	function delete() {
@@ -266,7 +274,7 @@ class Band extends DBObject {
 	
 	public $name;
 	public $picture=NULL;
-	public $typename;
+	public $typenames=array();
 	public $type;
 	public $info;
 	public $exists=false;
@@ -281,9 +289,12 @@ class Band extends DBObject {
 		while($row=mysql_fetch_array($result)){
 			$this->name = $row['name'];
 			$this->picture = $row['picture'];
-			$this->type = $row['type'];
+			$this->type = explode(',',$row['type']);
 			$this->info = $row['info'];
 			$this->exists=true;
+			if($this->name == "") {
+				$this->name = "Unnamed";
+			}
 		}
 		if($this->exists==true){
 
@@ -298,9 +309,13 @@ class Band extends DBObject {
 			while($row=mysql_fetch_array($result)){
 				$this->users[] = $row['userid'];
 			}
-			$result = mysql_query("SELECT * FROM bandstyles WHERE id='".$this->type."'",$this->Con) or die("It was me!".mysql_error());
-			while($row=mysql_fetch_array($result)){
-				$this->typename = $row['name'];
+			if(!empty($this->type)) {
+				foreach($this->type as $a) {
+					$result = mysql_query("SELECT * FROM bandstyles WHERE id='".$a."'",$this->Con) or die("It was me!".mysql_error());
+					while($row=mysql_fetch_array($result)){
+						$this->typenames[] = $row['name'];
+					}
+				}
 			}
 		}
 	}
@@ -329,7 +344,8 @@ class Venue extends DBObject {
 	public $type;
 	public $info;
 	public $exists;
-	
+	public $latitude;
+	public $longitude;
 	
 	public $users = array();
 	public $events = array();
@@ -345,6 +361,8 @@ class Venue extends DBObject {
 			$this->type = $row['type'];
 			$this->info = $row['info'];
 			$this->exists=true;
+			$this->latitude=$row['latitude'];
+			$this->longitude=$row['longitude'];
 		}
 		if($this->exists==true){
 
@@ -417,13 +435,97 @@ class Event extends DBObject {
 		mysql_query("DELETE FROM venuecalendar WHERE calendarid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 	}
 }
-class Calendar extends DBObject {
+class Record extends DBObject {
+	public $id;
+	public $name;
+	public $starttime;
+	public $endtime;
+	public $description;
+	public $users = array();
+	public $bands = array();
+	public $exists = false;
 	
 	public function __construct($i) {
 		$this->id=$i;
 		$this->Con=$this->getConnection();
+		$result = mysql_query("SELECT * FROM record WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		while($row=mysql_fetch_array($result)){
+			$this->name = $row['name'];
+			$this->starttime = $row['starttime'];
+			$this->endtime = $row['endtime'];
+			$this->description = $row['description'];
+			$this->exists=true;
+		}
+		if($this->exists==true){
+			$result = mysql_query("SELECT * FROM userrecord WHERE recordid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->users[] = $row['userid'];
+			}
+			$result = mysql_query("SELECT * FROM bandrecord WHERE recordid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->bands[] = $row['bandid'];
+			}
+		}
+	}
+	public function update() {
+		mysql_query("UPDATE record SET name = '".$this->name."', starttime = '".$this->starttime."', endtime = '".$this->endtime."', description = '".$this->description."' WHERE id = '".$this->id."'") or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandrecord WHERE recordid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		foreach($this->bands as $b) {
+			mysql_query("INSERT INTO bandrecord (bandid,recordid) VALUES ('".$b."','".$this->id."')") or die("It was me!".mysql_error());
+		}
+	}
+	public function delete() {
+		mysql_query("DELETE FROM record WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM userrecord WHERE recordid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandrecord WHERE recordid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
 	}
 }
+class Practice extends DBObject {
+	public $id;
+	public $name;
+	public $starttime;
+	public $endtime;
+	public $description;
+	public $users = array();
+	public $bands = array();
+	public $exists = false;
+	
+	public function __construct($i) {
+		$this->id=$i;
+		$this->Con=$this->getConnection();
+		$result = mysql_query("SELECT * FROM practice WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		while($row=mysql_fetch_array($result)){
+			$this->name = $row['name'];
+			$this->starttime = $row['starttime'];
+			$this->endtime = $row['endtime'];
+			$this->description = $row['description'];
+			$this->exists=true;
+		}
+		if($this->exists==true){
+			$result = mysql_query("SELECT * FROM userpractice WHERE practiceid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->users[] = $row['userid'];
+			}
+			$result = mysql_query("SELECT * FROM bandpractice WHERE practiceid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+			while($row=mysql_fetch_array($result)){
+				$this->bands[] = $row['bandid'];
+			}
+		}
+	}
+	public function update() {
+		mysql_query("UPDATE practice SET name = '".$this->name."', starttime = '".$this->starttime."', endtime = '".$this->endtime."', description = '".$this->description."' WHERE id = '".$this->id."'") or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandpractice WHERE practiceid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		foreach($this->bands as $b) {
+			mysql_query("INSERT INTO bandpractice (bandid,practiceid) VALUES ('".$b."','".$this->id."')") or die("It was me!".mysql_error());
+		}
+	}
+	public function delete() {
+		mysql_query("DELETE FROM practice WHERE id='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM userpractice WHERE practiceid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+		mysql_query("DELETE FROM bandpractice WHERE practiceid='".$this->id."'",$this->Con) or die("It was me!".mysql_error());
+	}
+}
+
 class Instrument extends DBObject {
 
 	public $id=null;
