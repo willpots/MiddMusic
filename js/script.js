@@ -172,8 +172,15 @@ function validateEventForm() {
 	var bands = document.getElementById('bands');
 	var venue = document.getElementById('venue');
 	var sbutton = document.getElementById('sbutton');
-	if(name.value!=""&&starttime.value!=""&&endtime.value!=""&&description.value!=""&&bands.selectedIndex!=-1&&venue.selectedIndex!=-1) {
-		sbutton.disabled=false;
+	if(name.value!=""&&starttime.value!=""&&endtime.value!=""&&description.value!="") {
+		if(document.getElementById('venue')==null) {
+			sbutton.disabled=false;
+		}
+		else if(bands.selectedIndex!=-1&&venue.selectedIndex!=-1) {
+			sbutton.disabled=false;
+		} else {
+			sbutton.disabled=true;
+		}
 	} else {
 		sbutton.disabled=true;
 	}

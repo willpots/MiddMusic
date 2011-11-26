@@ -119,15 +119,18 @@ if(isset($p['getDateView'])) {
 	$starttime = strtotime($p['starttime']);
 	$endtime = strtotime($p['endtime']);
 	$description = cleanString($p['description']);
-	$bands = $p['bands'];
-
+	$userid = $_COOKIE['mu_id'];
 	$con = mysql_connect($dbHost, $dbUser, $dbPass);
 	if(!$con) die('Could not connect: ' . mysql_error());
 	mysql_select_db($dbSchema, $con) or die('Could not select database');
 	$query = "INSERT INTO $calendar (name,starttime,endtime,description) VALUES ('$name','$starttime','$endtime','$description')";
 	$result = mysql_query($query,$con) or die(mysql_error());
 	$calendarid = mysql_insert_id();
+	$query = "INSERT INTO user$calendar (userid,practiceid) VALUES ('$userid','$calendarid')";
+	$result = mysql_query($query,$con) or die(mysql_error());
 	echo "Calendar ID: ".$calendarid."\n";
+	if($calendar=="calendar") {
+	$bands = $p['bands'];
 	foreach($bands as $b) {
 		$bs = explode('-',$b);
 		$bandid=$bs[1];
@@ -142,7 +145,7 @@ if(isset($p['getDateView'])) {
 	$result = mysql_query($query,$con) or die(mysql_error());
 	$query = "INSERT INTO user$calendar (userid,calendarid) VALUES ('".$_COOKIE['mu_id']."','$calendarid')";
 	$result = mysql_query($query,$con) or die(mysql_error());
-
+	}
 } else if(isset($p['updateEvent'])) {
 	$id = $p['id'];
 	$name = cleanString($p['name']);

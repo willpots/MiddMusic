@@ -17,6 +17,7 @@ else $page ="";
 				echo '<a href="logout.php">Log Out</a>';
 			} else {	
 				echo '<a href="?page=login">Log In</a>';
+				echo '<a href="?page=register">Register</a>';
 			}?>
 		</div>
 		<div id="inner-header">
@@ -53,7 +54,7 @@ if($page=="profile") {
 	} else if($page=="create") {
 	
 	} else if($page=="record"||$page=="practice") {
-		include('sidebars/practiceSidebar.php');
+		include('sidebars/calendarSidebar.php');
 	} else if($page=="bands"||$page=="musicians"||$page=="venues") {
 		include('sidebars/directorySidebar.php');
 	} else {
@@ -80,8 +81,10 @@ if($page=="profile") { //Profile
 	include('main/editMain.php');
 } else if($page=="calendar") { //Calendar Views
 	include('main/calendarMain.php');
-} else if($page=="record"||$page=="practice") {
-	include('main/practiceMain.php');
+} else if($page=="record") {
+	include('main/recordMain.php');
+} else if($page=="practice") {
+	include('main/recordMain.php');
 } else if($page=="bands"||$page=="musicians"||$page=="venues") { //Directory Views
 	include('main/directoryMain.php');
 } else { // Default to Profile View

@@ -31,6 +31,14 @@ if($inst!=false) {
 array_multisort( $sort_name, SORT_STRING, $inst);
 
 ?>
+<?php if(isset($_COOKIE['mu_id'])) { ?>
+<div id="create-buttons" class="sidebar-widget">
+	<a href="?page=create&band" class="create-button">Form a Band</a>
+	<a href="?page=edit" class="create-button">Edit my Profile</a>
+	<a href="?page=calendar" class="create-button">Create an Event</a>
+</div>
+<?php } ?>
+
 <div id="search-form" class="sidebar-widget">
 	<label for="s" class="sidebar-title">SEARCH <?php echo strtoupper($page); ?><br>
 	<?php 

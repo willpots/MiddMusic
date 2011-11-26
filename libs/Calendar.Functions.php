@@ -77,10 +77,10 @@ function drawDayView($day,$calendar) {
 
 <?php
 }
-function drawEventCreate($day=null,$calendar=null) {
+function drawEventCreate($day=null,$calendar="calendar") {
 
 ?>
-<div class="section-title">CALENDAR</div>
+<div class="section-title"><?php ucwords($calendar); ?></div>
 <div class="month-name">Create Event</div>
 <div class="event-form">
 	<form id="event-create-form" name="eventCreateForm" onkeyup="validateEventForm()">
@@ -89,6 +89,7 @@ function drawEventCreate($day=null,$calendar=null) {
 	<p><label for="endtime">End Time: <input type="text" name="endtime" class="compose-field" id="endtime" placeholder="End Time"></label></p>
 	<p><label for="description">Description:<br>
 		<textarea name="description" id="description" rows="10" cols="70" class="compose-field" placeholder="What's happening?"></textarea></label></p>
+	<?php if($calendar=='calendar') { ?>
 	<p><label for="bands">Bands/Performers:
 		<select multiple id="bands" name="bands[]" class="chzn-select" style="width:300px;">
 			<option></option>
@@ -101,7 +102,6 @@ function drawEventCreate($day=null,$calendar=null) {
 		</select>
 		</label>
 	</p>
-	<?php if($calendar=='calendar') { ?>
 	<p><label for="venue">Venue:
 		<select id="venue" name="venue" class="chzn-select" style="width:300px;">
 			<option></option>

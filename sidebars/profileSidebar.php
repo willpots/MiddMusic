@@ -9,6 +9,11 @@ $bands = getUserBands($id);
 
 if($ui!=false) {
 ?>
+<div id="create-buttons" class="sidebar-widget">
+	<a href="?page=create&band" class="create-button">Form a Band</a>
+	<a href="?page=edit" class="create-button">Edit my Profile</a>
+	<a href="?page=calendar" class="create-button">Create an Event</a>
+</div>
 <div id="search-form" class="sidebar-widget">
 	<label for="s" class="sidebar-title">SEARCH MUSICIANS<br>
 	<input type="text" onkeyup="searchFor(event, this.value, 'musicians')" class="field" autocomplete="off" name="s" id="s" <?php if(isset($_GET['q'])) echo 'value="'.$_GET['q'].'"'; ?>

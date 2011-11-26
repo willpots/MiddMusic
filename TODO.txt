@@ -24,3 +24,5 @@ Done:
 	* Email confirmation - Done, need to test!
 
 	* "Like" bands
+
+	* New Splash Page

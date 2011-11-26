@@ -1,10 +1,10 @@
 <?php 
-/***************************************************************************
- * Middlebury Music United 																*
- * This code is proprietary and property of William S. Potter.					*
- * It has been licensed for use to Middlebury College in this installation.*
- * Use of this code requires consent from William S. Potter						*
- * will@middpoint.com																		*
+/****************************************************************************
+ * Middlebury Music United 													*
+ * This code is proprietary and property of William S. Potter.				*
+ * It has been licensed for use to Middlebury College in this installation.	*
+ * Use of this code requires consent from William S. Potter					*
+ * will@middpoint.com														*
  ***************************************************************************/
 
 if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_GET['event'])&&is_logged_in()) {
@@ -86,7 +86,7 @@ if(!isset($_GET['id'])&&!isset($_GET['band'])&&!isset($_GET['venue'])&&!isset($_
 		<div id="profile-picture" class="right">
 			<img src="<?php if(isset($i['picture'])) echo '/'.$i['picture']; else echo "/photos/nameless.png"; ?>" width="200" alt="">
 		</div>
-		<div class="section-title"><?php echo strtoupper($i['firstname'].' '.$i['lastname']);?>
+		<div class="section-title"><?php echo strtoupper($i['firstname'].' '.$i['lastname']);?></div>
 		<?php if(is_logged_in()) { ?>
 		<a id="compose-message" href="?page=compose&to=u-<?php echo $i['id']; ?>" class="small-button right">Message Me</a></div>
 		<?php } ?>

@@ -11,12 +11,15 @@
 if(isset($_GET['month'])) {
 	$month = $_GET['month'];
 } else $month = date('n');
-
+if(isset($_GET['day'])) {
+	$day = $_GET['day'];
+} else $day = date('j');
 if(isset($_GET['year'])) {
 	$year = $_GET['year'];
 } else $year = date('Y');
 
-$month =  mktime(0,0,0,$month,1,$year);
+$month =  mktime(0,0,0,$month,$day,$year);
+
 $calendar = "record";
 ?>
 <div id="calendar">

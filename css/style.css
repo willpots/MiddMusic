@@ -438,6 +438,52 @@ a.fp-content-link:hover {
   margin: 5px;
   font-size: 16px;
 }
+#create-buttons {
+	text-align: center;
+}
+a.create-button {
+	display: inline-block;
+	width: 30%;
+	text-align: center;
+	background: #336796;
+	background: -webkit-gradient(linear,0% 40%,0% 70%,from(#336796),to(#4477a6));
+	background: -webkit-linear-gradient(, #4477a6);
+	background: -moz-linear-gradient(, #4477a6);
+	background: -o-linear-gradient(, #4477a6);
+	background: -ms-linear-gradient(, #4477a6);
+	background: linear-gradient(, #4477a6);
+	color: #fff;
+	padding: 4px 0;
+	cursor: pointer;
+	vertical-align: middle;
+	-moz-user-select: -moz-none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	-o-transition: border-top-color 0.218s,border-right-color 0.218s,border-bottom-color 0.218s,border-left-color .218s;
+	-webkit-transition: border-color .218s;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-top-color: rgba(0, 0, 0, 0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}
+a.create-button:hover {
+	border-color: #333!important;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+a.create-button:active {
+	background: -webkit-gradient(linear,0% 40%,0% 70%,from(#4477a6),to(#5588b6));
+	background: -webkit-linear-gradient(, #5588b6);
+	background: -moz-linear-gradient(, #5588b6);
+	background: -o-linear-gradient(, #5588b6);
+	background: -ms-linear-gradient(, #5588b6);
+	background: linear-gradient(, #5588b6);
+	border-color: #444!important;
+}
 #search-form input#s {
 	margin: 5px 0;
 	background:#fff url(/img/search.png) no-repeat 5px 6px;
@@ -471,10 +517,20 @@ a.fp-content-link:hover {
 	border-bottom: 1pt solid #ddd;
 	margin-bottom: 30px;
 }
+.large-section-title {
+	font-size: 30px;
+	width: 370px;
+	border-bottom: 1pt solid #ddd;
+	margin-bottom: 30px;
+}
 .section-content {
 	padding: 15px;
 	background: #eee;
 	margin-bottom: 15px;
+}
+.home-content {
+	font-size: 16px;
+	font-weight: lighter;
 }
 /* Messages */
 .message {

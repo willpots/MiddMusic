@@ -54,7 +54,7 @@ if(isset($_COOKIE['mu_user'])) {
 			if(isset($_COOKIE['mu_user'])) {
 				include('page.php');			
 			} else {
-				include('home.php');
+				include('home2.php');
 			}
 		} ?>
 

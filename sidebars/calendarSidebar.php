@@ -12,6 +12,14 @@
 <?php 
 $events = getUpcomingEvents();
 ?>
+<?php if(isset($_COOKIE['mu_id'])) { ?>
+<div id="create-buttons" class="sidebar-widget">
+	<a href="?page=create&band" class="create-button">Form a Band</a>
+	<a href="?page=edit" class="create-button">Edit my Profile</a>
+	<a href="?page=calendar" class="create-button">Create an Event</a>
+</div>
+<?php } ?>
+
 <div id="upcoming-events" class="sidebar-widget">
 	<div class="sidebar-title">UPCOMING EVENTS</div>
 	<div class="sidebar-widget-content">
@@ -28,9 +36,25 @@ $events = getUpcomingEvents();
 	</div>
 </div><!-- upcoming events -->
 
-<?php if(isset($_COOKIE['mu_id'])) { ?>
+<?php if(isset($_COOKIE['mu_id'])&&$page=="calendar") { ?>
 <div id="create-event" class="sidebar-widget">
 	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create" class="blue-button">CREATE AN EVENT</a></div>
+</div>
+
+<?php } ?>
+
+
+<?php if(isset($_COOKIE['mu_id'])&&$page=="record") { ?>
+<div id="create-event" class="sidebar-widget">
+	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create" class="blue-button">BOOK RECORDING TIME</a></div>
+</div>
+
+<?php } ?>
+
+
+<?php if(isset($_COOKIE['mu_id'])&&$page=="practice") { ?>
+<div id="create-event" class="sidebar-widget">
+	<div class="sidebar-title center "><a href="?page=<?php echo $page ?>&create" class="blue-button">BOOK PRACTICE TIME</a></div>
 </div>
 
 <?php } ?>

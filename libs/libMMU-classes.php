@@ -230,7 +230,31 @@ class Message extends DBObject {
 	public $content=NULL;
 	public $state=NULL;
 	public $unread;
+
+	function sendEmail($username) {
+		$email = $username."@middlebury.edu";
+		$EmailSubject = 'You have a new message!'; 
+		$mailheader = "From: Midd Music United <noreply@middmusic.com>\r\n";
+		$mailheader .= "Reply-To: Midd Music United <noreply@middmusic.com>\r\n"; 
+		$mailheader .= "Content-type: text/html; charset=UTF-8\r\n";
+		$mailheader .= "Organization: Midd Music United\r\n";
+		$mailheader .= "MIME-Version: 1.0\r\n";
+		$mailheader .= "X-Priority: 3\r\n";
+		$mailheader .= "X-Mailer: PHP". phpversion() ."\r\n";
+		$MESSAGE_BODY = '
+		<html>
+		<head>
+			<title>MMU Confirmation</title>
+		</head>
+		<body>
+			<p>You have a new message on MiddMusic.com. <a href="?page=profile">Click here to visit your inbox.</a></p>
+			
+		</body>
+		</html>';
+		mail($email, $EmailSubject, $MESSAGE_BODY, $mailheader) or die("Could not send Message!");
 	
+	}
+
 	public function __construct($i=null) {
 		$this->Con = $this->getConnection();
 		if($i!=null) {
@@ -253,6 +277,7 @@ class Message extends DBObject {
 		$this->subject=cleanString($this->subject);
 		$this->content=cleanString($this->content);
 		$date = time();
+		$this->sendNotification();
 		$query = "INSERT INTO messages 
 		(msgsent, msgto, msgfrom, subject, content, unread) 
 		VALUES ('$date', '".$this->msgto."','".$this->msgfrom."', '".$this->subject."', '".$this->content."', '1')";
@@ -268,6 +293,39 @@ class Message extends DBObject {
 		$this->Con = $this->getConnection();
 		$query = "UPDATE messages SET unread='0' WHERE id='".$this->id."'";
 		mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
+	}
+	function sendNotification() {
+		$e = explode(':',$m->msgto);
+		$i=0;
+		foreach($e as $a) {
+			$f = explode('-',$a);
+			if(count($f)>1) {
+				if($f[0]=='u') {
+					$fromname = getUser($f[1], 'username');
+					sendEmail($username);
+				} else if($f[0]=='b') {
+					$b = new Band($f[1]);
+					foreach($b->users as $bu) {
+						$bui = new User($bu);
+						sendEmail($bui->username);
+					}
+				} else if($f[0]=='v') {
+					$v = new Venue($f[1]);
+					foreach($v->users as $vu) {
+						$vui = new User($vu);
+						sendEmail($vui->username);
+					}
+				}
+			}
+			if($a=="everyone") {
+				$this->Con = $this->getConnection();
+				$query = "SELECT * FROM user";
+				$result = mysql_query($query) or die("Query failed: ".$query.' '.mysql_error());
+				while($row = mysql_fetch_array($result)) {
+					sendEmail($row['username']);
+				}
+			}
+		}
 	}
 }
 class Band extends DBObject {
