@@ -26,11 +26,7 @@ else $page ="";
 				<a href="?page=practice" class="<?php if($page=="practice") echo 'selected '; ?>">Practice</a>
 				<a href="?page=record" class="<?php if($page=="record") echo 'selected '; ?>">Record</a>
 				<?php } ?>
-				<a href="?page=calendar" class="<?php if($page=="calendar") echo 'selected '; ?>">Calendar
-					<div class="link-menu">
-						<a href="?page=calendar&create">Create an Event</a>
-					</div>
-				</a>
+				<a href="?page=calendar" class="<?php if($page=="calendar") echo 'selected '; ?>">Calendar</a>
 				<a href="?page=venues" class="<?php if($page=="venues") echo 'selected '; ?>">Venues</a>
 				<a href="?page=bands" class="<?php if($page=="bands") echo 'selected '; ?>">Bands/DJs</a>
 				<a href="?page=musicians" class="<?php if($page=="musicians") echo 'selected '; ?>">Musicians</a>

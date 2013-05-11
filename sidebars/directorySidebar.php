@@ -1,13 +1,13 @@
 <?php 
-/***************************************************************************
- * directorySiderbar.php																	*
- *
- * Middlebury 																					*
- * This code is proprietary and property of William S. Potter.					*
- * It has been licensed for use to Middlebury College in this installation.*
- * Use of this code requires consent from William S. Potter						*
- * will@middpoint.com																		*
- **************************************************************************/
+/****************************************************************************
+ * directorySiderbar.php													*
+ *																			*
+ * Middlebury 																*
+ * This code is proprietary and property of William S. Potter.				*
+ * It has been licensed for use to Middlebury College in this installation.	*
+ * Use of this code requires consent from William S. Potter					*
+ * will@middpoint.com														*
+ ****************************************************************************/
 // Alphabetically Sort the Array! Genius!
 $page = $_GET['page'];
 if(isset($_GET['q'])) $q = $_GET['q'];

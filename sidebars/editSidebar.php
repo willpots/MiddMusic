@@ -1,13 +1,13 @@
 <?php 
-/***************************************************************************
- * editSidebar.php																			*
- *
- * Middlebury 																					*
- * This code is proprietary and property of William S. Potter.					*
- * It has been licensed for use to Middlebury College in this installation.*
- * Use of this code requires consent from William S. Potter						*
- * will@middpoint.com																		*
- **************************************************************************/
+/****************************************************************************
+ * editSidebar.php															*
+ *																			*
+ * Middlebury 																*
+ * This code is proprietary and property of William S. Potter.				*
+ * It has been licensed for use to Middlebury College in this installation.	*
+ * Use of this code requires consent from William S. Potter					*
+ * will@middpoint.com														*
+ ****************************************************************************/
 // Alphabetically Sort the Array! Genius!
 $results = getUserInstruments($_COOKIE['mu_id']);
 if($results!=false) {
